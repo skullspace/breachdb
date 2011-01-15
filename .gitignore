@@ -1,0 +1,14 @@
+.svn
+.class
+*.bz2
+*.sql
+tmp/*
+*.sqlite3
+log/*
+.DS_Store
+.*.swp
+*~
+*.swp
+*.swo
+.bundle
+.#*
