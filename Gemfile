@@ -7,6 +7,7 @@ gem 'json'
 gem "racksh"
 gem 'i18n'
 gem 'haml'
+gem 'builder'
 gem "activesupport", "3.0.3"
 
 group :development do

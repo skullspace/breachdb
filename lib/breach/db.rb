@@ -2,11 +2,11 @@ module Breach
   DB = Sequel.connect("mysql2://root@localhost/breachdb")
 end
 
-require 'lib/breach/models/breach'
-require 'lib/breach/models/dictionary'
-require 'lib/breach/models/dictionary_word'
-require 'lib/breach/models/hash'
-require 'lib/breach/models/hash_type'
-require 'lib/breach/models/news'
-require 'lib/breach/models/password'
-require 'lib/breach/models/submission'
+require 'breach/models/breach'
+require 'breach/models/dictionary'
+require 'breach/models/dictionary_word'
+require 'breach/models/hash'
+require 'breach/models/hash_type'
+require 'breach/models/news'
+require 'breach/models/password'
+require 'breach/models/submission'

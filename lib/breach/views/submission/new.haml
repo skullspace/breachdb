@@ -1,0 +1,13 @@
+%form{:action => '/submissions', :method => "post", :multipart => true}
+  .inputs
+    .input.string
+      %label{:for  => :name} Name
+      %input{:name => :name}
+    .input.string
+      %label{:for  => :name} Name
+      %input{:name => :file,:type => :file}
+    .input.string
+      %label{:for  => :name} Name
+      %input{:name => :name}
+  .actions
+    %input{:type => :submit, :value => "Sign In"}

@@ -1,5 +1,9 @@
 module Breach
   class Server < Sinatra::Base
+    
+    set :public, File.dirname(__FILE__) + '/public'
+    set :views,  File.dirname(__FILE__) + '/views'
+
     get "/breaches" do
       content_type :json
       Breach.limit(10).map(&:values).to_json 
@@ -8,6 +12,14 @@ module Breach
     get '/submissions' do
       content_type :json
       Submission.limit(10).map(&:values).to_json 
+    end
+
+    get  '/submissions/new' do
+      haml :'submission/new'
+    end
+
+    post '/submissions' do 
+      puts params[:submission]
     end
 
     get '/dictionaries' do 
@@ -21,8 +33,8 @@ module Breach
     end
 
     get '/hashes' do
-      content_type :json
-      Hash.limit(10).map(&:values).to_json 
+      content_type :xml
+      Hash.limit(10).map(&:values).to_xml
     end
 
     get '/hash_types' do
