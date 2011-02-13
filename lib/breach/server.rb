@@ -20,10 +20,9 @@ module Breach
     set :views,  File.dirname(__FILE__) + '/views'
 
     get "/breaches" do
-      cache("/breachs") do
-        @breaches = Breach.all
-        haml(:'breaches/index')
-      end
+      response['Expires'] = (Time.now + 3600).httpdate
+      @breaches = Breach.all
+      haml :'breaches/index'
     end
 
     get '/submissions' do

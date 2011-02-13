@@ -1,6 +1,7 @@
 source :gemcutter
 
 gem 'sinatra'
+gem 'rack-cache'
 gem 'sequel'
 gem 'mysql2'
 gem 'json'
