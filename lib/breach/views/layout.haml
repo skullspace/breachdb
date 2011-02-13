@@ -1,0 +1,224 @@
+!!! 5
+%html
+  %head
+    :css
+      html, body, div, span, applet, object, iframe,
+      h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+      a, abbr, acronym, address, big, cite, code,
+      del, dfn, em, img, ins, kbd, q, s, samp,
+      small, strike, strong, sub, sup, tt, var,
+      b, u, i, center,
+      dl, dt, dd, ol, ul, li,
+      fieldset, form, label, legend,
+      table, caption, tbody, tfoot, thead, tr, th, td,
+      article, aside, canvas, details, embed, 
+      figure, figcaption, footer, header, hgroup, 
+      menu, nav, output, ruby, section, summary,
+      time, mark, audio, video {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        font: inherit;
+        vertical-align: baseline;
+      }
+      /* HTML5 display-role reset for older browsers */
+      article, aside, details, figcaption, figure, 
+      footer, header, hgroup, menu, nav, section {
+        display: block;
+      }
+      body {
+        line-height: 1;
+      }
+      ol, ul {
+        list-style: none;
+      }
+      blockquote, q {
+        quotes: none;
+      }
+      blockquote:before, blockquote:after,
+      q:before, q:after {
+        content: '';
+        content: none;
+      }
+      table {
+        border-collapse: collapse;
+        border-spacing: 0;
+      }
+      h1, h2, h3, h4, h5, h6 {
+        font-family: "Lucida Grande", "Lucida Sans Unicode", Arial, Verdana, sans-serif;
+        font-size: 1.6em; }
+      h2 {
+        font-size: 1.4em; }
+      h3 {
+        font-size: 1.2em; }
+      h4 {
+        font-size: 1em; }
+      h5 {
+        font-size: 0.8em; }
+      h6 {
+        font-size: 0.6em; }
+      p {
+        font-size: 1em;
+        line-height: 1.5em;
+        padding: 1em 0; }
+      ul {
+        list-style: disc;
+        padding-left: 1.3em;
+        font-size: 1em;
+        line-height: 1.5em; }
+      em {
+        font-weight: italic;
+        font-weight: 400;
+        line-height: 1em; }
+
+
+      .exo-progress-wrapper{
+        width: 300px;
+        height: 22px;
+        background: black;
+        display: block;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+      }
+
+      progress.exo-progress {
+        display: block;
+        position: absolute;
+        height: 20px;
+        width: 300px;
+        margin: 0 auto;
+        border: 1px solid #6a6a6a;
+        background: rgb(7,7,7);
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+        -moz-box-shadow: 0px 1px 2px #000;
+        -webkit-box-shadow: 0px 1px 2px #000;
+        background: none;
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(.3, black),color-stop(1, #444444));
+        background: -moz-linear-gradient(top, black, #444444);
+        filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000, endColorstr=#444444)";
+      }
+
+      progress.exo-progress::-webkit-progress-bar-value {
+        border: 1px solid #35530a;
+        background: #94df2f;
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(.3, #94df2f),color-stop(1, #507e0e));
+        background: -moz-linear-gradient(top, #94df2f, #507e0e);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=#94df2f, endColorStr=#507e0e);
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+      }
+
+      .exo-progress-value{
+        position: absolute;
+        line-height: 20px;
+        height: 20px;
+        display: inline-block;
+        margin-left: 140px;
+        text-align: left;
+        color: #eee;
+        font-size: 14px;
+        -webkit-text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.7);
+        -moz-text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.7);
+        text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.7);
+      }
+
+      .exo-progress-bar{
+        position: absolute;
+        background: red;
+        width: 300px;
+        display: block;
+        border: 1px solid #35530a;
+        background: #94df2f;
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(.3, #94df2f),color-stop(1, #507e0e));
+        background: -moz-linear-gradient(top, #94df2f, #507e0e);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=#94df2f, endColorStr=#507e0e);
+        -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#94df2f, endColorstr=#507e0e)";
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+        height: 20px;
+      }
+
+      tr{
+        margin: 0;
+        padding: 0;
+        border: 1px solid #eee;
+      }
+
+      tr td{
+        margin: 0;
+        padding: 3px 1em;
+      }
+
+
+      ul#menu{
+        list-style: none;
+      }
+
+      ul#menu li{
+        float: left;
+        margin-right: 2em;
+      }
+      body{
+        width: 900px;
+        margin: 0 auto;
+        font-family: Arial;
+      }
+      #container{
+        clear: both;
+      }
+      table {
+        border-top:1px solid #e5eff8;
+        border-right:1px solid #e5eff8;
+        border-collapse:collapse;
+        width: 100%;
+      }
+      td {
+        color:#333;
+        padding:.3em 1em;
+        text-align:center;
+        border-left: 1px solid #ECECEE;
+        border-right: 1px solid #ECECEE;
+        vertical-align: middle;
+      }
+
+      thead tr{
+        line-height: 30px;
+      }
+      th{
+        border-left: 1px solid #ECECEE;
+        border-right: 1px solid #ECECEE;
+      }
+
+      tr{
+        border-top: 1px solid #E3E3E3;
+        border-bottom: 1px solid #E3E3E3;
+      }
+
+      tr:nth-child(even)  { background-color:#F2F2F2; }
+    %title BreachDB
+    %script{:src=> 'js/jquery.js'}
+    %script{:src=> 'js/jquery.dataTables.min.js'}
+    %script{:src=> 'js/functions.js'}
+  %body
+    %h1 BreachDB
+    %ul#menu
+      %li
+        %a{:href=>"/breaches"} Breaches
+      %li
+        %a{:href=>"/submissions"} Submissions
+      %li
+        %a{:href=>"/dictionaries"} Dictionaries
+      %li
+        %a{:href => "/dictionary_words"} Dictionary Words
+      %li
+        %a{:href => "/hashes"} Hashes
+      %li
+        %a{:href => "/news"} News
+    #container
+      = yield

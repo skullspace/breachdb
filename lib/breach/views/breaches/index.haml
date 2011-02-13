@@ -1,0 +1,25 @@
+%table
+  %thead
+    %tr
+      %th Name
+      %th Breach Date
+      %th Progress
+      %th Cracked
+      %th Hashes
+      %th
+  %tbody
+    - @breaches.each do |breach|
+      %tr
+        %td
+          %a{:href => breach.breach_url}= breach.breach_name
+        %td= breach.breach_date
+        %td
+          - cracked_percentage = (breach.cracked_percentage * 1000).round/10.0
+          .exo-progress-wrapper
+            %progress.exo-progress{ :value => cracked_percentage, :max => 100 }
+              .exo-progress-bar{ :style => "width: #{cracked_percentage*3}px" }
+            .exo-progress-value== #{cracked_percentage}%
+        %td= breach.cracked_count
+        %td= breach.hash_count
+        %td
+
