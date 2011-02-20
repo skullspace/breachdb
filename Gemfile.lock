@@ -2,8 +2,11 @@ GEM
   remote: http://rubygems.org/
   specs:
     activesupport (3.0.3)
+    attic (0.5.3)
     builder (3.0.0)
     columnize (0.3.2)
+    gibbler (0.8.9)
+      attic (>= 0.4.0)
     haml (3.0.25)
     i18n (0.5.0)
     json (1.5.1)
@@ -36,6 +39,7 @@ PLATFORMS
 DEPENDENCIES
   activesupport (= 3.0.3)
   builder
+  gibbler
   haml
   i18n
   json
