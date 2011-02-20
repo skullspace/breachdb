@@ -3,21 +3,6 @@ require 'gibbler/aliases'
 module Breach
   CACHE = Moneta::File.new(:path => "/tmp/breachdb/cache")
 
-  class Cache
-
-    def self.set(key, obj,*)
-      CACHE[key] = obj
-    end
-
-    def self.get(key)
-      CACHE[key]
-    end
-
-    def self.delete(key)
-      CACHE.delete[key]
-    end
-  end
-
   # some caching stuff for sequel model
   class Sequel::Model
     module CachedMethodsApi
@@ -57,7 +42,7 @@ module Breach
     end
 
     def _cache(key,&block)
-      Cache.get(key) or Cache.set(key,yield)
+      CACHE[key] or CACHE[key] = yield
     end
   end
 end
