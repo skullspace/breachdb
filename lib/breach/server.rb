@@ -1,19 +1,6 @@
 
 module Breach
   class Server < Sinatra::Base
-    def initialize
-      @hash = Hash.new("")
-      super
-    end
-
-    def cache(key,&block)
-      @hash[key] ||= block.call
-    end
-
-    def expire(key)
-      @hash.delete(key)
-    end
-
     set :haml, :format => :html5
 
     set :public, File.dirname(__FILE__) + '/public'
