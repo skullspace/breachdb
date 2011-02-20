@@ -1,0 +1,45 @@
+- All Breaches
+  - ron wants progress bars to animate, on page load. (in 1 second max)
+  - numbers should be displayed 1,000,00
+  - list type of hashes on breach page.
+  - difficulty
+
+- Single Breach
+  - difficulty
+  - downloads
+    - hashes
+    - cracked-hashes with password
+    - uncracked-hashes
+    - passwords
+
+  - stats
+    - top passwords
+    - top types
+    - details
+
+  - cracker names
+
+  - masks
+    - statics
+    - top ten
+
+- Cracker
+  - cracked count
+  - breaches
+  - type
+  - experience
+  - submission count
+  - lots of stats.
+  - list of pending submissions
+
+Password
+  - breaches
+  - who cracked it first
+  - which top masks it belongs to
+  - password rating (difficulty)
+
+
+Submission
+  - submit password(s) as file
+  - name
+  - submission
