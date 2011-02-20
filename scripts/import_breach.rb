@@ -99,16 +99,16 @@ sleep(1)
 group_interval = rand(10000) + 20000
 i = 1
 hashes.keys().each_slice(group_interval) do |hash_group|
-	puts("Importing hashes #{i} to #{i + group_interval}...")
+	puts("Importing hashes #{i} to #{[i + group_interval, hashes.keys.size()].min()}...")
 	i = i + group_interval
 
 	insert = []
 	hash_group.each() do |hash|
 		count = hashes[hash]
-		insert << "('#{Mysql::quote(breach_id.to_s)}', '#{Mysql::quote(hash)}', '#{Mysql::quote(hash_type_id)}', '#{Mysql::quote(hash_type_id == '-1' ? '1' : '0')}', '#{Mysql::quote(count.to_s)}')"
+		insert << "('#{Mysql::quote(breach_id.to_s)}', '#{Mysql::quote(hash)}', '#{Mysql::quote(hash_type_id)}', '#{Mysql::quote(count.to_s)}')"
 	end
 	my.query("INSERT INTO `hash`
-		(`hash_breach_id`, `hash_hash`, `hash_hash_type_id`, `hash_is_cracked`, `hash_count`)
+		(`hash_breach_id`, `hash_hash`, `hash_hash_type_id`, `hash_count`)
 			VALUES #{insert.join(',')}")
 end
 

@@ -1,4 +1,5 @@
 require 'logger'
+
 module Breach
   DB = Sequel.connect("mysql2://root@localhost/breachdb", :loggers => [Logger.new($stdout)])
 end
