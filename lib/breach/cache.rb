@@ -43,7 +43,7 @@ module Breach
         end
 
         define_method method_name do |*args|
-          _cache [method_name,args].digest do
+          _cache [self.class,method_name,args].digest do
             send cached_method_name
           end
         end
