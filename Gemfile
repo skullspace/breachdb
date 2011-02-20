@@ -10,6 +10,8 @@ gem 'i18n'
 gem 'haml'
 gem 'builder'
 gem "activesupport", "3.0.3"
+gem 'moneta'
+gem 'xattr'
 
 group :development do
   gem 'ruby-debug'

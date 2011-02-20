@@ -8,6 +8,7 @@ require 'active_support/inflector'
 
 $:.unshift File.expand_path(__FILE__+'/../','lib')
 
+require 'breach/cache'
 require 'breach/db'
 require 'breach/server'
 require 'rack/cache'
