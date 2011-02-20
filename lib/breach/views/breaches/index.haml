@@ -6,6 +6,7 @@
       %th Progress
       %th Cracked
       %th Hashes
+      %th Hash Type
       %th
   %tbody
     - @breaches.each do |breach|
@@ -21,5 +22,6 @@
             .exo-progress-value== #{cracked_percentage}%
         %td= breach.cracked_count
         %td= breach.hash_count
+        %td "plaintext, raw-md5, crypt, des"
         %td
 
