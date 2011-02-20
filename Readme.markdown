@@ -9,11 +9,7 @@ Requirements
 
 Installation
 --------
- 
 
-
-  gem install bundler
-
-  bundle install
-
-  bundle exec rackup
+    gem install bundler
+    bundle install
+    bundle exec rackup
