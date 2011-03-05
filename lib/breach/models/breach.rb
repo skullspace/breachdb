@@ -21,6 +21,7 @@ module Breach
       end
 
       def cracked_count
+        cracked_hashes_dataset.sum(:hash_count).to_i
       end
 
       def hash_types
