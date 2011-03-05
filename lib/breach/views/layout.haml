@@ -199,8 +199,81 @@
         border-top: 1px solid #E3E3E3;
         border-bottom: 1px solid #E3E3E3;
       }
+      .dataTables_wrapper {
+        background-color: #eeeeee; }
+        .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing {
+          height: 35px;
+          line-height: 35px;
+          margin: 0 1em; }
+        .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_paginate {
+          border-top: 1px solid #d4d4d4;
+          margin: 0;
+          padding: 5px 1em;
+          color: #a9a9a9;
+          font-size: 12px;
+          height: 20px;
+          line-height: 20px;
+          border-bottom-right-radius: 5px;
+          -moz-border-radius-bottomright: 5px;
+          -webkit-border-bottom-right-radius: 5px;
+          border-bottom-left-radius: 5px;
+          -moz-border-radius-bottomleft: 5px;
+          -webkit-border-bottom-left-radius: 5px; }
+          .dataTables_wrapper .dataTables_info .paginate_button, .dataTables_wrapper .dataTables_info .paginate_active, .dataTables_wrapper .dataTables_paginate .paginate_button, .dataTables_wrapper .dataTables_paginate .paginate_active {
+            background: white;
+            padding: 3px 5px;
+            margin: 1px 2px;
+            border-radius: 3px;
+            -moz-border-radius: 3px;
+            -webkit-border-radius: 3px;
+            cursor: pointer;
+            border: 1px solid #d4d4d4; }
+            .dataTables_wrapper .dataTables_info .paginate_button:hover, .dataTables_wrapper .dataTables_info .paginate_active:hover, .dataTables_wrapper .dataTables_paginate .paginate_button:hover, .dataTables_wrapper .dataTables_paginate .paginate_active:hover {
+              background: #eeeeee;
+              color: black; }
+          .dataTables_wrapper .dataTables_info .paginate_active, .dataTables_wrapper .dataTables_paginate .paginate_active {
+            background: #eeeeee;
+            color: black;
+            cursor: default;
+            border: 1px solid none; }
+            .dataTables_wrapper .dataTables_info .paginate_active:hover, .dataTables_wrapper .dataTables_paginate .paginate_active:hover {
+              background: #eeeeee; }
+        .dataTables_wrapper .dataTables_length {
+          float: left; }
+        .dataTables_wrapper .dataTables_filter {
+          float: right; }
 
-      tr:nth-child(even)  { background-color:#F2F2F2; }
+      table {
+        width: 100%;
+        border-spacing: 0;
+        font-size: 12px;
+        clear: both; }
+        table tbody tr, table thead tr {
+          height: 30px;
+          line-height: 160%; }
+          table tbody tr.odd, table thead tr.odd {
+            background: #f8fafa; }
+          table tbody tr:hover, table thead tr:hover {
+            background: #dbe9ff; }
+          table tbody tr td, table tbody tr th, table thead tr td, table thead tr th {
+            line-height: 160%;
+            padding: 0 1em;
+            vertical-align: middle;
+            border-bottom: 1px solid #eeeeee;
+            line-height: 160%;
+            padding: 0 1em;
+            vertical-align: middle; }
+          table tbody tr th, table thead tr th {
+            border-top: 1px solid #dddddd;
+            border-bottom: 1px solid #dddddd;
+            background: #eeeeee;
+            text-align: left; }
+            table tbody tr th a, table thead tr th a {
+              color: #666666;
+              text-decoration: none;
+              cursor: pointer; }
+              table tbody tr th a:hover, table thead tr th a:hover {
+                border-bottom: 1px solid #666666; }
     %title BreachDB
     %script{:src=> 'js/jquery.js'}
     %script{:src=> 'js/jquery.dataTables.min.js'}
