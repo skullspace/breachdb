@@ -12,7 +12,7 @@ gem 'builder'
 gem "activesupport", "3.0.3"
 gem 'moneta'
 gem 'xattr'
-gem 'gibbler'
+gem 'rake'
 
 group :development do
   gem 'ruby-debug'
