@@ -9,6 +9,13 @@ module Breach
     end
 
     cache_methods do
+      # hash_count
+      #   - first attempts cache hit
+      #   - otherwise calls hash_count!
+      #
+      # hash_count!
+      #   - original method
+      #
       def hash_count
         hashes_dataset.sum(:hash_count).to_i
       end
