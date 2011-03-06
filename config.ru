@@ -8,10 +8,15 @@ require 'active_support/inflector'
 
 $:.unshift File.expand_path(__FILE__+'/../','lib')
 
+class Object
+  include Gibbler::String
+end
+
 require 'breach/cache'
 require 'breach/db'
 require 'breach/server'
 require 'rack/cache'
+
 
 use Rack::Cache,
   :verbose     => true,
