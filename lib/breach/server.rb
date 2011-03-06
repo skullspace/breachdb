@@ -13,6 +13,11 @@ module Breach
       haml :'breaches/index'
     end
 
+    get '/breaches/:id' do
+      @breach = Breach[params[:id]]
+      haml :'breaches/show'
+    end
+
     get '/submissions' do
       content_type :json
       Submission.limit(10).map(&:values).to_json 
