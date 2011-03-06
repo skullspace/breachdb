@@ -1,5 +1,5 @@
 require 'moneta/file'
-
+require 'gibbler'
 module Breach
   CACHE = Moneta::File.new(:path => "/tmp/breachdb/cache")
 
@@ -28,7 +28,7 @@ module Breach
         end
 
         define_method method_name do |*args|
-          _cache [self.class,method_name,args].object_id do
+          _cache [self.class.name.to_sym,self.breach_id,method_name,args] do
             send cached_method_name
           end
         end
@@ -43,7 +43,7 @@ module Breach
 
 
     def _cache(key,&block)
-      key = key.to_s
+      key = key.gibbler.to_s
       CACHE[key] or CACHE[key] = yield
     end
   end
