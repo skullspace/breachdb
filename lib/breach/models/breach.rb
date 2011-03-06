@@ -1,7 +1,13 @@
 module Breach
   class Breach < Sequel::Model(:breach)
     set_primary_key :breach_id
+
     one_to_many :hashes, :key => :hash_breach_id, :class => 'Breach::Hash'
+
+    many_to_many :hash_types,
+      :join_table => :hash,
+        :right_key => :hash_hash_type_id,
+        :left_key  => :hash_breach_id
 
     one_to_many( :cracked_hashes,
                  :key   => :hash_breach_id,
@@ -25,8 +31,8 @@ module Breach
         cracked_hashes_dataset.sum(:hash_count).to_i
       end
 
-      def hash_types
-        DB["SELECT distinct(hash_type.hash_type_english_name) FROM hash INNER JOIN hash_type ON (hash.hash_hash_type_id = hash_type.hash_type_id) WHERE hash_breach_id = #{self.breach_id}"].map {|r| r[:hash_type_english_name] }.join(",")
+      def uniq_hash_type_names
+        hash_types_dataset.distinct.select_map(:hash_type_english_name)
       end
     end
 
