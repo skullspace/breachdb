@@ -12,7 +12,7 @@
     - @breaches.each do |breach|
       %tr
         %td
-          %a{:href => breach.breach_url}= breach.breach_name
+          %a{:href => "/breaches/#{breach.breach_id}"}= breach.breach_name
         %td= breach.breach_date
         %td
           - cracked_percentage = (breach.cracked_percentage * 1000).round/10.0
