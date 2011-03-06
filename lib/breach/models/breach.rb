@@ -1,5 +1,6 @@
 module Breach
   class Breach < Sequel::Model(:breach)
+    set_primary_key :breach_id
     one_to_many :hashes, :key => :hash_breach_id, :class => 'Breach::Hash'
 
     one_to_many( :cracked_hashes,
@@ -28,7 +29,6 @@ module Breach
         DB["SELECT distinct(hash_type.hash_type_english_name) FROM hash INNER JOIN hash_type ON (hash.hash_hash_type_id = hash_type.hash_type_id) WHERE hash_breach_id = #{self.breach_id}"].map {|r| r[:hash_type_english_name] }.join(",")
       end
     end
-
 
     def cracked_percentage
       return 0 if hash_count == 0
