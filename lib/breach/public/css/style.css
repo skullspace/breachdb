@@ -90,8 +90,6 @@ progress.exo-progress {
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
-  -moz-box-shadow: 0px 1px 2px #000;
-  -webkit-box-shadow: 0px 1px 2px #000;
   background: none;
   background: -webkit-gradient(linear, left top, left bottom, color-stop(.3, black),color-stop(1, #444444));
   background: -moz-linear-gradient(top, black, #444444);
@@ -118,8 +116,6 @@ progress.exo-progress::-webkit-progress-bar-value {
   text-align: left;
   color: #eee;
   font-size: 14px;
-  -webkit-text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.7);
-  -moz-text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.7);
   text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.7);
 }
 
