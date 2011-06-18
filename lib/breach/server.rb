@@ -7,7 +7,7 @@ module Breach
     set :views,  File.dirname(__FILE__) + '/views'
 
     get "/breaches" do
-      response["Cache-Control"] = "max-age=60, public"
+      response["Cache-Control"] = "max-age=86400, public"
 
       @breaches = Breach.all
       haml :'breaches/index'
