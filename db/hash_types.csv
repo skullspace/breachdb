@@ -1,67 +1,68 @@
--1|0|-1|Plaintext|Plaintext|0|0|Password|Password|Plaintext passwords (not hashed at all)"
-1|4|2780000|DES|Traditional DES|1|0|CCNf8Sbh3HDfQ|U*U*U*U*|
-2|8|93184|BSDI|BSDI DES (x725)|1|0|_K9..SaltNrQgIYUAeoY|726 even|
-3|9|12878|MD5|FreeBSD MD5|1|0|$1$12345678$aIccj83HRDBo6ux1bVx7D1|0123456789ABCDE|Used by default on most Linux systems"
-4|10|744|BF|OpenBSD Blowfish|1|0|$2a$05$CCCCCCCCCCCCCCCCCCCCC.E5YPO9kmyuRGyh0XouQYb4YMJKvyOeW|U*U|Used by default on most BSD systems - painful to crack"
-5|5|1311000|AFS|Kerberos AFS DES|1|0|$K4$64c7c2aedccd70d6,0123456789|U*U***U*|
-6|1|13686000|LM|LM DES|0|0|$LM$73cc402bd3e79175|SCLEROS|Used by default on most Windows systems before Vista - max length = 7"
-7|1|28069000|NT|NT MD4|0|0|$NT$b7e4b9022cd45f275334bbdb83bb5be5|John the Ripper|Used by default on most Windows systems, including newer ones"
-8|3|3023000|XSHA|Mac OS X 10.4+ salted SHA-1|1|0|0E6A48F765D0FFFFF6247FA80D748E615F91DD0C7431E4D9|macintosh|
-9|1|16313000|mscash|M$ Cache Hash|1|0|M$test3#14dd041848e12fc48c0aa7a416a4a00c|test3|
-10|9|12792|md5a|Apache MD5|1|0|$apr1$GBx.D/..$yfVeeYFCIiEXInfRhBRpy/|ripper|
-11|5|1604000|hmac-md5|HMAC MD5|1|0|what do ya want for nothing?#750c783e6ab0b503eaa86e310a5db738|Jefe|
-12|2|3475000|PO|Post.Office MD5|1|0|9be296cf73d2f548dae3cccafaff1dd982916963c701200625cba2acd40d6569|FRED|
-13|2|6361000|raw-MD5|Raw MD5|0|0|378e2c4a07968da2eca692320136433d|thatsworking|
-14|2|5367000|MD5-gen|md5_gen(0): md5($p)  (raw-md5)|0|0|md5_gen(0)378e2c4a07968da2eca692320136433d|thatsworking|
-15|2|5293000|MD5-gen|md5_gen(1): md5($p.$s)  (joomla)|1|0|md5_gen(1)4fa1e9d54d89bfbe48b4c0f0ca0a3756$laxcaXPjgcdKdKEbkX1SIjHKm0gfYt1c|thatsworking|Used by Joomla"
-16|4|2624000|MD5-gen|md5_gen(2): md5(md5($p))  (e107)|0|0|md5_gen(2)ccd3c4231a072b5e13856a2059d04fad|thatsworking|Used by e107"
-17|5|1728000|MD5-gen|md5_gen(3): md5(md5(md5($p)))|0|0|md5_gen(3)5d7e6330f69548797c07d97c915690fe|thatsworking|
-18|2|5655000|MD5-gen|md5_gen(4): md5($s.$p)  (OSC)|1|0|md5_gen(4)4a2a1b013da3cda7f7e0625cf3dc3f4c$1234|thatsworking|Used by osCommerce"
-19|2|5385000|MD5-gen|md5_gen(5): md5($s.$p.$s)|1|0|md5_gen(5)c1c8618abfc7bdbc4a3c49c2c2c48f82$1234|thatsworking|
-20|2|5635000|MD5-gen|md5_gen(6): md5(md5($p).$s)|1|0|md5_gen(6)9694d706d1992abf04344c1e7da1c5d3$T &222|thatsworking|
-21|2|5651000|MD5-gen|md5_gen(7): md5(md5($p).$s)  (vBulletin)|1|0|md5_gen(7)de56b00bb15d6db79204bd44383469bc$T &|thatsworking|Used by vBulletin"
-22|4|2663000|MD5-gen|md5_gen(8): md5(md5($s).$p)|1|0|md5_gen(8)02547864bed278658e8f54dd6dfd69b7$123456|thatsworking|
-23|2|5332000|MD5-gen|md5_gen(9): md5($s.md5($p))|1|0|md5_gen(9)4dde7cd4cbf0dc4c59b255ae77352914$123456|thatsworking|
-24|4|2659000|MD5-gen|md5_gen(10): md5($s.md5($s.$p))|1|0|md5_gen(10)f385748e67a2dc1f6379b9124fabc0df$123456|thatsworking|
-25|4|2660000|MD5-gen|md5_gen(11): md5($s.md5($p.$s))|1|0|md5_gen(11)979e6671535cda6db95357d8a0afd9ac$123456|thatsworking|
-26|3|3282000|MD5-gen|md5_gen(12): md5(md5($s).md5($p))  (IPB)|1|0|md5_gen(12)b80eef24d1d01b61b3beff38559f9d26$123456|thatsworking|Used by IPB"
-27|3|3288000|MD5-gen|md5_gen(13): md5(md5($p).md5($s))|1|0|md5_gen(13)7abf788b3abbfc8719d900af96a3763a$123456|thatsworking|
-28|2|5182000|MD5-gen|md5_gen(14): md5($s.md5($p).$s)|1|0|md5_gen(14)d6321956964b2d27768df71d139eabd2$123456|thatsworking|
-29|9|3041|phpass-md5|md5_gen(17): phpass ($P$ or $H$)|1|0|$P$B12345678L6Lpt4BxNotVIMILOa9u81|JohnRipper|Used by PHPBB, Wordpress, etc."
-30|9|2823|MD5-gen|PHPass MD5|1|0|md5_gen(17)5R3ueot5zwV.7MyzAItyg/$912345678|thatsworking|
-31|3|3186000|IPB2|IPB2 MD5|1|0|$IPB2$5d75343455$de98ba8ca7bb16f43af05e9e4fb8afee|matrix|
-32|3|3153000|raw-sha1|Raw SHA-1|0|0|f879f8090e92232ed07092ebed6dc6170457a21d|azertyuiop2|
-33|4|2711000|krb4|Kerberos v4 TGT|1|0|$af$UMICH.EDU$bebcedf43f7f2aa78cf9c0639e494c92|abcdefg12345678|
-34|8|51130|krb5|Kerberos v5 TGT|1|0|$krb5$oskov$ACM.UIUC.EDU$4730d7249765615d6f3652321c4fb76d09fb9cd06faeb0c31b8737f9fdfcde4bd4259c31cb1dff25df39173b09abdff08373302d99ac09802a290915243d9f0ea0313fdedc7f8d1fae0d9df8f0ee6233818d317f03a72c2e77b480b2bc50d1ca14fba85133ea00e472c50dbc825291e2853bd60a969ddb69dae35b604b34ea2c2265a4ffc72e9fb811da17c7f2887ccb17e2f87cd1f6c28a9afc0c083a9356a9ee2a28d2e4a01fc7ea90cc8836b8e25650c3a1409b811d0bad42a59aa418143291d42d7b1e6cb5b1876a4cc758d721323a762e943f774630385c9faa68df6f3a94422f97|p4ssW0rd|
-35|3|3057000|nsldap|Netscape LDAP SHA|0|0|{SHA}0ijZPTcJXMa+t2XnEbEwSOkvQu0=|ccccccccc|
-36|4|2962000|ssha|Netscape LDAP SSHA|1|0|{SSHA}YbB2R1D2AlzYc9wk/YPtslG7NoiOWaoMOztLHA==|ripthispassword|
-37|4|2959000|openssha|OpenLDAP SSHA|1|0|{SSHA}Uf2x9YxSWZZNAi2t1QXbG2PmT07AtURl|chien|
-38|9|22425|bfegg|Eggdrop|0|0|+vPBrs07OTXE/|tesztuser|
-39|6|764600|oracle|Oracle|1|0|O$BOB#ec8147abb3373d53|LONG_MOT_DE_PASSE_OUI|
-40|3|3076000|oracle11|Oracle 11g|1|0|3437FF72BD69E3FB4D10C750B92B8FB90B155E26227B9AB62D94F54E5951|oracle|
-41|2|3630000|mysql|MYSQL|0|0|697a7de87c5390b2|drew|
-42|5|1637000|mysql-sha1|MySQL 4.1 double-SHA-1|0|0|*2C905879F74F28F8570989947D06A8429FB943E6|verysecretpassword|
-43|7|204455|lotus5|Lotus5|0|0|69D90B46B1AC0912E5CCF858094BBBFC|dirtydog|
-44|7|115613|DOMINOSEC|More Secure Internet Password|1|0|(GowT5I2hVHZpRWpvGmux)|terazjakiesdwadziesciacos|
-45|7|569408|NETLM|LM C/R DES|1|0|$NETLM$1122334455667788$B3A1B87DBBD4DF3CFA296198DD390C2F4E2E93C5C07B1D8B|MEDUSAFGDUMP12|
-46|6|826130|NETNTLM|NTLMv1 C/R MD4 DES|1|0|$NETNTLM$1122334455667788$B2B2220790F40C88BCFF347C652F67A7C4A70D3BEBD70233|cory21|
-47|6|623093|NETLMv2|LMv2 C/R MD4 HMAC-MD5|1|0|$NETLMv2$ADMINISTRATORFOODOM$1122334455667788$6F64C5C1E35F68DD80388C0F00F34406$F0F3FF27037AA69F|1337adminPASS|
-48|7|555651|NETNTLMv2|NTLMv2 C/R MD4 HMAC-MD5|1|0|$NETNTLMv2$USER1W2K3ADWIN7$1122334455667788$027EF88334DAA460144BDB678D4F988D$010100000000000092809B1192AACA01E01B519CB0248776000000000200120057004F0052004B00470052004F00550050000000000000000000|SomeLongPassword1BlahBlah|
-49|5|1392000|NETHALFLM|HalfLM C/R DES|1|0|$NETHALFLM$1122334455667788$1354FD5ABF3B627B8B49587B8F2BBA0F9F6C5E420824E0A2|ZEEEZ@1|
-50|6|829514|MSCHAPv2|MSCHAPv2 C/R MD4 DES|1|0|$MSCHAPv2$d07054459a1fdbc266a006f0220e6fac$33c8331a9b03b7e003f09dd253d740a2bead544143cc8bde$3545cb1d89b507a5de104435e81b14a4$testuser1|Cricket8|
-51|3|3302000|mssql|MS-SQL|1|0|0x01000508513EADDF6DB7DDD270CCA288BF097F2FF69CC2DB74FBB9644D6901764F999BAB9ECB80DE578D92E3F80D|BAR|
-52|3|3303000|mssql05|MS-SQL05|1|0|0x01004086CEB60ED526885801C23B366965586A43D3DEAC6DD3FD|titi|
-53|3|3355000|epi|EPiServer SID Hashes|1|0|0x5F1D84A6DE97E2BEFB637A3CB5318AFEF0750B856CF1836BD1D4470175BE 0x4D5EFDFA143EDF74193076F174AC47CEBF2F417F|Abc.!23|
-54|2|5657000|phps|PHPS MD5|1|0|$PHPS$433925$5d756853cd63acee76e6dcd6d3728447|welcome|
-55|1|31296000|mysql-fast|MYSQL_fast|0|0|77ff75006118bab8|hacker|
-56|2|5537000|pix-md5|PIX MD5|0|0|NuLKvvWGg.x9HEKO|password|
-57|5|1100000|sapG|SAP CODVN G (PASSCODE)|1|0|ROOT                                    $1194E38F14B9F3F8DA1B181F14DEB70E7BDCC239|KID|
-58|5|1717000|sapB|SAP BCODE|1|0|ROOT                                    $8366A4E9E6B72CB0|KID|
-59|2|4714000|md5ns|Netscreen MD5|1|0|a$nMf9FkrCIgHGccRAxsBAwxBtDtPHfn|netscreen|
-60|5|1558000|HDAA|HTTP Digest access authentication|1|0|$response$faa6cb7d676e5b7c17fcbf966436aa0c$moi$myrealm$GET$/$af32592775d27b1cd06356b3a0db9ddf$00000001$8e1d49754a25aea7$auth|kikou|
-61|7|266112|crypt|generic crypt(3)|1|0|XXxzOu6maQKqQ|*U*U*U*U|
-62|3|-1|raw-sha224|Raw SHA-224|0|1|d63dc919e201d7bc4c825630d2cf25fdc93d4b2f0d46706d29038d01|password|
-63|3|-1|raw-sha256|Raw SHA-256|0|1|5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8|password|
-64|3|-1|raw-sha384|Raw SHA-384|0|1|a8b64babd0aca91a59bdbb7761b421d4f2bb38280d3a75ba0f21f2bebc45583d446c598660c94ce680c47d19c30783a7|password|
-65|3|-1|raw-sha512|Raw SHA-512|0|1|b109f3bbbc244eb82441917ed06d618b9008dd09b3befd1b5e07394c706a8bb980b1d7785e5976ec049b46df5f1326af5a2ea6d103fd07c95385ffab0cacbc86|password|
-66|2|-1|ripe-md160|RIPEMD-160|0|1|2c08e8f5884750a7b99f6f2f342fc638db25ff31|password|
+-1|0|-1|Plaintext|Plaintext|0|0|^.*$|Password|Password|Plaintext passwords (not hashed at all)"||
+1|4|2780000|DES|Traditional DES|1|0|^[A-Za-z0-9+/]{13}$|CCNf8Sbh3HDfQ|U*U*U*U*|||
+2|8|93184|BSDI|BSDI DES (x725)|1|0|^.*$|_K9..SaltNrQgIYUAeoY|726 even|||
+3|9|12878|MD5|FreeBSD MD5|1|0|^$1$[^$]+$[A-Za-z0-9+/]+$|$1$12345678$aIccj83HRDBo6ux1bVx7D1|0123456789ABCDE|Used by default on most Linux systems"||
+4|10|744|BF|OpenBSD Blowfish|1|0|^$2a$[0-9]+$[^$]+$[A-Za-z0-9+/]+$|$2a$05$CCCCCCCCCCCCCCCCCCCCC.E5YPO9kmyuRGyh0XouQYb4YMJKvyOeW|U*U|Used by default on most BSD systems - painful to crack"||
+5|5|1311000|AFS|Kerberos AFS DES|1|0|^$K4$[A-Fa-f0-9]+$|$K4$64c7c2aedccd70d6|123456789|U*U***U*||
+6|1|13686000|LM|LM DES|0|0|^$LM$[A-Fa-f0-9]+$|$LM$73cc402bd3e79175|SCLEROS|Used by default on most Windows systems before Vista - max length = 7"||
+7|1|28069000|NT|NT MD4|0|0|^$NT$[A-Fa-f0-9]{32}$|$NT$b7e4b9022cd45f275334bbdb83bb5be5|John the Ripper|Used by default on most Windows systems| including newer ones"|
+8|3|3023000|XSHA|Mac OS X 10.4+ salted SHA-1|1|0|^[A-Fa-f0-9]{48}$|0E6A48F765D0FFFFF6247FA80D748E615F91DD0C7431E4D9|macintosh|||
+9|1|16313000|mscash|M$ Cache Hash|1|0|^.*$|M$test3#14dd041848e12fc48c0aa7a416a4a00c|test3|||
+10|9|12792|md5a|Apache MD5|1|0|^.*$|$apr1$GBx.D/..$yfVeeYFCIiEXInfRhBRpy/|ripper|||
+11|5|1604000|hmac-md5|HMAC MD5|1|0|^.*$|what do ya want for nothing?#750c783e6ab0b503eaa86e310a5db738|Jefe|||
+12|2|3475000|PO|Post.Office MD5|1|0|^.*$|9be296cf73d2f548dae3cccafaff1dd982916963c701200625cba2acd40d6569|FRED|||
+13|2|6361000|raw-MD5|Raw MD5|0|0|^[A-Fa-f0-9]{32}$|378e2c4a07968da2eca692320136433d|thatsworking|||
+14|2|5367000|MD5-gen|md5_gen(0): md5($p)  (raw-md5)|0|0|^md5_gen\(0\)[A-Fa-f0-9]{32}|md5_gen(0)378e2c4a07968da2eca692320136433d|thatsworking|||
+15|2|5293000|MD5-gen|md5_gen(1): md5($p.$s)  (joomla)|1|0|^md5_gen\(1\)[A-Fa-f0-9]{32}\$.*$|md5_gen(1)4fa1e9d54d89bfbe48b4c0f0ca0a3756$laxcaXPjgcdKdKEbkX1SIjHKm0gfYt1c|thatsworking|Used by Joomla"||
+16|4|2624000|MD5-gen|md5_gen(2): md5(md5($p))  (e107)|0|0|^md5_gen\(2\)[A-Fa-f0-9]{32}|md5_gen(2)ccd3c4231a072b5e13856a2059d04fad|thatsworking|Used by e107"||
+17|5|1728000|MD5-gen|md5_gen(3): md5(md5(md5($p)))|0|0|^md5_gen\(3\)[A-Fa-f0-9]{32}|md5_gen(3)5d7e6330f69548797c07d97c915690fe|thatsworking|||
+18|2|5655000|MD5-gen|md5_gen(4): md5($s.$p)  (OSC)|1|0|^md5_gen\(4\)[A-Fa-f0-9]{32}\$.*$|md5_gen(4)4a2a1b013da3cda7f7e0625cf3dc3f4c$1234|thatsworking|Used by osCommerce"||
+19|2|5385000|MD5-gen|md5_gen(5): md5($s.$p.$s)|1|0|^md5_gen\(5\)[A-Fa-f0-9]{32}\$.*$|md5_gen(5)c1c8618abfc7bdbc4a3c49c2c2c48f82$1234|thatsworking|||
+20|2|5635000|MD5-gen|md5_gen(6): md5(md5($p).$s)|1|0|^md5_gen\(6\)[A-Fa-f0-9]{32}\$.*$|md5_gen(6)9694d706d1992abf04344c1e7da1c5d3$T &222|thatsworking|||
+21|2|5651000|MD5-gen|md5_gen(7): md5(md5($p).$s)  (vBulletin)|1|0|^md5_gen\(7\)[A-Fa-f0-9]{32}\$.*$|md5_gen(7)de56b00bb15d6db79204bd44383469bc$T &|thatsworking|Used by vBulletin"||
+22|4|2663000|MD5-gen|md5_gen(8): md5(md5($s).$p)|1|0|^md5_gen\(8\)[A-Fa-f0-9]{32}\$.*$|md5_gen(8)02547864bed278658e8f54dd6dfd69b7$123456|thatsworking|||
+23|2|5332000|MD5-gen|md5_gen(9): md5($s.md5($p))|1|0|^md5_gen\(9\)[A-Fa-f0-9]{32}\$.*$|md5_gen(9)4dde7cd4cbf0dc4c59b255ae77352914$123456|thatsworking|||
+24|4|2659000|MD5-gen|md5_gen(10): md5($s.md5($s.$p))|1|0|^md5_gen\(10\)[A-Fa-f0-9]{32}\$.*$|md5_gen(10)f385748e67a2dc1f6379b9124fabc0df$123456|thatsworking|||
+25|4|2660000|MD5-gen|md5_gen(11): md5($s.md5($p.$s))|1|0|^md5_gen\(11\)[A-Fa-f0-9]{32}\$.*$|md5_gen(11)979e6671535cda6db95357d8a0afd9ac$123456|thatsworking|||
+26|3|3282000|MD5-gen|md5_gen(12): md5(md5($s).md5($p))  (IPB)|1|0|^md5_gen\(12\)[A-Fa-f0-9]{32}\$.*$|md5_gen(12)b80eef24d1d01b61b3beff38559f9d26$123456|thatsworking|Used by IPB"||
+27|3|3288000|MD5-gen|md5_gen(13): md5(md5($p).md5($s))|1|0|^md5_gen\(13\)[A-Fa-f0-9]{32}\$.*$|md5_gen(13)7abf788b3abbfc8719d900af96a3763a$123456|thatsworking|||
+28|2|5182000|MD5-gen|md5_gen(14): md5($s.md5($p).$s)|1|0|^md5_gen\(14\)[A-Fa-f0-9]{32}\$.*$|md5_gen(14)d6321956964b2d27768df71d139eabd2$123456|thatsworking|||
+29|9|3041|phpass-md5|md5_gen(17): phpass ($P$ or $H$)|1|0|^$[PH]$[A-Za-z0-9+/]+$|$P$B12345678L6Lpt4BxNotVIMILOa9u81|JohnRipper|Used by PHPBB| Wordpress| etc."
+30|9|2823|MD5-gen|PHPass MD5|1|0|^md5_gen\(17\)[A-Za-z0-9+/]+$.*$|md5_gen(17)5R3ueot5zwV.7MyzAItyg/$912345678|thatsworking|||
+31|3|3186000|IPB2|IPB2 MD5|1|0|^.*$|$IPB2$5d75343455$de98ba8ca7bb16f43af05e9e4fb8afee|matrix|||
+32|3|3153000|raw-sha1|Raw SHA-1|0|0|^.*$|f879f8090e92232ed07092ebed6dc6170457a21d|azertyuiop2|||
+33|4|2711000|krb4|Kerberos v4 TGT|1|0|^.*$|$af$UMICH.EDU$bebcedf43f7f2aa78cf9c0639e494c92|abcdefg12345678|||
+34|8|51130|krb5|Kerberos v5 TGT|1|0|^.*$|$krb5$oskov$ACM.UIUC.EDU$4730d7249765615d6f3652321c4fb76d09fb9cd06faeb0c31b8737f9fdfcde4bd4259c31cb1dff25df39173b09abdff08373302d99ac09802a290915243d9f0ea0313fdedc7f8d1fae0d9df8f0ee6233818d317f03a72c2e77b480b2bc50d1ca14fba85133ea00e472c50dbc825291e2853bd60a969ddb69dae35b604b34ea2c2265a4ffc72e9fb811da17c7f2887ccb17e2f87cd1f6c28a9afc0c083a9356a9ee2a28d2e4a01fc7ea90cc8836b8e25650c3a1409b811d0bad42a59aa418143291d42d7b1e6cb5b1876a4cc758d721323a762e943f774630385c9faa68df6f3a94422f97|p4ssW0rd|||
+35|3|3057000|nsldap|Netscape LDAP SHA|0|0|^.*$|{SHA}0ijZPTcJXMa+t2XnEbEwSOkvQu0=|ccccccccc|||
+36|4|2962000|ssha|Netscape LDAP SSHA|1|0|^.*$|{SSHA}YbB2R1D2AlzYc9wk/YPtslG7NoiOWaoMOztLHA==|ripthispassword|||
+37|4|2959000|openssha|OpenLDAP SSHA|1|0|^.*$|{SSHA}Uf2x9YxSWZZNAi2t1QXbG2PmT07AtURl|chien|||
+38|9|22425|bfegg|Eggdrop|0|0|^.*$|+vPBrs07OTXE/|tesztuser|||
+39|6|764600|oracle|Oracle|1|0|^.*$|O$BOB#ec8147abb3373d53|LONG_MOT_DE_PASSE_OUI|||
+40|3|3076000|oracle11|Oracle 11g|1|0|^.*$|3437FF72BD69E3FB4D10C750B92B8FB90B155E26227B9AB62D94F54E5951|oracle|||
+41|2|3630000|mysql|MYSQL|0|0|^.*$|697a7de87c5390b2|drew|||
+42|5|1637000|mysql-sha1|MySQL 4.1 double-SHA-1|0|0|^.*$|*2C905879F74F28F8570989947D06A8429FB943E6|verysecretpassword|||
+43|7|204455|lotus5|Lotus5|0|0|^.*$|69D90B46B1AC0912E5CCF858094BBBFC|dirtydog|||
+44|7|115613|DOMINOSEC|More Secure Internet Password|1|0|^.*$|(GowT5I2hVHZpRWpvGmux)|terazjakiesdwadziesciacos|||
+45|7|569408|NETLM|LM C/R DES|1|0|^.*$|$NETLM$1122334455667788$B3A1B87DBBD4DF3CFA296198DD390C2F4E2E93C5C07B1D8B|MEDUSAFGDUMP12|||
+46|6|826130|NETNTLM|NTLMv1 C/R MD4 DES|1|0|^.*$|$NETNTLM$1122334455667788$B2B2220790F40C88BCFF347C652F67A7C4A70D3BEBD70233|cory21|||
+47|6|623093|NETLMv2|LMv2 C/R MD4 HMAC-MD5|1|0|^.*$|$NETLMv2$ADMINISTRATORFOODOM$1122334455667788$6F64C5C1E35F68DD80388C0F00F34406$F0F3FF27037AA69F|1337adminPASS|||
+48|7|555651|NETNTLMv2|NTLMv2 C/R MD4 HMAC-MD5|1|0|^.*$|$NETNTLMv2$USER1W2K3ADWIN7$1122334455667788$027EF88334DAA460144BDB678D4F988D$010100000000000092809B1192AACA01E01B519CB0248776000000000200120057004F0052004B00470052004F00550050000000000000000000|SomeLongPassword1BlahBlah|||
+49|5|1392000|NETHALFLM|HalfLM C/R DES|1|0|^.*$|$NETHALFLM$1122334455667788$1354FD5ABF3B627B8B49587B8F2BBA0F9F6C5E420824E0A2|ZEEEZ@1|||
+50|6|829514|MSCHAPv2|MSCHAPv2 C/R MD4 DES|1|0|^.*$|$MSCHAPv2$d07054459a1fdbc266a006f0220e6fac$33c8331a9b03b7e003f09dd253d740a2bead544143cc8bde$3545cb1d89b507a5de104435e81b14a4$testuser1|Cricket8|||
+51|3|3302000|mssql|MS-SQL|1|0|^.*$|0x01000508513EADDF6DB7DDD270CCA288BF097F2FF69CC2DB74FBB9644D6901764F999BAB9ECB80DE578D92E3F80D|BAR|||
+52|3|3303000|mssql05|MS-SQL05|1|0|^.*$|0x01004086CEB60ED526885801C23B366965586A43D3DEAC6DD3FD|titi|||
+53|3|3355000|epi|EPiServer SID Hashes|1|0|^.*$|0x5F1D84A6DE97E2BEFB637A3CB5318AFEF0750B856CF1836BD1D4470175BE 0x4D5EFDFA143EDF74193076F174AC47CEBF2F417F|Abc.!23|||
+54|2|5657000|phps|PHPS MD5|1|0|^$PHPS$[^$]+$[A-Fa-f0-9]{32}$|$PHPS$433925$5d756853cd63acee76e6dcd6d3728447|welcome|||
+55|1|31296000|mysql-fast|MYSQL_fast|0|0|^.*$|77ff75006118bab8|hacker|||
+56|2|5537000|pix-md5|PIX MD5|0|0|^.*$|NuLKvvWGg.x9HEKO|password|||
+57|5|1100000|sapG|SAP CODVN G (PASSCODE)|1|0|^.*$|ROOT                                    $1194E38F14B9F3F8DA1B181F14DEB70E7BDCC239|KID|||
+58|5|1717000|sapB|SAP BCODE|1|0|^.*$|ROOT                                    $8366A4E9E6B72CB0|KID|||
+59|2|4714000|md5ns|Netscreen MD5|1|0|^.*$|a$nMf9FkrCIgHGccRAxsBAwxBtDtPHfn|netscreen|||
+60|5|1558000|HDAA|HTTP Digest access authentication|1|0|^.*$|$response$faa6cb7d676e5b7c17fcbf966436aa0c$moi$myrealm$GET$/$af32592775d27b1cd06356b3a0db9ddf$00000001$8e1d49754a25aea7$auth|kikou|||
+61|7|266112|crypt|generic crypt(3)|1|0|^.*$|XXxzOu6maQKqQ|*U*U*U*U|||
+62|3|-1|raw-sha224|Raw SHA-224|0|1|^[A-Fa-f0-9]{56}$|d63dc919e201d7bc4c825630d2cf25fdc93d4b2f0d46706d29038d01|password|||
+63|3|-1|raw-sha256|Raw SHA-256|0|1|^[A-Fa-f0-9]{64}$|5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8|password|||
+64|3|-1|raw-sha384|Raw SHA-384|0|1|^[A-Fa-f0-9]{96}$|a8b64babd0aca91a59bdbb7761b421d4f2bb38280d3a75ba0f21f2bebc45583d446c598660c94ce680c47d19c30783a7|password|||
+65|3|-1|raw-sha512|Raw SHA-512|0|1|^[A-Fa-f0-9]{128}$|b109f3bbbc244eb82441917ed06d618b9008dd09b3befd1b5e07394c706a8bb980b1d7785e5976ec049b46df5f1326af5a2ea6d103fd07c95385ffab0cacbc86|password|||
+66|2|-1|ripe-md160|RIPEMD-160|0|1|^[A-Fa-f0-9]{40}$|2c08e8f5884750a7b99f6f2f342fc638db25ff31|password|||
+67|2|6361000|truncated-md5|Truncated MD5|0|1|^[A-Fa-f0-9]{8}$|e10adc39|123456|The first 8 characters (32 bits) of a md5 hash (used by rootkit.com)||

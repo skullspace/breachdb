@@ -176,7 +176,11 @@
 # @replacements = @accents
 @replacements = @l33t
 
-def l33t(str, start)
+def l33t(str, start, depth)
+  if(depth > 8)
+    return
+  end
+
   start.upto(str.length) { |i|
     c = str[i..i]
     @replacements.each { |replacement|
@@ -187,13 +191,13 @@ def l33t(str, start)
         new_str = String.new(str)
         new_str[i] = to
         puts(new_str)
-        l33t(new_str, i)
+        l33t(new_str, i, depth + 1)
       end
     }
   }
 end
 
 STDIN.read.split("\n").each do |a|
-  l33t(a, 0)
+  l33t(a, 0, 0)
 end
 

@@ -1,0 +1,44 @@
+(footer on every page)
+All data presented here was posted publicly on the Internet at one time or another. BreachDB does not condone or encourage password theft, and it committed to helping users and companies understand the true risk of passwords. For more information, see our <link>faq page</link>. 
+
+
+What, exactly, are you doing?
+I collect statistical data on <em>public</em> password breaches. 
+
+Are you hurting people?
+No, my goal is to raise awareness, particularly for people storing passwords, and help prevent this from happening again. All data on my site was, at one time or another, posted publicly, and we can therefore be certain that the bad guys have not only the passwords, but the email addresses, usernames, and any other leaked information as well. Please see this blog post for more information. 
+
+Can I send you a breach privately?
+Only if it's a publicly known breach that's already been posted offline. If you compromised a site yourself and want to send me the details, you've comed to the wrong place. 
+
+Are you releasing private data?
+No. I only release information that's already out there and that the "bad guys" already have. 
+
+Are you releasing personal data?
+No. I only release aggregate password data, nothing else. 
+
+My site's listed here! 
+That sucks, but remember that somebody, somewhere, has the rest of your data, too. It's your responsibility to make sure this doesn't happen again! 
+
+How can I prevent this type of thing from happening to me?
+There are plenty of ways! 
+* Implement good security and coding standards on your sites
+* Use a 3rd party password system (Facebook, Google, OpenID, Yahoo, etc)
+* Hash passwords with a slow algorithm - bcrypt, phpass-md5, etc
+
+Can you send me the (usernames/email addresses/etc) from a site?
+No. I don't share (or keep) identifying information - that is, information that can harm people. 
+
+Who are you?
+I am Ron Bowes. I run SkullSecurity.org. You can find more information about me there. 
+
+Is this site affiliated with.....
+No (unless you were going to say SkullSecurity.org, my blog). This site is not affiliated with any company or organization. 
+
+How can I help?
+If you have hardware and a familiarity with john, download uncracked hashes in any format, find any plaintexts you can, and submit them to me. 
+If not, then spread the word about the importance of password security! 
+
+Why don't you let me create an account when I submit cracks?
+I refuse to store any private data in this database. 100% of the breachdb site and database are available as snapshots to anybody who wants them - any less would be an invitation to steal them from me anyways. :)
+
