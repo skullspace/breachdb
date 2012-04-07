@@ -4,6 +4,7 @@ require 'breaches'
 require 'crackers'
 require 'hashes'
 require 'passwords'
+require 'passwordcache'
 require 'hashtypes'
 require 'masks'
 
@@ -66,8 +67,19 @@ def get_password_table(passwords, pagination = nil)
   end
 
   return Passwords.html_table(passwords, [
-          { :heading => "Password", :field => "password",   :sortby => 'password_password' },
-          { :heading => "Count",    :field => "hash_count", :sortby => 'hash_count' },
+          { :heading => "Password", :field => "password",     :sortby => 'password_password' },
+          { :heading => "Count",    :field => "c_hash_count", :sortby => 'c_hash_count' },
+        ], nil, pagination)
+end
+
+def get_password_cache_table(passwords, pagination = nil)
+  passwords.each do |p|
+    p['password'] = Passwords.html_get_link(p['password_cache_password_id'], p['password_cache_password_password'])
+  end
+
+  return PasswordCache.html_table(passwords, [
+          { :heading => "Password", :field => "password",   :sortby => 'password_cache_password_password' },
+          { :heading => "Count",    :field => "password_cache_password_count", :sortby => 'password_cache_password_count' },
         ], nil, pagination)
 end
 
@@ -129,7 +141,7 @@ get '/' do
 
   str += "<h1>Top passwords</h1>\n"
   str += get_password_search()
-  str += get_password_table(Passwords.list_with_hash(nil, 'hash_count', 'DESC', TOP_SIZE))
+  str += get_password_cache_table(PasswordCache.top_passwords(TOP_SIZE))
   str += "<p><a href='/passwords'>More passwords...</a></p>"
 
   str += "<h1>Top hashes</h1>"
@@ -179,13 +191,13 @@ get '/hash_types' do
 end
 
 get '/passwords' do
-  pagination = Pagination.new('/passwords', params, Passwords.get_count, 'hash_count', 'DESC')
+  pagination = Pagination.new('/passwords', params, Passwords.get_count, 'c_hash_count', 'DESC')
 
   str = ''
   str += "<h1>Passwords</h1>\n"
   str += "<p><a href='/'>Home</a></p>\n"
   str += pagination.get_html()
-  str += get_password_table(Passwords.list_with_hash(nil, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
+  str += get_password_table(Passwords.list(nil, nil, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
   str += pagination.get_html()
 
   return str
@@ -555,7 +567,7 @@ return "<h1>FAQ</h1>
 <p>No, my goal is to raise awareness, particularly for people storing passwords, and help prevent this from happening again. All data on my site was, at one time or another, posted publicly, and we can therefore be certain that the bad guys have not only the passwords, but the email addresses, usernames, and any other leaked information as well. Please see this blog post for more information.</p>
 
 <p>Can I send you a breach privately?</p>
-<p>Only if it's a publicly known breach that's already been posted offline. If you compromised a site yourself and want to send me the details, you've comed to the wrong place.</p>
+<p>Only if it's a publicly known breach that's already been posted offline. If you compromised a site yourself and want to send me the details, you've come to the wrong place.</p>
 
 <p>Are you releasing private data?</p>
 <p>No. I only release information that's already out there and that the \"bad guys\" already have.</p>
