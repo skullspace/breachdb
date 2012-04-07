@@ -280,7 +280,7 @@ get /^\/breach\/([\d]+)$/ do |breach_id|
   str += "<p><a href='/breach/#{breach['breach_id']}/hashes/uncracked'>More uncracked hashes...</a></p>"
 
   str += "<h2>Top passwords</h2>\n"
-  str += get_hash_table(Passwords.list_with_hash("`hash_breach_id`='#{breach['breach_id']}'", 'hash_count', 'DESC', TOP_SIZE))
+  str += get_password_cache_table(PasswordCache.top_passwords_by_breach(breach['breach_id'], TOP_SIZE))
   str += "<p><a href='/breach/#{breach['breach_id']}/passwords'>More passwords...</a></p>"
   
   return str
@@ -336,7 +336,7 @@ get /^\/breach\/([\d]+)\/passwords$/ do |breach_id|
 
   where = "`hash_breach_id`='#{breach['breach_id']}'"
 
-  pagination = Pagination.new("/breach/#{breach['breach_id']}/passwords", params, Passwords.get_count_with_hash(where), 'hash_count', 'DESC')
+  pagination = Pagination.new("/breach/#{breach['breach_id']}/passwords", params, Passwords.get_count(where), 'hash_count', 'DESC')
 
   str = ""
   str += "<h2>Passwords for #{breach['breach_name']}</h2>\n"
@@ -435,7 +435,7 @@ get /^\/hash_type\/([\d]+)\/passwords$/ do |hash_type_id|
 
   where = "`hash_hash_type_id`='#{hash_type['hash_type_id']}'"
 
-  pagination = Pagination.new("/hash_type/#{hash_type['hash_type_id']}/passwords", params, Passwords.get_count_with_hash(where), 'hash_count', 'DESC')
+  pagination = Pagination.new("/hash_type/#{hash_type['hash_type_id']}/passwords", params, Passwords.get_count(where), 'hash_count', 'DESC')
 
   str = ""
   str += "<h2>Passwords for #{hash_type['hash_type_name']}</h2>\n"
@@ -543,7 +543,7 @@ get /^\/search\/password\/$/ do
 
     where = "`password_password` LIKE '%#{password_sql}%'"
 
-    pagination = Pagination.new("/search/password/#{password_html}", params, Passwords.get_count_with_hash(where), 'password_password', 'ASC')
+    pagination = Pagination.new("/search/password/#{password_html}", params, Passwords.get_count(where), 'password_password', 'ASC')
 
     str += "<h1>Passwords containing '#{password_html}':</h1>\n"
     str += "<p><a href='/'>Home</a></p>\n"
