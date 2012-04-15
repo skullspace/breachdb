@@ -49,21 +49,38 @@ class Db
   end
 
   ##
-  # Perform a query based on the given 'param' structure.
+  # Perform a query based on the given 'query_params' structure.
   #
-  # The param structure is a table with the following elements (all elements 
+  # The query_params structure is a table with the following elements (all elements 
   # are optional):
-  # * :columns - An array of columns. Each column is either a string representing a single column name, or a table containing :name and :aggregate (eg. 'SUM', 'COUNT', etc).
+  # * :columns  : An Array of columns. Each column is either a String representing a single column name, or a Table containing :name and :aggregate (eg. 'SUM', 'COUNT', etc).
+  # * :table    : A String represting the table we're selecting from.
+  # * :join     : A single Hash (or Array of hashes) containing :type (eg, 'LEFT JOIN'), :table, :column1, and :column2. 
+  # * :where    : The 'where' clause, as a String.
+  # * :orderby  : A String, representing which column to order by; a Hash, containing :column and (optionally) :dir; or an Array of such hashes.
+  # * :groupby  : A String or an Array of strings that list which columns to put in the GROUP BY clause.
+  # * :limit    : A String, FixNum, or Hash that contains :page and :pagesize
+  # 
+  # There are also special arguments that can override the others:
+  # * :pagination : An instance of the Pagination class; overrides :orderby and :limit
+  #
   ##
-  def self.query_ex(params)
+  def self.query_ex(query_params)
+    # If a 'pagination' was given, override :orderby and :limit
+    if(!query_params[:pagination].nil?)
+      pagination = query_params[:pagination]
+      query_params[:limit]   = { :page => pagination.page, :pagesize => pagination.count }
+      query_params[:orderby] = { :column => pagination.sort, :dir => pagination.sortdir}
+    end
+
     # Default the column list to '*'
     columns = "SELECT *\n"
 
     # If a columns array was given, each element consists of an 'aggregate'
     # and a 'name'
-    if(!params[:columns].nil?)
+    if(!query_params[:columns].nil?)
       columns = []
-      params[:columns].each do |col|
+      query_params[:columns].each do |col|
         # Make sure we have a valid type
         if(!col.is_a?(String) && !col.is_a?(Hash))
           throw :BadType
@@ -83,15 +100,26 @@ class Db
     end
 
     # Use the table directly
-    table = "FROM `#{Mysql::quote(params[:table])}`"
+    table = "FROM `#{Mysql::quote(query_params[:table])}`"
 
     # Default join to nothing
     join = ''
 
     # If a join array was given, it's a list of tables that contain type,
     # table, col1, and col2
-    if(!params[:join].nil?)
-      params[:join].each do |join|
+    if(!query_params[:join].nil?)
+      # Make sure it's either a Array or a Hash
+      if(!query_params[:join].is_a?(Array) && !query_params[:join].is_a?(Hash))
+        throw :BadType
+      end
+
+      # Handle a Hash properly (by converting it to an Array with a single
+      # element)
+      if(query_params[:join].is_a?(Hash))
+        query_params[:join] = [ query_params[:join] ]
+      end
+
+      query_params[:join].each do |join|
         type  = join[:type].nil? ? join[:type] : 'JOIN'
         table = join[:table]
         col1  = join[:column1]
@@ -106,8 +134,8 @@ class Db
     where = ''
 
     # Use the where clause as-is, if it's present
-    if(!params[:where].nil?)
-      where = "WHERE\n#{params[:where]}"
+    if(!query_params[:where].nil?)
+      where = "WHERE\n#{query_params[:where]}"
     end
 
     # Default orderby to blank
@@ -115,9 +143,25 @@ class Db
 
     # If the orderby array exists, it's an array of tables containing column
     # and dir
-    if(!params[:orderby].nil?)
+    if(!query_params[:orderby].nil?)
+      # Make sure we have a String, a Hash, or a Array
+      if(!query_params[:orderby].is_a?(String) && !query_params[:orderby].is_a?(Hash) && !query_params[:orderby].is_a?(Array))
+        throw :BadType
+      end
+
+      # Handle String arguments (by converting it into a Hash)
+      if(query_params[:orderby].is_a?(String))
+        query_params[:orderby] = { :column => query_params[:orderby] }
+      end
+
+      # Handle Hash arguments (by converting them into an Array)
+      if(query_params[:orderby].is_a?(Hash))
+        query_params[:orderby] = [ query_params[:orderby] ]
+      end
+
+      # Finally, handle Array arguments
       orderby = []
-      params[:orderby].each do |o|
+      query_params[:orderby].each do |o|
         if(!o[:column].nil? && o[:column] != '')
           column = "`#{Mysql::quote(o[:column])}`"
           dir = 'ASC'
@@ -129,6 +173,8 @@ class Db
         end
       end
 
+      # If we have a length of 0, we had no 'orderby' clause (this is for
+      # reverse compatibility)
       if(orderby.length == 0)
         orderby = ''
       else
@@ -140,9 +186,20 @@ class Db
     groupby = ''
 
     # If groupby exists, it's simply an array of columns
-    if(!params[:groupby].nil?)
+    if(!query_params[:groupby].nil?)
+      # Make sure we have either a string or an Array
+      if(!query_params[:groupby].is_a?(String) && !query_params[:groupby].is_a?(Array))
+        throw :BadType
+      end
+
+      # Handle a String by converting it to an Array
+      if(query_params[:groupby].is_a?(String))
+        query_params[:groupby] = [ query_params[:groupby] ]
+      end
+
+      # Handle an Array
       groupby = []
-      params[:groupby].each do |g|
+      query_params[:groupby].each do |g|
         groupby << "\t`#{Mysql::quote(g)}`"
       end
       groupby = "GROUP BY #{groupby.join("\n")}"
@@ -152,8 +209,22 @@ class Db
     limit = ''
 
     # If limit exists, it's a table containing :pagesize and :page
-    if(!params[:limit].nil?)
-      limit = get_limit(params[:limit][:pagesize], params[:limit][:page])
+    if(!query_params[:limit].nil?)
+      # Make sure we have either a Hash, a String, or a FixNum for limit
+      if(!limit.is_a?(Hash) && !limit.is_a?(String) && !limit.is_a?(FixNum))
+        throw :BadType
+      end
+
+      # Convert a String or FixNum size to a Hash
+      if(limit.is_a?(String) || limit.is_a?(FixNum))
+        limit = { :pagesize => limit }
+      end
+
+      # Handle the Hash
+      page      = query_params[:limit][:page].to_i || 0
+      page_size = query_params[:limit][:pagesize].to_i || 10
+
+      limit = "LIMIT #{(page-1) * page_size}, #{page_size}"
     end
 
     this_query = "
@@ -164,12 +235,7 @@ class Db
 #{orderby}
 #{limit}
 "
-    puts("QUERY:")
-    puts(this_query)
-    puts()
-
     return result_to_list(query(this_query))
-exit()
   end
 
 
@@ -303,18 +369,6 @@ exit()
     return self.list("`#{id_column}`='#{Mysql::quote(id)}'").pop
   end
 
-  def self.get_limit(page_size = nil, page = nil)
-    limit = ''
-    if(!page_size.nil?)
-      page = page.to_i || 0
-      page_size = page_size.to_i
-
-      limit = "LIMIT #{(page-1) * page_size}, #{page_size}"
-    end
-
-    return limit
-  end
-
   ##
   # Get a list of all rows that match the given id or just all rows.
   #
@@ -359,7 +413,6 @@ exit()
       #{limit}
     "))
   end
-
 
   ##
   # Get the number of rows that are returned by the query with the given
