@@ -49,6 +49,133 @@ class Db
   end
 
   ##
+  # Perform a query based on the given 'param' structure.
+  #
+  # The param structure is a table with the following elements (all elements 
+  # are optional):
+  # * :columns - An array of columns. Each column is either a string representing a single column name, or a table containing :name and :aggregate (eg. 'SUM', 'COUNT', etc).
+  ##
+  def self.query_ex(params)
+    # Default the column list to '*'
+    columns = "SELECT *\n"
+
+    # If a columns array was given, each element consists of an 'aggregate'
+    # and a 'name'
+    if(!params[:columns].nil?)
+      columns = []
+      params[:columns].each do |col|
+        # Make sure we have a valid type
+        if(!col.is_a?(String) && !col.is_a?(Hash))
+          throw :BadType
+        end
+
+        # Handle string columns
+        if(col.is_a?(String))
+          col = { :name => col }
+        end
+
+        # Handle hashes
+        aggregate = col[:aggregate].nil? ? nil : Mysql::quote(col[:aggregate])
+        name      = col[:name] == '*' ? '*' : "`#{Mysql::quote(col[:name])}`"
+        columns << "\t" + (aggregate.nil? ? "#{name}" : "#{aggregate}(#{name})")
+      end
+      columns = "SELECT\n#{columns.join("\n")}"
+    end
+
+    # Use the table directly
+    table = "FROM `#{Mysql::quote(params[:table])}`"
+
+    # Default join to nothing
+    join = ''
+
+    # If a join array was given, it's a list of tables that contain type,
+    # table, col1, and col2
+    if(!params[:join].nil?)
+      params[:join].each do |join|
+        type  = join[:type].nil? ? join[:type] : 'JOIN'
+        table = join[:table]
+        col1  = join[:column1]
+        col2  = join[:column2]
+
+        join << "\t#{type} `#{table}` ON `#{col1}`=`#{col2}`"
+      end
+      join = join.join("\n")
+    end
+
+    # Default where to blank
+    where = ''
+
+    # Use the where clause as-is, if it's present
+    if(!params[:where].nil?)
+      where = "WHERE\n#{params[:where]}"
+    end
+
+    # Default orderby to blank
+    orderby = ''
+
+    # If the orderby array exists, it's an array of tables containing column
+    # and dir
+    if(!params[:orderby].nil?)
+      orderby = []
+      params[:orderby].each do |o|
+        if(!o[:column].nil? && o[:column] != '')
+          column = "`#{Mysql::quote(o[:column])}`"
+          dir = 'ASC'
+          if(!o[:dir].nil?)
+            dir = o[:dir].upcase == 'DESC' ? 'DESC' : 'ASC' # Can only be 'ASC'/'DESC'
+          end
+
+          orderby << "\t#{column} #{dir}"
+        end
+      end
+
+      if(orderby.length == 0)
+        orderby = ''
+      else
+        orderby = "ORDER BY\n" + orderby.join("\n") + "\n"
+      end
+    end
+
+    # Default groupby to blank
+    groupby = ''
+
+    # If groupby exists, it's simply an array of columns
+    if(!params[:groupby].nil?)
+      groupby = []
+      params[:groupby].each do |g|
+        groupby << "\t`#{Mysql::quote(g)}`"
+      end
+      groupby = "GROUP BY #{groupby.join("\n")}"
+    end
+
+    # Default limit to blank
+    limit = ''
+
+    # If limit exists, it's a table containing :pagesize and :page
+    if(!params[:limit].nil?)
+      limit = get_limit(params[:limit][:pagesize], params[:limit][:page])
+    end
+
+    this_query = "
+#{columns}
+#{table}
+#{join}
+#{where}
+#{orderby}
+#{limit}
+"
+    puts("QUERY:")
+    puts(this_query)
+    puts()
+
+    return result_to_list(query(this_query))
+exit()
+  end
+
+
+
+
+  ##
   # Convert the result from a MySQL call into an array. This is either an
   # associative array (if column is nil) or an array representing a single
   # column (if column is set). 
@@ -176,28 +303,7 @@ class Db
     return self.list("`#{id_column}`='#{Mysql::quote(id)}'").pop
   end
 
-  ##
-  # Given an orderby and orderby_dir, generate the full 'ORDER BY' clause
-  # (if any).
-  ##
-  def self.get_orderby(orderby = nil, orderby_dir = nil)
-    if(orderby.nil?)
-      orderby = ''
-    elsif(orderby.is_a? String)
-      orderby = "ORDER BY `#{Mysql::quote(orderby)}` #{Mysql::quote(orderby_dir)}"
-    elsif(orderby.is_a? Array)
-      new_orderby = []
-      0.upto(orderby.count - 1) do |i|
-        new_orderby << "`#{Mysql::quote(orderby[i])}` #{Mysql::quote(orderby_dir[i])}"
-      end
-      orderby = "ORDER BY #{new_orderby.join(", ")}"
-    end
-
-    return orderby
-  end
-
   def self.get_limit(page_size = nil, page = nil)
-    # Set up the pagination code
     limit = ''
     if(!page_size.nil?)
       page = page.to_i || 0
@@ -226,12 +332,23 @@ class Db
   # @return The results as a list of associative arrays
   ##
   def self.list(where = nil, orderby = nil, orderby_dir = nil, page_size = nil, page = nil)
-    where = '1=1' if(where.nil?)
     page = 1 if(page.nil? || page < 1)
     page_size = 10 if(page_size.nil? || page_size == 0)
 
-    orderby = get_orderby(orderby, orderby_dir)
-    limit   = get_limit(page_size, page)
+    return query_ex({
+      :columns => [ "*" ],
+      :table => table_name,
+      :where => where,
+      :orderby => [ {
+          :column => orderby,
+          :dir    => orderby_dir
+        }
+      ],
+      :limit => {
+        :pagesize => page_size,
+        :page => page
+      }
+    })
 
     # Get the results
     return result_to_list(query("
@@ -243,6 +360,11 @@ class Db
     "))
   end
 
+
+  ##
+  # Get the number of rows that are returned by the query with the given
+  # 'where' clause.
+  ##
   def self.get_count(where = nil)
     result = result_to_list(query("
       SELECT COUNT(*) AS `count`

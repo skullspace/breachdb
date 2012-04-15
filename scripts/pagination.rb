@@ -52,4 +52,14 @@ class Pagination
             "sort=#{sort.nil?       ? @sort    : sort}&" +
             "sortdir=#{sortdir.nil? ? @sortdir : sortdir}&"
   end
+
+  def get_limit_table
+    return { :pagesize => @count, :page => @page }
+  end
+
+  def get_sort_table
+    return [
+        { :column => @sort, :dir => @sortdir }
+      ]
+  end
 end
