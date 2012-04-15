@@ -91,7 +91,9 @@ class Passwords < Breachdb
 #  end
 # 
 # 
-#  def self.cache_update()
+  def self.cache_update()
+    # I don't think we need anything here
+  end
 #    puts("Updating password.c_hash_count...")
 #    query("UPDATE `password` SET `c_hash_count`='0'")
 #    query("

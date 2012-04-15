@@ -269,6 +269,7 @@ end
 
 def cache_update()
   @all_classes.each do |c|
+    puts("Updating cache for #{c.name}...")
     c.cache_update()
   end
   @should_update_cache = false

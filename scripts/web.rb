@@ -334,9 +334,9 @@ get /^\/breach\/([\d]+)\/passwords$/ do |breach_id|
     return 'Breach not found'
   end
 
-  where = "`hash_breach_id`='#{breach['breach_id']}'"
+  where = "`password_cache_breach_id`='#{breach['breach_id']}'"
 
-  pagination = Pagination.new("/breach/#{breach['breach_id']}/passwords", params, Passwords.get_count(where), 'hash_count', 'DESC')
+  pagination = Pagination.new("/breach/#{breach['breach_id']}/passwords", params, PasswordCache.get_count(where), 'password_cache_password_count', 'DESC')
 
   str = ""
   str += "<h2>Passwords for #{breach['breach_name']}</h2>\n"
@@ -344,7 +344,7 @@ get /^\/breach\/([\d]+)\/passwords$/ do |breach_id|
   str += "<p><a href='/'>Home</a></p>\n"
   str += "<p><a href='/breach/#{breach['breach_id']}'>Back to #{breach['breach_name']}</a></p>\n"
   str += pagination.get_html()
-  str += get_password_table(Passwords.list_with_hash(where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
+  str += get_password_cache_table(PasswordCache.list(nil, where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
   str += pagination.get_html()
   return str
 end
@@ -379,7 +379,7 @@ get /^\/hash_type\/([\d]+)$/ do |hash_type_id|
   str += "<p><a href='/hash_type/#{hash_type['hash_type_id']}/hashes/uncracked'>More uncracked hashes...</a></p>"
 
   str += "<h2>Top passwords</h2>\n"
-  str += get_hash_table(Passwords.list_with_hash("`hash_hash_type_id`='#{hash_type['hash_type_id']}'", 'hash_count', 'DESC', TOP_SIZE))
+  str += get_password_cache_table(PasswordCache.list(nil, "`password_cache_hash_type_id`='#{hash_type['hash_type_id']}'", 'password_cache_password_count', 'DESC', TOP_SIZE))
   str += "<p><a href='/hash_type/#{hash_type['hash_type_id']}/passwords'>More passwords...</a></p>"
   
   return str
@@ -433,9 +433,9 @@ get /^\/hash_type\/([\d]+)\/passwords$/ do |hash_type_id|
     return 'Hash type not found'
   end
 
-  where = "`hash_hash_type_id`='#{hash_type['hash_type_id']}'"
+  where = "`password_cache_hash_type_id`='#{hash_type['hash_type_id']}'"
 
-  pagination = Pagination.new("/hash_type/#{hash_type['hash_type_id']}/passwords", params, Passwords.get_count(where), 'hash_count', 'DESC')
+  pagination = Pagination.new("/hash_type/#{hash_type['hash_type_id']}/passwords", params, PasswordCache.get_count(where), 'password_cache_password_count', 'DESC')
 
   str = ""
   str += "<h2>Passwords for #{hash_type['hash_type_name']}</h2>\n"
@@ -443,7 +443,7 @@ get /^\/hash_type\/([\d]+)\/passwords$/ do |hash_type_id|
   str += "<p><a href='/'>Home</a></p>\n"
   str += "<p><a href='/hash_type/#{hash_type['hash_type_id']}'>Back to #{hash_type['hash_type_name']}</a></p>\n"
   str += pagination.get_html()
-  str += get_password_table(Passwords.list_with_hash(where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
+  str += get_password_cache_table(PasswordCache.list(nil, where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
   str += pagination.get_html()
   return str
 end
@@ -472,15 +472,15 @@ end
 get /^\/mask\/([\d]+)$/ do |mask_id|
   mask = Masks.list(mask_id).pop
 
-  where = "`password_mask_id`='#{mask_id}'"
-  pagination = Pagination.new("/mask/#{mask_id}", params, Passwords.get_count(where), 'hash_count', 'DESC')
+  where = "`password_cache_mask_id`='#{mask_id}'"
+  pagination = Pagination.new("/mask/#{mask_id}", params, PasswordCache.get_count(where), 'password_cache_password_count', 'DESC')
 
   str = ''
   str += "<h1>Mask: #{mask['mask_mask']}</h1>\n"
   str += "<p><a href='/'>Home</a></p>\n"
   str += "<p><a href='/masks'>Masks</a></p>\n"
   str += pagination.get_html()
-  str += get_password_table(Passwords.list_with_hash(where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
+  str += get_password_cache_table(PasswordCache.list(nil, where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
   str += pagination.get_html()
 
   return str
@@ -532,23 +532,24 @@ get /^\/search\/hash\/$/ do
 end
 
 get /^\/search\/password\/$/ do
-  # IMPORTANT: sanitize the password, since it can be anything
   password = params['password']
 
   str = ''
   if(!password.nil?)
+    # IMPORTANT: sanitize the password, since it can be anything
     password_sql  = Mysql::quote(password)
     password_html = password.gsub("&", "&amp;").gsub("'", "&apos;").gsub('"', "&quot;").gsub("<", "&lt;").gsub(">", "&gt;")
     password = ''
 
-    where = "`password_password` LIKE '%#{password_sql}%'"
+    where = "`password_cache_password_password` LIKE '%#{password_sql}%'"
 
-    pagination = Pagination.new("/search/password/#{password_html}", params, Passwords.get_count(where), 'password_password', 'ASC')
+    pagination = Pagination.new("/search/password/#{password_html}", params, PasswordCache.get_count(where), 'password_cache_password_password', 'ASC')
 
     str += "<h1>Passwords containing '#{password_html}':</h1>\n"
     str += "<p><a href='/'>Home</a></p>\n"
     str += pagination.get_html()
-    str += get_hash_table(Passwords.list_with_hash(where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
+   # AAAAAAAA 
+    str += get_password_cache_table(PasswordCache.list(nil, where, pagination.sort, pagination.sortdir, pagination.count, pagination.page))
     str += pagination.get_html()
     str += get_password_search(password_html)
   else
