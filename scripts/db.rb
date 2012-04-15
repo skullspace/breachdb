@@ -177,6 +177,39 @@ class Db
   end
 
   ##
+  # Given an orderby and orderby_dir, generate the full 'ORDER BY' clause
+  # (if any).
+  ##
+  def self.get_orderby(orderby = nil, orderby_dir = nil)
+    if(orderby.nil?)
+      orderby = ''
+    elsif(orderby.is_a? String)
+      orderby = "ORDER BY `#{Mysql::quote(orderby)}` #{Mysql::quote(orderby_dir)}"
+    elsif(orderby.is_a? Array)
+      new_orderby = []
+      0.upto(orderby.count - 1) do |i|
+        new_orderby << "`#{Mysql::quote(orderby[i])}` #{Mysql::quote(orderby_dir[i])}"
+      end
+      orderby = "ORDER BY #{new_orderby.join(", ")}"
+    end
+
+    return orderby
+  end
+
+  def self.get_limit(page_size = nil, page = nil)
+    # Set up the pagination code
+    limit = ''
+    if(!page_size.nil?)
+      page = page.to_i || 0
+      page_size = page_size.to_i
+
+      limit = "LIMIT #{(page-1) * page_size}, #{page_size}"
+    end
+
+    return limit
+  end
+
+  ##
   # Get a list of all rows that match the given id or just all rows.
   #
   # This is designed for subclasses, it won't work directly.
@@ -197,26 +230,8 @@ class Db
     page = 1 if(page.nil? || page < 1)
     page_size = 10 if(page_size.nil? || page_size == 0)
 
-    if(orderby.nil?)
-      orderby = ''
-    elsif(orderby.is_a? String)
-      orderby = "ORDER BY `#{Mysql::quote(orderby)}` #{Mysql::quote(orderby_dir)}"
-    elsif(orderby.is_a? Array)
-      new_orderby = []
-      0.upto(orderby.count - 1) do |i|
-        new_orderby << "`#{Mysql::quote(orderby[i])}` #{Mysql::quote(orderby_dir[i])}"
-      end
-      orderby = "ORDER BY #{new_orderby.join(", ")}"
-    end
-
-    # Set up the pagination code
-    limit = ''
-    if(!page_size.nil?)
-      page = page.to_i || 0
-      page_size = page_size.to_i
-
-      limit = "LIMIT #{(page-1) * page_size}, #{page_size}"
-    end
+    orderby = get_orderby(orderby, orderby_dir)
+    limit   = get_limit(page_size, page)
 
     # Get the results
     return result_to_list(query("
