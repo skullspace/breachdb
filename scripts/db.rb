@@ -170,6 +170,13 @@ class Db
   end
 
   ##
+  # Get the row with the given id.
+  ##
+  def self.get(id)
+    return self.list("`#{id_column}`='#{Mysql::quote(id)}'").pop
+  end
+
+  ##
   # Get a list of all rows that match the given id or just all rows.
   #
   # This is designed for subclasses, it won't work directly.
@@ -185,14 +192,10 @@ class Db
   #
   # @return The results as a list of associative arrays
   ##
-  def self.list(id = nil, where = nil, orderby = nil, orderby_dir = nil, page_size = nil, page = nil)
+  def self.list(where = nil, orderby = nil, orderby_dir = nil, page_size = nil, page = nil)
     where = '1=1' if(where.nil?)
     page = 1 if(page.nil? || page < 1)
     page_size = 10 if(page_size.nil? || page_size == 0)
-
-    if(!id.nil?)
-      where = where + " AND `#{id_column}`='#{id}'"
-    end
 
     if(orderby.nil?)
       orderby = ''

@@ -142,7 +142,7 @@ def prompt_values(table, id, data)
 
   # If we're editing a table, load it
   if(!id.nil?)
-    results = table.list(id).pop
+    results = table.get(id)
     results.each_pair do |column, value|
       data = data.each() do |d|
         if(d[:column] == column)
@@ -167,7 +167,7 @@ def prompt_values(table, id, data)
         valid = true
         d[:value] = get_with_default(table.table_name + "::" + d[:name], d[:value], d[:regex])
         valid = false if(d[:is_file] && !File.exist?(d[:value]))
-        valid = false if(d[:foreign_table] && d[:foreign_table].list(d[:value]).pop.nil? && d[:value] != '0')
+        valid = false if(d[:foreign_table] && d[:foreign_table].get(d[:value]).nil? && d[:value] != '0')
       end while(!valid)
     end
 
@@ -279,7 +279,7 @@ def prompt_for_key(table)
   value = '0'
   loop do
     value = get_with_default(table.table_name + "::id", value, /^[0-9]+$/)
-    if(!table.list(value).pop.nil? || value == '0')
+    if(!table.get(value).nil? || value == '0')
       return value
     end
   end
@@ -408,7 +408,7 @@ def process_submissions()
     end
 
     # Check if it's a valid id
-    submission_batch = SubmissionBatches.list(submission_batch_id).pop
+    submission_batch = SubmissionBatches.get(submission_batch_id)
     if(!submission_batch.nil?)
       break
     end
@@ -451,7 +451,7 @@ def list_submissions(brief = true)
   else
     where = "`submission_submission_batch_id`='#{Mysql::quote(submission_batch_id)}'"
   end
-  show_list(Submissions.list(nil, where), [
+  show_list(Submissions.list(where), [
     {:name=>'submission_hash',     :english=>'Hash'},
     {:name=>'submission_password', :english=>'Password'}, ], brief)
 end
@@ -489,7 +489,7 @@ def list_hashes(brief = true)
   else
     where = "`hash_breach_id`='#{Mysql::quote(hash_breach_id)}'"
   end
-  show_list(Hashes.list(nil, where), [
+  show_list(Hashes.list(where), [
     {:name=>'c_hash_type',  :english=>'Type'},
     {:name=>'hash_hash',    :english=>'Hash'},
     {:name=>'c_password',   :english=>'Password'},

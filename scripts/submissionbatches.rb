@@ -168,7 +168,7 @@ class SubmissionBatches < Breachdb
   def self.process(submission_batch_id)
     # If they want all the batches, get the list and process each of them using this function
     if(submission_batch_id.to_i == 0)
-      submission_batches = SubmissionBatches.list(nil, "`submission_batch_done`='0'")
+      submission_batches = SubmissionBatches.list("`submission_batch_done`='0'")
       submission_batches.each do |submission_batch|
         process(submission_batch['submission_batch_id'])
       end
@@ -176,7 +176,7 @@ class SubmissionBatches < Breachdb
     end
 
     debug("Processing submissions for batch " + submission_batch_id)
-    submission_batch = SubmissionBatches.list(submission_batch_id).pop
+    submission_batch = SubmissionBatches.get(submission_batch_id)
     where = "`submission_submission_batch_id`='#{Mysql::quote(submission_batch_id)}'"
     results = {}
 

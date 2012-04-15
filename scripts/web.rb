@@ -132,11 +132,11 @@ get '/' do
   str += "<p>Perhaps you wish to visit the <a href='/downloads'>downloads</a> page</p>"
 
   str += "<h1>Top breaches</h1>\n"
-  str += get_breach_table(Breaches.list(nil, nil, 'c_total_hashes', 'DESC', TOP_SIZE))
+  str += get_breach_table(Breaches.list(nil, 'c_total_hashes', 'DESC', TOP_SIZE))
   str += "<p><a href='/breaches'>More breaches...</a></p>"
          
   str += "<h1>Top hash types</h1>\n"
-  str += get_hash_type_table(HashTypes.list(nil, nil, 'c_total_hashes', 'DESC', TOP_SIZE))
+  str += get_hash_type_table(HashTypes.list(nil, 'c_total_hashes', 'DESC', TOP_SIZE))
   str += "<p><a href='/hash_types'>More hash_types...</a></p>"
 
   str += "<h1>Top passwords</h1>\n"
@@ -146,19 +146,19 @@ get '/' do
 
   str += "<h1>Top hashes</h1>"
   str += get_hash_search()
-  str += get_hash_table(Hashes.list(nil, nil, 'hash_count', 'DESC', TOP_SIZE))
+  str += get_hash_table(Hashes.list(nil, 'hash_count', 'DESC', TOP_SIZE))
   str += "<p><a href='/hashes'>More hashes...</a></p>"
 
   str += "<h1>Top uncracked hashes</h1>"
-  str += get_hash_table(Hashes.list(nil, "`hash_password_id`='0'", 'hash_count', 'DESC', TOP_SIZE))
+  str += get_hash_table(Hashes.list("`hash_password_id`='0'", 'hash_count', 'DESC', TOP_SIZE))
   str += "<p><a href='/hashes/uncracked'>More uncracked hashes...</a></p>"
 
   str += "<h1>Top masks</h1>"
-  str += get_mask_table(Masks.list(nil, nil, 'c_password_count', 'DESC', TOP_SIZE))
+  str += get_mask_table(Masks.list(nil, 'c_password_count', 'DESC', TOP_SIZE))
   str += "<p><a href='/masks'>More masks...</a></p>"
 
   str += "<h1>Top crackers</h1>"
-  str += get_cracker_table(Crackers.list(nil, nil, 'c_total_hashes', 'DESC', TOP_SIZE))
+  str += get_cracker_table(Crackers.list(nil, 'c_total_hashes', 'DESC', TOP_SIZE))
   str += "<p><a href='/crackers'>More crackers...</a></p>"
 
   return str
@@ -171,7 +171,7 @@ get '/breaches' do
   str += "<h1>Breaches</h1>\n"
   str += "<p><a href='/'>Home</a></p>\n"
   str += pagination.get_html()
-  str += get_breach_table(Breaches.list(nil, nil, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
+  str += get_breach_table(Breaches.list(nil, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
   str += pagination.get_html()
 
   return str
@@ -184,7 +184,7 @@ get '/hash_types' do
   str += "<h1>Hash Types</h1>\n"
   str += "<p><a href='/'>Home</a></p>\n"
   str += pagination.get_html()
-  str += get_hash_type_table(HashTypes.list(nil, nil, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
+  str += get_hash_type_table(HashTypes.list(nil, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
   str += pagination.get_html()
 
   return str
@@ -197,7 +197,7 @@ get '/passwords' do
   str += "<h1>Passwords</h1>\n"
   str += "<p><a href='/'>Home</a></p>\n"
   str += pagination.get_html()
-  str += get_password_table(Passwords.list(nil, nil, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
+  str += get_password_table(Passwords.list(nil, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
   str += pagination.get_html()
 
   return str
@@ -210,7 +210,7 @@ get '/hashes' do
   str += "<h1>Hashes</h1>\n"
   str += "<p><a href='/'>Home</a></p>\n"
   str += pagination.get_html()
-  str += get_hash_table(Hashes.list(nil, nil, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
+  str += get_hash_table(Hashes.list(nil, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
   str += pagination.get_html()
 
   return str
@@ -223,7 +223,7 @@ get '/hashes/uncracked' do
   str += "<h1>Uncracked hashes</h1>\n"
   str += "<p><a href='/'>Home</a></p>\n"
   str += pagination.get_html()
-  str += get_hash_table(Hashes.list(nil, "`hash_password_id`='0'", pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
+  str += get_hash_table(Hashes.list("`hash_password_id`='0'", pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
   str += pagination.get_html()
 
   return str
@@ -236,7 +236,7 @@ get '/masks' do
   str += "<h1>Masks</h1>\n"
   str += "<p><a href='/'>Home</a></p>\n"
   str += pagination.get_html()
-  str += get_mask_table(Masks.list(nil, nil, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
+  str += get_mask_table(Masks.list(nil, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
   str += pagination.get_html()
 
   return str
@@ -249,14 +249,14 @@ get '/crackers' do
   str += "<h1>Crackers</h1>\n"
   str += "<p><a href='/'>Home</a></p>\n"
   str += pagination.get_html()
-  str += get_cracker_table(Crackers.list(nil, nil, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
+  str += get_cracker_table(Crackers.list(nil, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
   str += pagination.get_html()
 
   return str
 end
 
 get /^\/breach\/([\d]+)$/ do |breach_id|
-  breach = Breaches.list(breach_id).pop
+  breach = Breaches.get(breach_id)
   if(breach.nil?)
     return 'Breach not found'
   end
@@ -272,11 +272,11 @@ get /^\/breach\/([\d]+)$/ do |breach_id|
   str += "<a href='/breaches'>Back to breach list</a>\n"
 
   str += "<h2>Top hashes</h2>\n"
-  str += get_hash_table(Hashes.list(nil, "`hash_breach_id`='#{breach['breach_id']}'", 'hash_count', 'DESC', TOP_SIZE))
+  str += get_hash_table(Hashes.list("`hash_breach_id`='#{breach['breach_id']}'", 'hash_count', 'DESC', TOP_SIZE))
   str += "<p><a href='/breach/#{breach['breach_id']}/hashes'>More hashes...</a></p>"
 
   str += "<h2>Top uncracked hashes</h2>\n"
-  str += get_hash_table(Hashes.list(nil, "`hash_password_id`='0' AND `hash_breach_id`='#{breach['breach_id']}'", 'hash_count', 'DESC', TOP_SIZE))
+  str += get_hash_table(Hashes.list("`hash_password_id`='0' AND `hash_breach_id`='#{breach['breach_id']}'", 'hash_count', 'DESC', TOP_SIZE))
   str += "<p><a href='/breach/#{breach['breach_id']}/hashes/uncracked'>More uncracked hashes...</a></p>"
 
   str += "<h2>Top passwords</h2>\n"
@@ -287,7 +287,7 @@ get /^\/breach\/([\d]+)$/ do |breach_id|
 end
 
 get /^\/breach\/([\d]+)\/hashes$/ do |breach_id|
-  breach = Breaches.list(breach_id).pop
+  breach = Breaches.get(breach_id)
   if(breach.nil?)
     return 'Breach not found'
   end
@@ -302,13 +302,13 @@ get /^\/breach\/([\d]+)\/hashes$/ do |breach_id|
   str += "<p><a href='/'>Home</a></p>\n"
   str += "<p><a href='/breach/#{breach['breach_id']}'>Back to #{breach['breach_name']}</a></p>\n"
   str += pagination.get_html()
-  str += get_hash_table(Hashes.list(nil, where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
+  str += get_hash_table(Hashes.list(where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
   str += pagination.get_html()
   return str
 end
 
 get /^\/breach\/([\d]+)\/hashes\/uncracked$/ do |breach_id|
-  breach = Breaches.list(breach_id).pop
+  breach = Breaches.get(breach_id)
   if(breach.nil?)
     return 'Breach not found'
   end
@@ -323,13 +323,13 @@ get /^\/breach\/([\d]+)\/hashes\/uncracked$/ do |breach_id|
   str += "<p><a href='/'>Home</a></p>\n"
   str += "<p><a href='/breach/#{breach['breach_id']}'>Back to #{breach['breach_name']}</a></p>\n"
   str += pagination.get_html()
-  str += get_hash_table(Hashes.list(nil, where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
+  str += get_hash_table(Hashes.list(where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
   str += pagination.get_html()
   return str
 end
 
 get /^\/breach\/([\d]+)\/passwords$/ do |breach_id|
-  breach = Breaches.list(breach_id).pop
+  breach = Breaches.get(breach_id)
   if(breach.nil?)
     return 'Breach not found'
   end
@@ -344,13 +344,13 @@ get /^\/breach\/([\d]+)\/passwords$/ do |breach_id|
   str += "<p><a href='/'>Home</a></p>\n"
   str += "<p><a href='/breach/#{breach['breach_id']}'>Back to #{breach['breach_name']}</a></p>\n"
   str += pagination.get_html()
-  str += get_password_cache_table(PasswordCache.list(nil, where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
+  str += get_password_cache_table(PasswordCache.list(where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
   str += pagination.get_html()
   return str
 end
 
 get /^\/hash_type\/([\d]+)$/ do |hash_type_id|
-  hash_type = HashTypes.list(hash_type_id).pop
+  hash_type = HashTypes.get(hash_type_id)
   if(hash_type.nil?)
     return 'Hash type not found'
   end
@@ -371,22 +371,22 @@ get /^\/hash_type\/([\d]+)$/ do |hash_type_id|
   str += "<a href='/hashes'>Back to hash list</a>\n"
 
   str += "<h2>Top hashes</h2>\n"
-  str += get_hash_table(Hashes.list(nil, "`hash_hash_type_id`='#{hash_type['hash_type_id']}'", 'hash_count', 'DESC', TOP_SIZE))
+  str += get_hash_table(Hashes.list("`hash_hash_type_id`='#{hash_type['hash_type_id']}'", 'hash_count', 'DESC', TOP_SIZE))
   str += "<p><a href='/hash_type/#{hash_type['hash_type_id']}/hashes'>More hashes...</a></p>"
 
   str += "<h2>Top uncracked hashes</h2>\n"
-  str += get_hash_table(Hashes.list(nil, "`hash_password_id`='0' AND `hash_hash_type_id`='#{hash_type['hash_type_id']}'", 'hash_count', 'DESC', TOP_SIZE))
+  str += get_hash_table(Hashes.list("`hash_password_id`='0' AND `hash_hash_type_id`='#{hash_type['hash_type_id']}'", 'hash_count', 'DESC', TOP_SIZE))
   str += "<p><a href='/hash_type/#{hash_type['hash_type_id']}/hashes/uncracked'>More uncracked hashes...</a></p>"
 
   str += "<h2>Top passwords</h2>\n"
-  str += get_password_cache_table(PasswordCache.list(nil, "`password_cache_hash_type_id`='#{hash_type['hash_type_id']}'", 'password_cache_password_count', 'DESC', TOP_SIZE))
+  str += get_password_cache_table(PasswordCache.list("`password_cache_hash_type_id`='#{hash_type['hash_type_id']}'", 'password_cache_password_count', 'DESC', TOP_SIZE))
   str += "<p><a href='/hash_type/#{hash_type['hash_type_id']}/passwords'>More passwords...</a></p>"
   
   return str
 end
 
 get /^\/hash_type\/([\d]+)\/hashes$/ do |hash_type_id|
-  hash_type = HashTypes.list(hash_type_id).pop
+  hash_type = HashTypes.get(hash_type_id)
   if(hash_type.nil?)
     return 'Hash type not found'
   end
@@ -401,13 +401,13 @@ get /^\/hash_type\/([\d]+)\/hashes$/ do |hash_type_id|
   str += "<p><a href='/'>Home</a></p>\n"
   str += "<p><a href='/hash_type/#{hash_type['hash_type_id']}'>Back to #{hash_type['hash_type_name']}</a></p>\n"
   str += pagination.get_html()
-  str += get_hash_table(Hashes.list(nil, where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
+  str += get_hash_table(Hashes.list(where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
   str += pagination.get_html()
   return str
 end
 
 get /^\/hash_type\/([\d]+)\/hashes\/uncracked$/ do |hash_type_id|
-  hash_type = HashTypes.list(hash_type_id).pop
+  hash_type = HashTypes.get(hash_type_id)
   if(hash_type.nil?)
     return 'Hash type not found'
   end
@@ -422,13 +422,13 @@ get /^\/hash_type\/([\d]+)\/hashes\/uncracked$/ do |hash_type_id|
   str += "<p><a href='/'>Home</a></p>\n"
   str += "<p><a href='/hash_type/#{hash_type['hash_type_id']}'>Back to #{hash_type['hash_type_name']}</a></p>\n"
   str += pagination.get_html()
-  str += get_hash_table(Hashes.list(nil, where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
+  str += get_hash_table(Hashes.list(where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
   str += pagination.get_html()
   return str
 end
 
 get /^\/hash_type\/([\d]+)\/passwords$/ do |hash_type_id|
-  hash_type = HashTypes.list(hash_type_id).pop
+  hash_type = HashTypes.get(hash_type_id)
   if(hash_type.nil?)
     return 'Hash type not found'
   end
@@ -443,13 +443,13 @@ get /^\/hash_type\/([\d]+)\/passwords$/ do |hash_type_id|
   str += "<p><a href='/'>Home</a></p>\n"
   str += "<p><a href='/hash_type/#{hash_type['hash_type_id']}'>Back to #{hash_type['hash_type_name']}</a></p>\n"
   str += pagination.get_html()
-  str += get_password_cache_table(PasswordCache.list(nil, where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
+  str += get_password_cache_table(PasswordCache.list(where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
   str += pagination.get_html()
   return str
 end
 
 get /^\/password\/([\d]+)$/ do |password_id|
-  password = Passwords.list(password_id).pop
+  password = Passwords.get(password_id)
   if(password.nil?)
     return 'Password not found'
   end
@@ -464,13 +464,13 @@ get /^\/password\/([\d]+)$/ do |password_id|
 
   
   str += "<h2>Hash representations</h2>\n"
-  str += get_hash_table(Hashes.list(nil, "`hash_password_id`='#{password_id}'"))
+  str += get_hash_table(Hashes.list("`hash_password_id`='#{password_id}'"))
 
   return str
 end
 
 get /^\/mask\/([\d]+)$/ do |mask_id|
-  mask = Masks.list(mask_id).pop
+  mask = Masks.get(mask_id)
 
   where = "`password_cache_mask_id`='#{mask_id}'"
   pagination = Pagination.new("/mask/#{mask_id}", params, PasswordCache.get_count(where), 'password_cache_password_count', 'DESC')
@@ -480,14 +480,14 @@ get /^\/mask\/([\d]+)$/ do |mask_id|
   str += "<p><a href='/'>Home</a></p>\n"
   str += "<p><a href='/masks'>Masks</a></p>\n"
   str += pagination.get_html()
-  str += get_password_cache_table(PasswordCache.list(nil, where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
+  str += get_password_cache_table(PasswordCache.list(where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
   str += pagination.get_html()
 
   return str
 end
 
 get /^\/cracker\/([\d]+)$/ do |cracker_id|
-  cracker = Crackers.list(cracker_id).pop
+  cracker = Crackers.get(cracker_id)
 
   where = "`hash_cracker_id`='#{cracker_id}'"
   pagination = Pagination.new("/cracker/#{cracker_id}", params, Hashes.get_count(where), 'hash_count', 'DESC')
@@ -497,7 +497,7 @@ get /^\/cracker\/([\d]+)$/ do |cracker_id|
   str += "<p><a href='/'>Home</a></p>\n"
   str += "<p><a href='/crackers'>Crackers</a></p>\n"
   str += pagination.get_html()
-  str += get_hash_table(Hashes.list(nil, where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
+  str += get_hash_table(Hashes.list(where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
   str += pagination.get_html()
 
   return str
@@ -521,7 +521,7 @@ get /^\/search\/hash\/$/ do
     str += "<h1>Hashes containing '#{hash_html}':</h1>\n"
     str += "<p><a href='/'>Home</a></p>\n"
     str += pagination.get_html()
-    str += get_hash_table(Hashes.list(nil, where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
+    str += get_hash_table(Hashes.list(where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
     str += pagination.get_html()
     str += get_hash_search(hash_html)
   else
@@ -549,7 +549,7 @@ get /^\/search\/password\/$/ do
     str += "<p><a href='/'>Home</a></p>\n"
     str += pagination.get_html()
    # AAAAAAAA 
-    str += get_password_cache_table(PasswordCache.list(nil, where, pagination.sort, pagination.sortdir, pagination.count, pagination.page))
+    str += get_password_cache_table(PasswordCache.list(where, pagination.sort, pagination.sortdir, pagination.count, pagination.page))
     str += pagination.get_html()
     str += get_password_search(password_html)
   else
