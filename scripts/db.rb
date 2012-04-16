@@ -66,6 +66,8 @@ class Db
   #
   ##
   def self.query_ex(query_params)
+
+puts(query_params.inspect)
     # If a 'pagination' was given, override :orderby and :limit
     if(!query_params[:pagination].nil?)
       pagination = query_params[:pagination]
@@ -95,9 +97,9 @@ class Db
         aggregate = col[:aggregate].nil? ? nil : Mysql::quote(col[:aggregate])
         name      = col[:name] == '*'    ? '*' : "`#{Mysql::quote(col[:name])}`"
         as        = col[:as].nil?        ? nil : "`#{Mysql::quote(col[:as])}`"
-        columns << "\t" + (aggregate.nil? ? "#{name}" : "#{aggregate}(#{name})") + (as.nil? ? '' : "AS #{as}")
+        columns << "\t" + (aggregate.nil? ? "#{name}" : "#{aggregate}(#{name})") + (as.nil? ? '' : " AS #{as}")
       end
-      columns = "SELECT\n#{columns.join("\n")}"
+      columns = "SELECT\n#{columns.join(", ")}"
     end
 
     # Use the table directly
@@ -241,6 +243,7 @@ class Db
 #{table}
 #{join}
 #{where}
+#{groupby}
 #{orderby}
 #{limit}
 "
