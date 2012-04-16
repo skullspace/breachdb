@@ -132,11 +132,11 @@ get '/' do
   str += "<p>Perhaps you wish to visit the <a href='/downloads'>downloads</a> page</p>"
 
   str += "<h1>Top breaches</h1>\n"
-  str += get_breach_table(Breaches.list(nil, 'c_total_hashes', 'DESC', TOP_SIZE))
+  str += get_breach_table(Breaches.get_top('c_total_hashes', TOP_SIZE))
   str += "<p><a href='/breaches'>More breaches...</a></p>"
          
   str += "<h1>Top hash types</h1>\n"
-  str += get_hash_type_table(HashTypes.list(nil, 'c_total_hashes', 'DESC', TOP_SIZE))
+  str += get_hash_type_table(HashTypes.get_top('c_total_hashes', TOP_SIZE))
   str += "<p><a href='/hash_types'>More hash_types...</a></p>"
 
   str += "<h1>Top passwords</h1>\n"

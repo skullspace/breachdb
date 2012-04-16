@@ -246,8 +246,15 @@ class Db
     return result_to_list(query(this_query))
   end
 
+  # A handy little wrapper around query_ex to get the top rows from a table
+  def self.get_top(column, count, query_params = nil)
+    query_params = query_params || {}
 
+    query_params[:orderby] = {:column=>column, :dir=>'DESC'}
+    query_params[:limit]  = count
 
+    return query_ex(query_params)
+  end
 
   ##
   # Convert the result from a MySQL call into an array. This is either an
