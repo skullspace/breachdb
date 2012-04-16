@@ -65,7 +65,7 @@ class Db
   # * :pagination : An instance of the Pagination class; overrides :orderby and :limit
   #
   ##
-  def self.query_ex(query_params)
+  def self.get_query(query_params)
     query_params = query_params.nil? ? {} : query_params.clone
 
     # If a 'pagination' was given, override :orderby and :limit
@@ -243,7 +243,7 @@ class Db
       limit = "LIMIT #{(page-1) * page_size}, #{page_size}"
     end
 
-    this_query = "
+    return "
 #{columns}
 #{table}
 #{join}
@@ -252,9 +252,14 @@ class Db
 #{orderby}
 #{limit}
 "
+  end
 
-puts(this_query)
-    return result_to_list(query(this_query))
+  ##
+  # Perform a query. See the documentation for get_query() for information on
+  # how the query_params argument works. 
+  ##
+  def self.query_ex(query_params)
+    return result_to_list(query(get_query(query_params)))
   end
 
   # A handy little wrapper around query_ex to get the top rows from a table
@@ -285,6 +290,7 @@ puts(this_query)
     query_params = query_params.nil? ? {} : query_params.clone
 
     query_params[:columns] = { :name => '*', :aggregate => 'COUNT', :as => 'RESULT' }
+    query_params[:print] = true;
     result = query_ex(query_params)
     return result.pop['RESULT'].to_i
   end
