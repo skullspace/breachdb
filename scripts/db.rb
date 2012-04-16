@@ -53,7 +53,7 @@ class Db
   #
   # The query_params structure is a table with the following elements (all elements 
   # are optional):
-  # * :columns  : An Array of columns. Each column is either a String representing a single column name, or a Table containing :name and :aggregate (eg. 'SUM', 'COUNT', etc).
+  # * :columns  : An Array of columns. Each column is either a String representing a single column name, or a Table containing :name, :as, and :aggregate (eg. 'SUM', 'COUNT', etc).
   # * :table    : A String represting the table we're selecting from. Defaults to the class's table_name.
   # * :join     : A single Hash (or Array of hashes) containing :type (eg, 'LEFT JOIN'), :table, :column1, and :column2. 
   # * :where    : The 'where' clause, as a String.
@@ -93,8 +93,9 @@ class Db
 
         # Handle hashes
         aggregate = col[:aggregate].nil? ? nil : Mysql::quote(col[:aggregate])
-        name      = col[:name] == '*' ? '*' : "`#{Mysql::quote(col[:name])}`"
-        columns << "\t" + (aggregate.nil? ? "#{name}" : "#{aggregate}(#{name})")
+        name      = col[:name] == '*'    ? '*' : "`#{Mysql::quote(col[:name])}`"
+        as        = col[:as].nil?        ? nil : "`#{Mysql::quote(col[:as])}`"
+        columns << "\t" + (aggregate.nil? ? "#{name}" : "#{aggregate}(#{name})") + (as.nil? ? '' : "AS #{as}")
       end
       columns = "SELECT\n#{columns.join("\n")}"
     end
