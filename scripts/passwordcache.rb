@@ -17,26 +17,19 @@ class PasswordCache < Breachdb
         { :name => '*' },
         { :name => 'password_cache_password_count', :aggregate => 'SUM', :as => 'password_cache_password_count' }
       ],
-      :groupby => 'password_cache_password_count',
+      :groupby => 'password_cache_password_id',
     })
-#    return result_to_list(query("
-#      SELECT `password_cache`.*, SUM(`password_cache_password_count`) AS `password_cache_password_count`
-#      FROM `password_cache`
-#      GROUP BY `password_cache_password_id`
-#      ORDER BY `password_cache_password_count` DESC
-#      LIMIT #{limit}
-#    "))
   end
 
   def self.top_passwords_by_breach(breach_id, limit = 10)
-    return result_to_list(query("
-      SELECT `password_cache`.*
-      FROM `password_cache`
-      WHERE `password_cache_breach_id`='#{Mysql::quote(breach_id)}'
-      GROUP BY `password_cache_password_id`
-      ORDER BY `password_cache_password_count` DESC
-      LIMIT #{limit}
-    "))
+    return get_top('password_cache_password_count', limit, {
+      :columns => [
+        { :name => '*' },
+        { :name => 'password_cache_password_count', :aggregate => 'SUM', :as => 'password_cache_password_count' }
+      ],
+      :groupby => 'password_cache_password_id',
+      :where => "`password_cache_breach_id`='#{Mysql::quote(breach_id)}'"
+    })
   end
 
   def self.cache_update()
