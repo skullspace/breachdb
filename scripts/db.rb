@@ -54,12 +54,12 @@ class Db
   # The query_params structure is a table with the following elements (all elements 
   # are optional):
   # * :columns  : An Array of columns. Each column is either a String representing a single column name, or a Table containing :name and :aggregate (eg. 'SUM', 'COUNT', etc).
-  # * :table    : A String represting the table we're selecting from.
+  # * :table    : A String represting the table we're selecting from. Defaults to the class's table_name.
   # * :join     : A single Hash (or Array of hashes) containing :type (eg, 'LEFT JOIN'), :table, :column1, and :column2. 
   # * :where    : The 'where' clause, as a String.
   # * :orderby  : A String, representing which column to order by; a Hash, containing :column and (optionally) :dir; or an Array of such hashes.
   # * :groupby  : A String or an Array of strings that list which columns to put in the GROUP BY clause.
-  # * :limit    : A String, FixNum, or Hash that contains :page and :pagesize
+  # * :limit    : A String, Fixnum, or Hash that contains :page and :pagesize
   # 
   # There are also special arguments that can override the others:
   # * :pagination : An instance of the Pagination class; overrides :orderby and :limit
@@ -100,6 +100,9 @@ class Db
     end
 
     # Use the table directly
+    if(query_params[:table].nil?)
+      query_params[:table] = table_name
+    end
     table = "FROM `#{Mysql::quote(query_params[:table])}`"
 
     # Default join to nothing
@@ -210,19 +213,24 @@ class Db
 
     # If limit exists, it's a table containing :pagesize and :page
     if(!query_params[:limit].nil?)
-      # Make sure we have either a Hash, a String, or a FixNum for limit
-      if(!limit.is_a?(Hash) && !limit.is_a?(String) && !limit.is_a?(FixNum))
+      # Make sure we have either a Hash, a String, or a Fixnum for limit
+      if(!query_params[:limit].is_a?(Hash) && !query_params[:limit].is_a?(String) && !query_params[:limit].is_a?(Fixnum))
         throw :BadType
       end
 
-      # Convert a String or FixNum size to a Hash
-      if(limit.is_a?(String) || limit.is_a?(FixNum))
-        limit = { :pagesize => limit }
+      # Convert a String or Fixnum size to a Hash
+      if(query_params[:limit].is_a?(String) || query_params[:limit].is_a?(Fixnum))
+        query_params[:limit] = { :pagesize => query_params[:limit] }
       end
 
       # Handle the Hash
-      page      = query_params[:limit][:page].to_i || 0
+      page      = query_params[:limit][:page].to_i || 1
       page_size = query_params[:limit][:pagesize].to_i || 10
+
+      # Make sure we don't try to get a negative page
+      if(page < 1)
+        page = 1
+      end
 
       limit = "LIMIT #{(page-1) * page_size}, #{page_size}"
     end
