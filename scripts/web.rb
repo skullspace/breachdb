@@ -433,14 +433,12 @@ get /^\/hash_type\/([\d]+)\/passwords$/ do |hash_type_id|
     return 'Hash type not found'
   end
 
-  # TODO: This requires: :groupby => "password_cache_password_id"
-  # But I don't know how to do the get_count_ex() call properly..
   query = { :columns => [
               {:name => '*'},
-#              {:name => 'password_cache_password_count', :aggregate => 'sum', :as => 'password_cache_password_count' }
+              {:name => 'password_cache_password_count', :aggregate => 'sum', :as => 'password_cache_password_count' }
             ],
             :where => "`password_cache_hash_type_id`='#{hash_type['hash_type_id']}'",
-#            :groupby => "password_cache_password_id"
+            :groupby => "password_cache_password_id"
   }
 
   query[:pagination] = Pagination.new("/hash_type/#{hash_type['hash_type_id']}/passwords", params, PasswordCache.get_count_ex(query), 'password_cache_password_count', 'DESC')
@@ -480,33 +478,44 @@ end
 get /^\/mask\/([\d]+)$/ do |mask_id|
   mask = Masks.get(mask_id)
 
-  where = "`password_cache_mask_id`='#{mask_id}'"
-  pagination = Pagination.new("/mask/#{mask_id}", params, PasswordCache.get_count(where), 'password_cache_password_count', 'DESC')
+  if(mask.nil?)
+    return 'Mask not found'
+  end
 
-  str = ''
-  str += "<h1>Mask: #{mask['mask_mask']}</h1>\n"
+  query = { :columns => [
+              {:name => '*'},
+              {:name => 'password_cache_password_count', :aggregate => 'sum', :as => 'password_cache_password_count' }
+            ],
+            :where => "`password_cache_mask_id`='#{mask['mask_id']}'",
+            :groupby => "password_cache_password_id"
+  }
+
+  query[:pagination] = Pagination.new("/mask/#{mask['mask_id']}/passwords", params, PasswordCache.get_count_ex(query), 'password_cache_password_count', 'DESC')
+
+  str = ""
+  str += "<h2>Passwords for #{mask['mask_mask']}</h2>\n"
+
   str += "<p><a href='/'>Home</a></p>\n"
-  str += "<p><a href='/masks'>Masks</a></p>\n"
-  str += pagination.get_html()
-  str += get_password_cache_table(PasswordCache.list(where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
-  str += pagination.get_html()
-
+  str += "<p><a href='/mask/#{mask['mask_id']}'>Back to #{mask['mask_mask']}</a></p>\n"
+  str += query[:pagination].get_html()
+  str += get_password_cache_table(PasswordCache.query_ex(query), query[:pagination])
+  str += query[:pagination].get_html()
   return str
 end
 
 get /^\/cracker\/([\d]+)$/ do |cracker_id|
   cracker = Crackers.get(cracker_id)
 
-  where = "`hash_cracker_id`='#{cracker_id}'"
-  pagination = Pagination.new("/cracker/#{cracker_id}", params, Hashes.get_count(where), 'hash_count', 'DESC')
+  query = { :where => "`hash_cracker_id`='#{cracker_id}'" }
+  query[:pagination] = Pagination.new("/cracker/#{cracker_id}", params, Hashes.get_count_ex(query), 'hash_count', 'DESC')
 
   str = ''
   str += "<h1>Cracker: #{cracker['cracker_name']}</h1>\n"
   str += "<p><a href='/'>Home</a></p>\n"
   str += "<p><a href='/crackers'>Crackers</a></p>\n"
-  str += pagination.get_html()
-  str += get_hash_table(Hashes.list(where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
-  str += pagination.get_html()
+  str += query[:pagination].get_html()
+  str += get_hash_table(Hashes.query_ex(query), query[:pagination])
+  str += query[:pagination].get_html()
 
   return str
 end
@@ -521,16 +530,16 @@ get /^\/search\/hash\/$/ do
     hash_html = hash.gsub("&", "&amp;").gsub("'", "&apos;").gsub('"', "&quot;").gsub("<", "&lt;").gsub(">", "&gt;")
     hash = ''
 
-    where = "`hash_hash` LIKE '%#{hash_sql}%'"
+    query = { :where => "`hash_hash` LIKE '%#{hash_sql}%'" }
 
-    pagination = Pagination.new("/search/hash/#{hash_html}", params, Hashes.get_count(where), 'hash_count', 'DESC')
+    query[:pagination] = Pagination.new("/search/hash/#{hash_html}", params, Hashes.get_count_ex(query), 'hash_count', 'DESC')
 
     str = ''
     str += "<h1>Hashes containing '#{hash_html}':</h1>\n"
     str += "<p><a href='/'>Home</a></p>\n"
-    str += pagination.get_html()
-    str += get_hash_table(Hashes.list(where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
-    str += pagination.get_html()
+    str += query[:pagination].get_html()
+    str += get_hash_table(Hashes.query_ex(query), query[:pagination])
+    str += query[:pagination].get_html()
     str += get_hash_search(hash_html)
   else
     str += get_hash_search()
@@ -549,16 +558,15 @@ get /^\/search\/password\/$/ do
     password_html = password.gsub("&", "&amp;").gsub("'", "&apos;").gsub('"', "&quot;").gsub("<", "&lt;").gsub(">", "&gt;")
     password = ''
 
-    where = "`password_cache_password_password` LIKE '%#{password_sql}%'"
+    query = { :where => "`password_cache_password_password` LIKE '%#{password_sql}%'" }
 
-    pagination = Pagination.new("/search/password/#{password_html}", params, PasswordCache.get_count(where), 'password_cache_password_password', 'ASC')
+    query[:pagination] = Pagination.new("/search/password/#{password_html}", params, PasswordCache.get_count_ex(query), 'password_cache_password_password', 'ASC')
 
     str += "<h1>Passwords containing '#{password_html}':</h1>\n"
     str += "<p><a href='/'>Home</a></p>\n"
-    str += pagination.get_html()
-   # AAAAAAAA 
-    str += get_password_cache_table(PasswordCache.list(where, pagination.sort, pagination.sortdir, pagination.count, pagination.page))
-    str += pagination.get_html()
+    str += query[:pagination].get_html()
+    str += get_password_cache_table(PasswordCache.query_ex(query), query[:pagination])
+    str += query[:pagination].get_html()
     str += get_password_search(password_html)
   else
     str += get_password_search()

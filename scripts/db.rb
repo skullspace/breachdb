@@ -99,12 +99,16 @@ class Db
       # Now we know we have an Array to work with
       columns = []
       query_params[:columns].each do |col|
-        aggregate = col[:aggregate].nil? ? nil : Mysql::quote(col[:aggregate])
-        name      = col[:name] == '*'    ? '*' : "`#{Mysql::quote(col[:name])}`"
-        as        = col[:as].nil?        ? nil : "`#{Mysql::quote(col[:as])}`"
-        columns << "\t" + (aggregate.nil? ? "#{name}" : "#{aggregate}(#{name})") + (as.nil? ? '' : " AS #{as}")
+        if(!col[:raw_name].nil?)
+          columns << Mysql::quote(col[:raw_name])
+        else
+          aggregate = col[:aggregate].nil? ? nil : Mysql::quote(col[:aggregate])
+          name      = col[:name] == '*'    ? '*' : "`#{Mysql::quote(col[:name])}`"
+          as        = col[:as].nil?        ? nil : "`#{Mysql::quote(col[:as])}`"
+          columns << (aggregate.nil? ? "#{name}" : "#{aggregate}(#{name})") + (as.nil? ? '' : " AS #{as}")
+        end
       end
-      columns = "SELECT\n#{columns.join(", ")}"
+      columns = "SELECT #{columns.join(", ")}"
     end
 
     # Use the table directly
@@ -289,9 +293,16 @@ class Db
   def self.get_count_ex(query_params = nil)
     query_params = query_params.nil? ? {} : query_params.clone
 
-    query_params[:columns] = { :name => '*', :aggregate => 'COUNT', :as => 'RESULT' }
-    query_params[:print] = true;
-    result = query_ex(query_params)
+    query_params[:columns] = { :raw_name => '1' }
+    query = get_query(query_params)
+
+    result = result_to_list(query("
+                    SELECT COUNT(*) AS `RESULT`
+                    FROM
+                    (
+                      #{query}
+                    ) AS `a`"))
+
     return result.pop['RESULT'].to_i
   end
 
