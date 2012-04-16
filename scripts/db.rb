@@ -65,7 +65,7 @@ class Db
   # * :pagination : An instance of the Pagination class; overrides :orderby and :limit
   #
   ##
-  def self.get_query(query_params)
+  def self.get_query(query_params = nil)
     query_params = query_params.nil? ? {} : query_params.clone
 
     # If a 'pagination' was given, override :orderby and :limit
@@ -262,7 +262,7 @@ class Db
   # Perform a query. See the documentation for get_query() for information on
   # how the query_params argument works. 
   ##
-  def self.query_ex(query_params)
+  def self.query_ex(query_params = nil)
     return result_to_list(query(get_query(query_params)))
   end
 
@@ -431,52 +431,7 @@ class Db
   # Get the row with the given id.
   ##
   def self.get(id)
-    return self.list("`#{id_column}`='#{Mysql::quote(id)}'").pop
-  end
-
-  ##
-  # Get a list of all rows that match the given id or just all rows.
-  #
-  # This is designed for subclasses, it won't work directly.
-  #
-  # @param id An ID to look up.
-  # @param where A where clause.
-  # @param orderby The field to order the results by. Can be an array for
-  #  multiple fields.
-  # @param orderby_dir The orderby direction (ASC/DESC). Must be an array if
-  #  orderby is an array.
-  # @param page_size The number of results to display on each page.
-  # @param page The number of the page to display
-  #
-  # @return The results as a list of associative arrays
-  ##
-  def self.list(where = nil, orderby = nil, orderby_dir = nil, page_size = nil, page = nil)
-    page = 1 if(page.nil? || page < 1)
-    page_size = 10 if(page_size.nil? || page_size == 0)
-
-    return query_ex({
-      :columns => "*",
-      :table => table_name,
-      :where => where,
-      :orderby => [ {
-          :column => orderby,
-          :dir    => orderby_dir
-        }
-      ],
-      :limit => {
-        :pagesize => page_size,
-        :page => page
-      }
-    })
-
-    # Get the results
-    return result_to_list(query("
-      SELECT *
-      FROM `#{Mysql::quote(table_name)}`
-      #{where.nil? ? "" : "WHERE #{where}"}
-      #{orderby}
-      #{limit}
-    "))
+    return self.query_ex( { :where => "`#{id_column}`='#{Mysql::quote(id)}'" }).pop
   end
 
   ##

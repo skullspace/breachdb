@@ -3,7 +3,7 @@ require 'db'
 
 class Breachdb < Db
   ##
-  # Take the result from a .list() call to a table with cache columns
+  # Take the result from a query to a table with cache columns
   # (c_total_hashes, c_total_passwords, c_distinct_hashes,
   # c_distinct_passwords), and create new fields:
   # * c_total_percentage

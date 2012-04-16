@@ -288,7 +288,7 @@ end
 def list_breaches(brief = true, prompt = false)
   puts("Breaches:")
   puts("--------")
-  show_list(Breaches.list(), [
+  show_list(Breaches.query_ex(), [
     { :name=>'breach_id',   :english=> 'ID'},
     { :name=>'breach_name', :english=>'Name'},
     { :name=>'breach_date', :english=>'Date'}], brief)
@@ -326,7 +326,7 @@ def list_crackers(brief = true, prompt = false)
   puts("Crackers:")
   puts("--------")
 
-  show_list(Crackers.list(), [
+  show_list(Crackers.query_ex(), [
     {:name=>'cracker_id',   :english=>'ID'},
     {:name=>'cracker_name', :english=>'Name'},
     {:name=>'c_total_hashes', :english=>'Hashes cracked'}], brief) # TODO: Other fields
@@ -360,7 +360,7 @@ def list_submission_batches(brief = true, prompt = false)
   puts("Submission batches:")
   puts("------------------")
 
-  show_list(SubmissionBatches.list(), [
+  show_list(SubmissionBatches.query_ex(), [
     {:name=>'submission_batch_done', :english=>'Done?'},
     {:name=>'submission_batch_id',   :english=>'ID'},
     {:name=>'c_cracker_name',        :english=>'Cracker'},
@@ -451,7 +451,7 @@ def list_submissions(brief = true)
   else
     where = "`submission_submission_batch_id`='#{Mysql::quote(submission_batch_id)}'"
   end
-  show_list(Submissions.list(where), [
+  show_list(Submissions.query_ex({:where => where}), [
     {:name=>'submission_hash',     :english=>'Hash'},
     {:name=>'submission_password', :english=>'Password'}, ], brief)
 end
@@ -489,7 +489,7 @@ def list_hashes(brief = true)
   else
     where = "`hash_breach_id`='#{Mysql::quote(hash_breach_id)}'"
   end
-  show_list(Hashes.list(where), [
+  show_list(Hashes.query_ex({:where => where}), [
     {:name=>'c_hash_type',  :english=>'Type'},
     {:name=>'hash_hash',    :english=>'Hash'},
     {:name=>'c_password',   :english=>'Password'},
@@ -500,7 +500,7 @@ def list_hash_types(brief = true, prompt = false)
   puts("Hash types:")
   puts("----------")
 
-  show_list(HashTypes.list(), [
+  show_list(HashTypes.query_ex(), [
     {:name=>'hash_type_id',   :english=>'ID'},
     {:name=>'hash_type_name', :english=>'John name'}], brief)
 
@@ -541,7 +541,7 @@ def list_dictionaries(brief = true, prompt = false)
   puts("Dictionaries:")
   puts("------------")
 
-  show_list(Dictionaries.list(), [
+  show_list(Dictionaries.query_ex(), [
     {:name=>'dictionary_id',   :english=>'ID'},
     {:name=>'dictionary_name', :english=>'Name'},
     {:name=>'dictionary_date', :english=>'Date'},
