@@ -141,7 +141,7 @@ get '/' do
 
   str += "<h1>Top passwords</h1>\n"
   str += get_password_search()
-  str += get_password_cache_table(PasswordCache.top_passwords(TOP_SIZE))
+  str += get_password_cache_table(PasswordCache.get_top_sum('password_cache_password_count', 'password_cache_password_id', TOP_SIZE))
   str += "<p><a href='/passwords'>More passwords...</a></p>"
 
   str += "<h1>Top hashes</h1>"
@@ -171,7 +171,7 @@ get '/breaches' do
   str += "<h1>Breaches</h1>\n"
   str += "<p><a href='/'>Home</a></p>\n"
   str += pagination.get_html()
-  str += get_breach_table(Breaches.list(nil, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
+  str += get_breach_table(Breaches.query_ex({ :pagination => pagination }))
   str += pagination.get_html()
 
   return str
@@ -184,7 +184,7 @@ get '/hash_types' do
   str += "<h1>Hash Types</h1>\n"
   str += "<p><a href='/'>Home</a></p>\n"
   str += pagination.get_html()
-  str += get_hash_type_table(HashTypes.list(nil, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
+  str += get_hash_type_table(HashTypes.query_ex({:pagination => pagination}), pagination)
   str += pagination.get_html()
 
   return str
@@ -197,7 +197,7 @@ get '/passwords' do
   str += "<h1>Passwords</h1>\n"
   str += "<p><a href='/'>Home</a></p>\n"
   str += pagination.get_html()
-  str += get_password_table(Passwords.list(nil, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
+  str += get_password_table(Passwords.query_ex({:pagination => pagination}), pagination)
   str += pagination.get_html()
 
   return str
@@ -210,7 +210,7 @@ get '/hashes' do
   str += "<h1>Hashes</h1>\n"
   str += "<p><a href='/'>Home</a></p>\n"
   str += pagination.get_html()
-  str += get_hash_table(Hashes.list(nil, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
+  str += get_hash_table(Hashes.query_ex({:pagination => pagination}), pagination)
   str += pagination.get_html()
 
   return str
@@ -223,7 +223,7 @@ get '/hashes/uncracked' do
   str += "<h1>Uncracked hashes</h1>\n"
   str += "<p><a href='/'>Home</a></p>\n"
   str += pagination.get_html()
-  str += get_hash_table(Hashes.list("`hash_password_id`='0'", pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
+  str += get_hash_table(Hashes.query_ex({:pagination => pagination, :where => "`hash_password_id`='0'"}), pagination)
   str += pagination.get_html()
 
   return str
@@ -236,7 +236,7 @@ get '/masks' do
   str += "<h1>Masks</h1>\n"
   str += "<p><a href='/'>Home</a></p>\n"
   str += pagination.get_html()
-  str += get_mask_table(Masks.list(nil, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
+  str += get_mask_table(Masks.query_ex({:pagination => pagination}), pagination)
   str += pagination.get_html()
 
   return str
@@ -249,7 +249,7 @@ get '/crackers' do
   str += "<h1>Crackers</h1>\n"
   str += "<p><a href='/'>Home</a></p>\n"
   str += pagination.get_html()
-  str += get_cracker_table(Crackers.list(nil, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
+  str += get_cracker_table(Crackers.query_ex({:pagination => pagination}), pagination)
   str += pagination.get_html()
 
   return str
@@ -272,15 +272,16 @@ get /^\/breach\/([\d]+)$/ do |breach_id|
   str += "<a href='/breaches'>Back to breach list</a>\n"
 
   str += "<h2>Top hashes</h2>\n"
-  str += get_hash_table(Hashes.list("`hash_breach_id`='#{breach['breach_id']}'", 'hash_count', 'DESC', TOP_SIZE))
+  str += get_hash_table(Hashes.get_top('hash_count', TOP_SIZE, {:where => "`hash_breach_id`='#{breach['breach_id']}'"}))
   str += "<p><a href='/breach/#{breach['breach_id']}/hashes'>More hashes...</a></p>"
 
   str += "<h2>Top uncracked hashes</h2>\n"
-  str += get_hash_table(Hashes.list("`hash_password_id`='0' AND `hash_breach_id`='#{breach['breach_id']}'", 'hash_count', 'DESC', TOP_SIZE))
+  str += get_hash_table(Hashes.get_top('hash_count', TOP_SIZE, {:where => "`hash_breach_id`='#{breach['breach_id']}' AND `hash_password_id`='0'"}))
+
   str += "<p><a href='/breach/#{breach['breach_id']}/hashes/uncracked'>More uncracked hashes...</a></p>"
 
   str += "<h2>Top passwords</h2>\n"
-  str += get_password_cache_table(PasswordCache.top_passwords_by_breach(breach['breach_id'], TOP_SIZE))
+  str += get_password_cache_table(PasswordCache.get_top_sum('password_cache_password_count', 'password_cache_password_id', TOP_SIZE, { :where => "`password_cache_breach_id`='#{Mysql::quote(breach_id)}'"}))
   str += "<p><a href='/breach/#{breach['breach_id']}/passwords'>More passwords...</a></p>"
   
   return str

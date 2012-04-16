@@ -66,8 +66,6 @@ class Db
   #
   ##
   def self.query_ex(query_params)
-
-puts(query_params.inspect)
     # If a 'pagination' was given, override :orderby and :limit
     if(!query_params[:pagination].nil?)
       pagination = query_params[:pagination]
@@ -258,6 +256,20 @@ puts(query_params.inspect)
     query_params[:limit]  = count
 
     return query_ex(query_params)
+  end
+
+  # A handy wrapper aorund query_ex that performs a GROUP BY/SUM() on a column
+  # and takes the top-x from that column on the result
+  def self.get_top_sum(sum_column, groupby_column, count, query_params = nil)
+    query_params = query_params || {}
+
+    query_params[:columns] = [
+        { :name => '*' },
+        { :name => sum_column, :aggregate => 'SUM', :as => sum_column }
+    ]
+    query_params[:groupby] = groupby_column;
+
+    return get_top(sum_column, count, query_params)
   end
 
   ##

@@ -11,27 +11,6 @@ class PasswordCache < Breachdb
     return 'password_cache_id'
   end
 
-  def self.top_passwords(limit = 10)
-    return get_top('password_cache_password_count', limit, {
-      :columns => [
-        { :name => '*' },
-        { :name => 'password_cache_password_count', :aggregate => 'SUM', :as => 'password_cache_password_count' }
-      ],
-      :groupby => 'password_cache_password_id',
-    })
-  end
-
-  def self.top_passwords_by_breach(breach_id, limit = 10)
-    return get_top('password_cache_password_count', limit, {
-      :columns => [
-        { :name => '*' },
-        { :name => 'password_cache_password_count', :aggregate => 'SUM', :as => 'password_cache_password_count' }
-      ],
-      :groupby => 'password_cache_password_id',
-      :where => "`password_cache_breach_id`='#{Mysql::quote(breach_id)}'"
-    })
-  end
-
   def self.cache_update()
     puts("Creating password_cache table...")
     query("DELETE FROM `password_cache`")
