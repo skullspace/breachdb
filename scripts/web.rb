@@ -146,19 +146,19 @@ get '/' do
 
   str += "<h1>Top hashes</h1>"
   str += get_hash_search()
-  str += get_hash_table(Hashes.list(nil, 'hash_count', 'DESC', TOP_SIZE))
+  str += get_hash_table(Hashes.get_top('hash_count', TOP_SIZE))
   str += "<p><a href='/hashes'>More hashes...</a></p>"
 
   str += "<h1>Top uncracked hashes</h1>"
-  str += get_hash_table(Hashes.list("`hash_password_id`='0'", 'hash_count', 'DESC', TOP_SIZE))
+  str += get_hash_table(Hashes.get_top('hash_count', TOP_SIZE, {:where => "`hash_password_id`='0'"}))
   str += "<p><a href='/hashes/uncracked'>More uncracked hashes...</a></p>"
 
   str += "<h1>Top masks</h1>"
-  str += get_mask_table(Masks.list(nil, 'c_password_count', 'DESC', TOP_SIZE))
+  str += get_mask_table(Masks.get_top('c_password_count', TOP_SIZE))
   str += "<p><a href='/masks'>More masks...</a></p>"
 
   str += "<h1>Top crackers</h1>"
-  str += get_cracker_table(Crackers.list(nil, 'c_total_hashes', 'DESC', TOP_SIZE))
+  str += get_cracker_table(Crackers.get_top('c_total_hashes', TOP_SIZE))
   str += "<p><a href='/crackers'>More crackers...</a></p>"
 
   return str
