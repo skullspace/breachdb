@@ -480,19 +480,6 @@ class Db
   end
 
   ##
-  # Get the number of rows that are returned by the query with the given
-  # 'where' clause.
-  ##
-  def self.get_count(where = nil)
-    result = result_to_list(query("
-      SELECT COUNT(*) AS `count`
-      FROM `#{table_name}`
-      #{where.nil? ? '' : "WHERE #{where}"}
-    "))
-    return result.pop['count'].to_i
-  end
-
-  ##
   # Insert one or more rows into the table. The to_import argument is an 
   # associative array with the key being a column and the value being the
   # data to insert into the database. The value can optionally be an array,
