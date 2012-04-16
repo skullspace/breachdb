@@ -165,7 +165,7 @@ get '/' do
 end
 
 get '/breaches' do
-  pagination = Pagination.new('/breaches', params, Breaches.get_count, 'c_total_hashes', 'DESC')
+  pagination = Pagination.new('/breaches', params, Breaches.get_count_ex, 'c_total_hashes', 'DESC')
 
   str = ''
   str += "<h1>Breaches</h1>\n"
@@ -178,7 +178,7 @@ get '/breaches' do
 end
 
 get '/hash_types' do
-  pagination = Pagination.new('/hash_types', params, HashTypes.get_count, 'c_total_hashes', 'DESC')
+  pagination = Pagination.new('/hash_types', params, HashTypes.get_count_ex, 'c_total_hashes', 'DESC')
 
   str = ''
   str += "<h1>Hash Types</h1>\n"
@@ -191,7 +191,7 @@ get '/hash_types' do
 end
 
 get '/passwords' do
-  pagination = Pagination.new('/passwords', params, Passwords.get_count, 'c_hash_count', 'DESC')
+  pagination = Pagination.new('/passwords', params, Passwords.get_count_ex, 'c_hash_count', 'DESC')
 
   str = ''
   str += "<h1>Passwords</h1>\n"
@@ -204,7 +204,7 @@ get '/passwords' do
 end
 
 get '/hashes' do
-  pagination = Pagination.new('/hashes', params, Hashes.get_count, 'hash_count', 'DESC')
+  pagination = Pagination.new('/hashes', params, Hashes.get_count_ex, 'hash_count', 'DESC')
 
   str = ''
   str += "<h1>Hashes</h1>\n"
@@ -217,20 +217,21 @@ get '/hashes' do
 end
 
 get '/hashes/uncracked' do
-  pagination = Pagination.new('/hashes', params, Hashes.get_count("`hash_password_id`='0'"), 'hash_count', 'DESC')
+  query = {:where => "`hash_password_id`='0'"}
+  query[:pagination] = Pagination.new('/hashes', params, Hashes.get_count_ex(query), 'hash_count', 'DESC')
 
   str = ''
   str += "<h1>Uncracked hashes</h1>\n"
   str += "<p><a href='/'>Home</a></p>\n"
-  str += pagination.get_html()
-  str += get_hash_table(Hashes.query_ex({:pagination => pagination, :where => "`hash_password_id`='0'"}), pagination)
-  str += pagination.get_html()
+  str += query[:pagination].get_html()
+  str += get_hash_table(Hashes.query_ex(query), query[:pagination])
+  str += query[:pagination].get_html()
 
   return str
 end
 
 get '/masks' do
-  pagination = Pagination.new('/masks', params, Masks.get_count, 'c_password_count', 'DESC')
+  pagination = Pagination.new('/masks', params, Masks.get_count_ex, 'c_password_count', 'DESC')
 
   str = ''
   str += "<h1>Masks</h1>\n"
@@ -243,7 +244,7 @@ get '/masks' do
 end
 
 get '/crackers' do
-  pagination = Pagination.new('/crackers', params, Crackers.get_count, 'c_total_hashes', 'DESC')
+  pagination = Pagination.new('/crackers', params, Crackers.get_count_ex, 'c_total_hashes', 'DESC')
 
   str = ''
   str += "<h1>Crackers</h1>\n"
@@ -293,18 +294,18 @@ get /^\/breach\/([\d]+)\/hashes$/ do |breach_id|
     return 'Breach not found'
   end
 
-  where = "`hash_breach_id`='#{breach['breach_id']}'"
+  query = { :where => "`hash_breach_id`='#{breach['breach_id']}'" }
 
-  pagination = Pagination.new("/breach/#{breach['breach_id']}/hashes", params, Hashes.get_count(where), 'hash_count', 'DESC')
+  query[:pagination] = Pagination.new("/breach/#{breach['breach_id']}/hashes", params, Hashes.get_count_ex(query), 'hash_count', 'DESC')
 
   str = ""
   str += "<h2>Hashes for #{breach['breach_name']}</h2>\n"
 
   str += "<p><a href='/'>Home</a></p>\n"
   str += "<p><a href='/breach/#{breach['breach_id']}'>Back to #{breach['breach_name']}</a></p>\n"
-  str += pagination.get_html()
-  str += get_hash_table(Hashes.list(where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
-  str += pagination.get_html()
+  str += query[:pagination].get_html()
+  str += get_hash_table(Hashes.query_ex(query), query[:pagination])
+  str += query[:pagination].get_html()
   return str
 end
 
@@ -314,18 +315,17 @@ get /^\/breach\/([\d]+)\/hashes\/uncracked$/ do |breach_id|
     return 'Breach not found'
   end
 
-  where = "`hash_breach_id`='#{breach['breach_id']}' AND `hash_password_id`='0'"
-
-  pagination = Pagination.new("/breach/#{breach['breach_id']}/hashes/uncracked", params, Hashes.get_count(where), 'hash_count', 'DESC')
+  query = { :where => "`hash_breach_id`='#{breach['breach_id']}' AND `hash_password_id`='0'" }
+  query[:pagination] = Pagination.new("/breach/#{breach['breach_id']}/hashes/uncracked", params, Hashes.get_count_ex(query), 'hash_count', 'DESC')
 
   str = ""
   str += "<h2>Hashes for #{breach['breach_name']}</h2>\n"
 
   str += "<p><a href='/'>Home</a></p>\n"
   str += "<p><a href='/breach/#{breach['breach_id']}'>Back to #{breach['breach_name']}</a></p>\n"
-  str += pagination.get_html()
-  str += get_hash_table(Hashes.list(where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
-  str += pagination.get_html()
+  str += query[:pagination].get_html()
+  str += get_hash_table(Hashes.query_ex(query))
+  str += query[:pagination].get_html()
   return str
 end
 
@@ -335,18 +335,17 @@ get /^\/breach\/([\d]+)\/passwords$/ do |breach_id|
     return 'Breach not found'
   end
 
-  where = "`password_cache_breach_id`='#{breach['breach_id']}'"
-
-  pagination = Pagination.new("/breach/#{breach['breach_id']}/passwords", params, PasswordCache.get_count(where), 'password_cache_password_count', 'DESC')
+  query = { :where => "`password_cache_breach_id`='#{breach['breach_id']}'" }
+  query[:pagination] = Pagination.new("/breach/#{breach['breach_id']}/passwords", params, PasswordCache.get_count_ex(query), 'password_cache_password_count', 'DESC')
 
   str = ""
   str += "<h2>Passwords for #{breach['breach_name']}</h2>\n"
 
   str += "<p><a href='/'>Home</a></p>\n"
   str += "<p><a href='/breach/#{breach['breach_id']}'>Back to #{breach['breach_name']}</a></p>\n"
-  str += pagination.get_html()
-  str += get_password_cache_table(PasswordCache.list(where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
-  str += pagination.get_html()
+  str += query[:pagination].get_html()
+  str += get_password_cache_table(PasswordCache.query_ex(query), query[:pagination])
+  str += query[:pagination].get_html()
   return str
 end
 
@@ -372,15 +371,15 @@ get /^\/hash_type\/([\d]+)$/ do |hash_type_id|
   str += "<a href='/hashes'>Back to hash list</a>\n"
 
   str += "<h2>Top hashes</h2>\n"
-  str += get_hash_table(Hashes.list("`hash_hash_type_id`='#{hash_type['hash_type_id']}'", 'hash_count', 'DESC', TOP_SIZE))
+  str += get_hash_table(Hashes.get_top('hash_count', TOP_SIZE, {:where => "`hash_hash_type_id`='#{hash_type['hash_type_id']}'"}))
   str += "<p><a href='/hash_type/#{hash_type['hash_type_id']}/hashes'>More hashes...</a></p>"
 
   str += "<h2>Top uncracked hashes</h2>\n"
-  str += get_hash_table(Hashes.list("`hash_password_id`='0' AND `hash_hash_type_id`='#{hash_type['hash_type_id']}'", 'hash_count', 'DESC', TOP_SIZE))
+  str += get_hash_table(Hashes.get_top('hash_count', TOP_SIZE, {:where => "`hash_password_id`='0' AND `hash_hash_type_id`='#{hash_type['hash_type_id']}'"}))
   str += "<p><a href='/hash_type/#{hash_type['hash_type_id']}/hashes/uncracked'>More uncracked hashes...</a></p>"
 
   str += "<h2>Top passwords</h2>\n"
-  str += get_password_cache_table(PasswordCache.list("`password_cache_hash_type_id`='#{hash_type['hash_type_id']}'", 'password_cache_password_count', 'DESC', TOP_SIZE))
+  str += get_password_cache_table(PasswordCache.get_top_sum('password_cache_password_count', 'password_cache_password_id', TOP_SIZE, {:where => "`password_cache_hash_type_id`='#{hash_type['hash_type_id']}'"}))
   str += "<p><a href='/hash_type/#{hash_type['hash_type_id']}/passwords'>More passwords...</a></p>"
   
   return str
@@ -392,18 +391,18 @@ get /^\/hash_type\/([\d]+)\/hashes$/ do |hash_type_id|
     return 'Hash type not found'
   end
 
-  where = "`hash_hash_type_id`='#{hash_type['hash_type_id']}'"
+  query = { :where => "`hash_hash_type_id`='#{hash_type['hash_type_id']}'" }
 
-  pagination = Pagination.new("/hash_type/#{hash_type['hash_type_id']}/hashes", params, Hashes.get_count(where), 'hash_count', 'DESC')
+  query[:pagination] = Pagination.new("/hash_type/#{hash_type['hash_type_id']}/hashes", params, Hashes.get_count_ex(query), 'hash_count', 'DESC')
 
   str = ""
   str += "<h2>Hashes for #{hash_type['hash_type_name']}</h2>\n"
 
   str += "<p><a href='/'>Home</a></p>\n"
   str += "<p><a href='/hash_type/#{hash_type['hash_type_id']}'>Back to #{hash_type['hash_type_name']}</a></p>\n"
-  str += pagination.get_html()
-  str += get_hash_table(Hashes.list(where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
-  str += pagination.get_html()
+  str += query[:pagination].get_html()
+  str += get_hash_table(Hashes.query_ex(query), query[:pagination])
+  str += query[:pagination].get_html()
   return str
 end
 
@@ -413,18 +412,18 @@ get /^\/hash_type\/([\d]+)\/hashes\/uncracked$/ do |hash_type_id|
     return 'Hash type not found'
   end
 
-  where = "`hash_hash_type_id`='#{hash_type['hash_type_id']}' AND `hash_password_id`='0'"
+  query = { :where => "`hash_hash_type_id`='#{hash_type['hash_type_id']}' AND `hash_password_id`='0'" }
 
-  pagination = Pagination.new("/hash_type/#{hash_type['hash_type_id']}/hashes/uncracked", params, Hashes.get_count(where), 'hash_count', 'DESC')
+  query[:pagination] = Pagination.new("/hash_type/#{hash_type['hash_type_id']}/hashes", params, Hashes.get_count_ex(query), 'hash_count', 'DESC')
 
   str = ""
-  str += "<h2>Hashes for #{hash_type['hash_type_name']}</h2>\n"
+  str += "<h2>Uncracked hashes for #{hash_type['hash_type_name']}</h2>\n"
 
   str += "<p><a href='/'>Home</a></p>\n"
   str += "<p><a href='/hash_type/#{hash_type['hash_type_id']}'>Back to #{hash_type['hash_type_name']}</a></p>\n"
-  str += pagination.get_html()
-  str += get_hash_table(Hashes.list(where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
-  str += pagination.get_html()
+  str += query[:pagination].get_html()
+  str += get_hash_table(Hashes.query_ex(query), query[:pagination])
+  str += query[:pagination].get_html()
   return str
 end
 
@@ -434,18 +433,26 @@ get /^\/hash_type\/([\d]+)\/passwords$/ do |hash_type_id|
     return 'Hash type not found'
   end
 
-  where = "`password_cache_hash_type_id`='#{hash_type['hash_type_id']}'"
+  # TODO: This requires: :groupby => "password_cache_password_id"
+  # But I don't know how to do the get_count_ex() call properly..
+  query = { :columns => [
+              {:name => '*'},
+#              {:name => 'password_cache_password_count', :aggregate => 'sum', :as => 'password_cache_password_count' }
+            ],
+            :where => "`password_cache_hash_type_id`='#{hash_type['hash_type_id']}'",
+#            :groupby => "password_cache_password_id"
+  }
 
-  pagination = Pagination.new("/hash_type/#{hash_type['hash_type_id']}/passwords", params, PasswordCache.get_count(where), 'password_cache_password_count', 'DESC')
+  query[:pagination] = Pagination.new("/hash_type/#{hash_type['hash_type_id']}/passwords", params, PasswordCache.get_count_ex(query), 'password_cache_password_count', 'DESC')
 
   str = ""
   str += "<h2>Passwords for #{hash_type['hash_type_name']}</h2>\n"
 
   str += "<p><a href='/'>Home</a></p>\n"
   str += "<p><a href='/hash_type/#{hash_type['hash_type_id']}'>Back to #{hash_type['hash_type_name']}</a></p>\n"
-  str += pagination.get_html()
-  str += get_password_cache_table(PasswordCache.list(where, pagination.sort, pagination.sortdir, pagination.count, pagination.page), pagination)
-  str += pagination.get_html()
+  str += query[:pagination].get_html()
+  str += get_password_cache_table(PasswordCache.query_ex(query), query[:pagination])
+  str += query[:pagination].get_html()
   return str
 end
 
@@ -465,7 +472,7 @@ get /^\/password\/([\d]+)$/ do |password_id|
 
   
   str += "<h2>Hash representations</h2>\n"
-  str += get_hash_table(Hashes.list("`hash_password_id`='#{password_id}'"))
+  str += get_hash_table(Hashes.query_ex({:where => "`hash_password_id`='#{password_id}'"}))
 
   return str
 end

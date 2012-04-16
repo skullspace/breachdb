@@ -66,6 +66,8 @@ class Db
   #
   ##
   def self.query_ex(query_params)
+    query_params = query_params.nil? ? {} : query_params.clone
+
     # If a 'pagination' was given, override :orderby and :limit
     if(!query_params[:pagination].nil?)
       pagination = query_params[:pagination]
@@ -79,19 +81,24 @@ class Db
     # If a columns array was given, each element consists of an 'aggregate'
     # and a 'name'
     if(!query_params[:columns].nil?)
+      # Make sure we have a String, a Hash, or an Array
+      if(!query_params[:columns].is_a?(String) && !query_params[:columns].is_a?(Hash) && !query_params[:columns].is_a?(Array))
+        throw :BadType
+      end
+
+      # If we have a String, convert it into a Hash
+      if(query_params[:columns].is_a?(String))
+        query_params[:columns] = { :name => query_params[:columns] }
+      end
+
+      # If we have a Hash, convert it into an Array
+      if(query_params[:columns].is_a?(Hash))
+        query_params[:columns] = [ query_params[:columns] ]
+      end
+
+      # Now we know we have an Array to work with
       columns = []
       query_params[:columns].each do |col|
-        # Make sure we have a valid type
-        if(!col.is_a?(String) && !col.is_a?(Hash))
-          throw :BadType
-        end
-
-        # Handle string columns
-        if(col.is_a?(String))
-          col = { :name => col }
-        end
-
-        # Handle hashes
         aggregate = col[:aggregate].nil? ? nil : Mysql::quote(col[:aggregate])
         name      = col[:name] == '*'    ? '*' : "`#{Mysql::quote(col[:name])}`"
         as        = col[:as].nil?        ? nil : "`#{Mysql::quote(col[:as])}`"
@@ -245,12 +252,14 @@ class Db
 #{orderby}
 #{limit}
 "
+
+puts(this_query)
     return result_to_list(query(this_query))
   end
 
   # A handy little wrapper around query_ex to get the top rows from a table
   def self.get_top(column, count, query_params = nil)
-    query_params = query_params || {}
+    query_params = query_params.nil? ? {} : query_params.clone
 
     query_params[:orderby] = {:column=>column, :dir=>'DESC'}
     query_params[:limit]  = count
@@ -261,7 +270,7 @@ class Db
   # A handy wrapper aorund query_ex that performs a GROUP BY/SUM() on a column
   # and takes the top-x from that column on the result
   def self.get_top_sum(sum_column, groupby_column, count, query_params = nil)
-    query_params = query_params || {}
+    query_params = query_params.nil? ? {} : query_params.clone
 
     query_params[:columns] = [
         { :name => '*' },
@@ -270,6 +279,14 @@ class Db
     query_params[:groupby] = groupby_column;
 
     return get_top(sum_column, count, query_params)
+  end
+
+  def self.get_count_ex(query_params = nil)
+    query_params = query_params.nil? ? {} : query_params.clone
+
+    query_params[:columns] = { :name => '*', :aggregate => 'COUNT', :as => 'RESULT' }
+    result = query_ex(query_params)
+    return result.pop['RESULT'].to_i
   end
 
   ##
@@ -421,7 +438,7 @@ class Db
     page_size = 10 if(page_size.nil? || page_size == 0)
 
     return query_ex({
-      :columns => [ "*" ],
+      :columns => "*",
       :table => table_name,
       :where => where,
       :orderby => [ {

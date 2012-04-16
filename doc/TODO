@@ -4,3 +4,4 @@
 # Remove c_hash_count from password table and see if anything breaks
 * Take submissions
 * Get rid of the first argument to 'list'
+* Totally get rid of get_count(), list(), and other obsolete functions
