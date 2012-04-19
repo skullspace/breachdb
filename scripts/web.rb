@@ -130,6 +130,7 @@ get '/' do
   str = ''
   str += "<p>Please read the <a href='/faq'>faq</a> page before yelling at me!</p>"
   str += "<p>Perhaps you wish to visit the <a href='/downloads'>downloads</a> page</p>"
+  str += "<p>Perhaps you want to help out with <a href='/submissions'>cracking hashes</a>, or perhaps you want to <a href='https://github.com/skullspace/breachdb'>help develop</a>?</p>"
 
   str += "<h1>Top breaches</h1>\n"
   str += get_breach_table(Breaches.get_top('c_total_hashes', TOP_SIZE))
@@ -573,6 +574,32 @@ get /^\/search\/password\/$/ do
   end
 
   return str
+end
+
+get '/submissions' do
+  return "
+<h1>Submissions</h1>
+
+<p>Thanks for offering to help crack passwords! Any help goes a long way towards password research!</p>
+
+<p>The first thing you should do is visit the <a href='/hashes/uncracked'>uncracked hashes</a> page, or pick a <a href='/breaches'>breach</a> or <a href='/hash_types'>hash type</a> you're interested in.</p>
+
+<p>Then run the hashes through <a href='http://www.openwall.com/john/'>John the Ripper</a>, <a href='http://hashcat.net/oclhashcat-plus/'>Hashcat</a>, or whatever tool you like.</p>
+
+<p>Finally, copy/paste your passwords into the field below, one password per line. The hashes aren't necessary unless you're cracking a particularly slow protocol - such as bcrypt or phpass - in which case I'd ask that you start each line with the hash, followed by a colon.</p>
+
+<p>Note: results won't show up right away, they're cached and processed in batches.</p>
+
+<form action='/submissions/submit'>
+  <p><textarea name='passwords' rows='20' cols='80'></textarea></p>
+  <p>Your name, if you want credit: <input type='text' name='cracker' value='anonymous'></p>
+  <p><input type='submit' value='Submit'></p>
+</form>
+"
+end
+
+get '/submissions/submit' do
+  return 'TODO'
 end
 
 get '/faq' do

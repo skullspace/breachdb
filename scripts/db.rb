@@ -103,8 +103,12 @@ class Db
           columns << Mysql::quote(col[:raw_name])
         else
           aggregate = col[:aggregate].nil? ? nil : Mysql::quote(col[:aggregate])
-          name      = col[:name] == '*'    ? '*' : "`#{Mysql::quote(col[:name])}`"
-          as        = col[:as].nil?        ? nil : "`#{Mysql::quote(col[:as])}`"
+          if(col[:name].nil?)
+            name = ''
+          else
+            name = col[:name] == '*'    ? '*' : "`#{Mysql::quote(col[:name])}`"
+          end
+          as = col[:as].nil?        ? nil : "`#{Mysql::quote(col[:as])}`"
           columns << (aggregate.nil? ? "#{name}" : "#{aggregate}(#{name})") + (as.nil? ? '' : " AS #{as}")
         end
       end
@@ -263,7 +267,9 @@ class Db
   # how the query_params argument works. 
   ##
   def self.query_ex(query_params = nil)
-    return result_to_list(query(get_query(query_params)))
+    this_query = get_query(query_params)
+puts(this_query)
+    return result_to_list(query(this_query))
   end
 
   # A handy little wrapper around query_ex to get the top rows from a table
