@@ -46,7 +46,7 @@ class Pagination
   end
 
   def get_url(count = nil, page = nil, sort = nil, sortdir = nil)
-    return "#{url}?" + 
+    return "#{url}#{url.include?('?') ? '&' : '?'}" + 
             "count=#{count.nil?     ? @count   : count}&" +
             "page=#{page.nil?       ? @page    : page}&" +
             "sort=#{sort.nil?       ? @sort    : sort}&" +

@@ -532,7 +532,7 @@ get /^\/search\/hash\/$/ do
 
     query = { :where => "`hash_hash` LIKE '%#{hash_sql}%'" }
 
-    query[:pagination] = Pagination.new("/search/hash/#{hash_html}", params, Hashes.get_count_ex(query), 'hash_count', 'DESC')
+    query[:pagination] = Pagination.new("/search/hash/?hash=#{hash_html}", params, Hashes.get_count_ex(query), 'hash_count', 'DESC')
 
     str = ''
     str += "<h1>Hashes containing '#{hash_html}':</h1>\n"
@@ -560,7 +560,7 @@ get /^\/search\/password\/$/ do
 
     query = { :where => "`password_cache_password_password` LIKE '%#{password_sql}%'" }
 
-    query[:pagination] = Pagination.new("/search/password/#{password_html}", params, PasswordCache.get_count_ex(query), 'password_cache_password_password', 'ASC')
+    query[:pagination] = Pagination.new("/search/password/?password=#{password_html}", params, PasswordCache.get_count_ex(query), 'password_cache_password_password', 'ASC')
 
     str += "<h1>Passwords containing '#{password_html}':</h1>\n"
     str += "<p><a href='/'>Home</a></p>\n"
