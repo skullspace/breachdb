@@ -7,6 +7,7 @@ require 'passwords'
 require 'passwordcache'
 require 'hashtypes'
 require 'masks'
+require 'submissions'
 
 require 'pagination'
 
@@ -590,16 +591,62 @@ get '/submissions' do
 
 <p>Note: results won't show up right away, they're cached and processed in batches.</p>
 
-<form action='/submissions/submit'>
-  <p><textarea name='passwords' rows='20' cols='80'></textarea></p>
+<form action='/submissions/submit' method='post'>
+  <p><textarea name='passwords' rows='10' cols='60'></textarea></p>
   <p>Your name, if you want credit: <input type='text' name='cracker' value='anonymous'></p>
   <p><input type='submit' value='Submit'></p>
 </form>
 "
 end
 
-get '/submissions/submit' do
-  return 'TODO'
+post '/submissions/submit' do
+  # IMPORTANT: these parameters need to be sanitized
+  submissions = params['passwords']
+  cracker     = Mysql::quote(params['cracker'])
+
+  # TODO: Create a batch
+  # TODO: Get the cracker
+
+  # Automatically detect if the passwords are in hash:password format by
+  # looking at the first bunch and seeing if they all contain colons
+  with_hash = true
+  submissions = submissions.split(/\r\n|\n|\r/)
+  0.upto([submissions.length, 100].min - 1) do |i|
+    if(!submissions[i].include?(':'))
+      with_hash = false
+    end
+  end
+
+  # Loop through the submissions and add them to arrays
+  words = []
+  hashes = []
+  submissions.each do |submission|
+    submission = Mysql::quote(submission)
+    hash = ''
+    if(with_hash)
+      # Eliminate blank lines
+      if(submission == '')
+        next
+      end
+
+      hash, word = submission.split(/:/, 2)
+    else
+      word = submission
+    end
+
+    words << word
+    hashes << hash
+  end
+
+  values = {}
+  values['submission_password'] = words
+  values['submission_hash'] = hashes
+
+  Submissions.insert_rows(values)
+ 
+  return "<p>Your submissions have been saved and will be rolled into the active set at our next batch update. Thanks for your help!</p>
+          <p><a href='/'>Home</a></p>"
+
 end
 
 get '/faq' do

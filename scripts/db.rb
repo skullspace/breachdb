@@ -455,7 +455,7 @@ puts(this_query)
   #  are arrays, they have to be the same length.
   # @param id Set to the id of the row to edit, if we're editing a value.
   #
-  # @return The ID of the last row added, or the id of the row that was edited.
+  # @return The id of the last row added, or the id of the row that was edited.
   ##
   def self.insert_rows(to_import, id = nil)
     if(id.nil?)
