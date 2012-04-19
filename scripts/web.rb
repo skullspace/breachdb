@@ -127,6 +127,24 @@ def get_cracker_table(crackers, pagination = nil)
         ], nil, pagination)
 end
 
+get '/download/breaches' do
+  puts("Starting: " + Time.new.to_s)
+  Breaches.export('/tmp/breaches.txt.bz2', nil)
+  puts("Done: " + Time.new.to_s)
+end
+
+get '/download/passwords' do
+  puts("Starting: " + Time.new.to_s)
+  Passwords.export('/tmp/passwords.txt.bz2', nil)
+  puts("Done: " + Time.new.to_s)
+end
+
+get '/download/hashes' do
+  puts("Starting: " + Time.new.to_s)
+  Hashes.export('/tmp/hashes.txt.bz2', nil)
+  puts("Done: " + Time.new.to_s)
+end
+
 get '/' do
   # Get a list of breaches
   str = ''

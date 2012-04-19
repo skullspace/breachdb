@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'mysql'
+require 'bzip2-ruby'
 
 require 'pagination'
 
@@ -310,6 +311,27 @@ puts(this_query)
                     ) AS `a`"))
 
     return result.pop['RESULT'].to_i
+  end
+
+  # TODO: Pick columns
+  # TODO: I'll likely have to do this in chunks
+  # TODO: Update the get_chunk function to use the new query_params
+  def self.export(filename, query_params = nil)
+    data = query_ex(query_params)
+    keys = data.pop.keys
+
+    test = Bzip2::Writer.new(File.open(filename, 'wb'))
+    test.write(keys.join(',') + "\n")
+    data.each do |datum|
+      this_line = []
+      keys.each do |key|
+        this_line = this_line << datum[key]
+      end
+
+      test.write(this_line.join(',') + "\n")
+    end
+    test.close()
+    puts(filename)
   end
 
   ##
