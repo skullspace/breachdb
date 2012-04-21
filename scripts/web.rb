@@ -127,7 +127,81 @@ def get_cracker_table(crackers, pagination = nil)
         ], nil, pagination)
 end
 
-get '/download/breaches' do
+get '/downloads' do
+  str = "<h1>Downloads</h1>
+    <p><a href='/'>Home</a></p>"
+
+  str += "
+    <table>
+      <tr>
+        <td>&nbsp;</td>
+        <td>Passwords</td>
+        <td>Hashes</td>
+        <td>Uncracked hashes</td>
+      </tr>"
+
+  str += "<tr><th colspan='4'>By breach</th></tr>"
+  Breaches.query_ex().each do |breach|
+    str = str + "
+        <tr>
+          <td><a href='/breach/#{breach['breach_id']}'>#{breach['breach_name']}</td>
+          <td><a href='/downloads/breach/#{breach['breach_id']}/passwords'>Passwords</a></td>
+          <td><a href='/downloads/breach/#{breach['breach_id']}/hashes'>Hashes</a></td>
+          <td><a href='/downloads/breach/#{breach['breach_id']}/hashes/uncracked'>Uncracked</a></td>
+        </tr>
+    "
+  end
+
+  str += "<tr><th>&nbsp;</th></tr>"
+  str += "<tr><th colspan='4'>By hash type</th></tr>"
+  HashTypes.query_ex().each do |hash_type|
+    if(hash_type['c_total_hashes'].to_i > 0)
+      str = str + "
+        <tr>
+          <td><a href='/hash_type/#{hash_type['hash_type_id']}'>#{hash_type['hash_type_name']}</td>
+          <td><a href='/downloads/hash_type/#{hash_type['hash_type_id']}/passwords'>Passwords</a></td>
+          <td><a href='/downloads/hash_type/#{hash_type['hash_type_id']}/hashes'>Hashes</a></td>
+          <td><a href='/downloads/hash_type/#{hash_type['hash_type_id']}/hashes/uncracked'>Uncracked</a></td>
+        </tr>
+      "
+    end
+  end
+
+  str += "<tr><th>&nbsp;</th></tr>"
+  str += "<tr><th colspan='4'>By cracker</th></tr>"
+  Crackers.query_ex().each do |cracker|
+    if(cracker['c_total_hashes'].to_i > 0)
+      str = str + "
+        <tr>
+          <td><a href='/cracker/#{cracker['cracker_id']}'>#{cracker['cracker_name']}</td>
+          <td><a href='/downloads/cracker/#{cracker['cracker_id']}/passwords'>Passwords</a></td>
+          <td><a href='/downloads/cracker/#{cracker['cracker_id']}/hashes'>Hashes</a></td>
+          <td><a href='/downloads/cracker/#{cracker['cracker_id']}/hashes/uncracked'>Uncracked</a></td>
+        </tr>
+      "
+    end
+  end
+
+  str += "<tr><th>&nbsp;</th></tr>"
+  str += "<tr><th colspan='4'>By mask</th></tr>"
+  Masks.get_top('c_password_count', TOP_SIZE).each do |mask|
+    str = str + "
+        <tr>
+          <td><a href='/mask/#{mask['mask_id']}'>#{mask['mask_mask']}</td>
+          <td><a href='/downloads/mask/#{mask['mask_id']}/passwords'>Passwords</a></td>
+          <td><a href='/downloads/mask/#{mask['mask_id']}/hashes'>Hashes</a></td>
+          <td><a href='/downloads/mask/#{mask['mask_id']}/hashes/uncracked'>Uncracked</a></td>
+        </tr>
+    "
+  end
+
+  str += "
+    </table>
+"
+
+end
+
+get '/downloads/breaches' do
   puts("Starting: " + Time.new.to_s)
   Breaches.export('/tmp/breaches.txt.bz2', nil)
   puts("Done: " + Time.new.to_s)
