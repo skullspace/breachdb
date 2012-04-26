@@ -316,7 +316,7 @@ puts(this_query)
         { :name => sum_column, :aggregate => 'SUM', :as => sum_column }
       ],
       :orderby => {
-        :column=>groupby_column,
+        :column=>sum_column,
         :dir=>'DESC'
       },
       :groupby => groupby_column,
