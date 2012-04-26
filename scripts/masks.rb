@@ -52,7 +52,6 @@ class Masks < Breachdb
     end
   end
 
-
   def self.cache_update()
     puts("Updating mask.c_password_count...")
     query("UPDATE `mask` SET `c_password_count`='0'")
