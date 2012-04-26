@@ -22,11 +22,16 @@ class Db
   # This needs to be called at the start of the program to initiate the
   # database connection.
   ##
-  def self.initialize()
+  def self.initialize(host = nil, username = nil, password = nil, db = nil)
     # Only initialize the database once (not really threadsafe, but not a big
     # deal)
     if(@@my.nil?)
-      @@my = Mysql::new(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DB)
+      @@my = Mysql::new(
+        host.nil?     ? DB_HOST     : host,
+        username.nil? ? DB_USERNAME : username,
+        password.nil? ? DB_PASSWORD : password,
+        db.nil?       ? DB_DB       : db
+      )
     end
   end
 
@@ -285,8 +290,6 @@ class Db
   def self.query_ex(query_params = nil, query_params_override = nil)
     # Construct the query
     this_query = get_query(query_params, query_params_override)
-
-puts(this_query)
 
     # Get the single_column value from the override or the original query_params variable
     single_column = query_params_override.nil? ? nil : query_params_override[:single_column]
