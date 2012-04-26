@@ -1,7 +1,6 @@
 .svn
 .class
 *.bz2
-*.sql
 tmp/*
 *.sqlite3
 log/*
