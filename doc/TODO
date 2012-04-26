@@ -4,5 +4,3 @@
   * Possibly implement some smarter cache calculation?
 * Create some proper testing (3 or 4 smaller breaches, a good list of submissions)
 * Allow submissions in .txt or .bz2 format
-* Fix the md5-gen part of hash_type (right now it displays the same thing a bunch of times over and over)
-

@@ -534,6 +534,17 @@ def edit_hash_type()
   return go_hash_type(list_hash_types(true, true))
 end
 
+def import_hash_type()
+  puts("Import hash types...")
+  puts("-----------------")
+  values = prompt_values(HashTypes, nil,
+    [
+      {:name=>'File', :column=>'hash_type_file', :value=>'', :is_file=>true}
+    ])
+
+  HashTypes.import_csv(values['hash_type_file'])
+end
+
 def create_hash_type()
   return go_hash_type(nil)
 end
@@ -625,6 +636,7 @@ def menu()
     {:name=>'HashType::list',          :function=>method(:list_hash_types)},
     {:name=>'HashType::create',        :function=>method(:create_hash_type)},
     {:name=>'HashType::edit',          :function=>method(:edit_hash_type)},
+    {:name=>'HashType::import',        :function=>method(:import_hash_type)},
 
     {:name=>'Dictionary::list',        :function=>method(:list_dictionaries)},
     {:name=>'Dictionary::create',      :function=>method(:create_dictionary)},
