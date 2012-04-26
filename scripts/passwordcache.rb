@@ -39,10 +39,10 @@ class PasswordCache < Breachdb
                 `hash_type_name`    AS `password_cache_hash_type_name`,
                 SUM(`hash_count`)   AS `password_cache_hash_count`
               FROM `password` 
-                JOIN `hash`      ON `hash_password_id`=`password_id`
-                JOIN `breach`    ON `hash_breach_id`=`breach_id`
-                JOIN `mask`      ON `password_mask_id`=`mask_id`
-                JOIN `hash_type` ON `hash_hash_type_id`=`hash_type_id`
+                LEFT JOIN `hash`      ON `hash_password_id`=`password_id`
+                LEFT JOIN `breach`    ON `hash_breach_id`=`breach_id`
+                LEFT JOIN `mask`      ON `password_mask_id`=`mask_id`
+                LEFT JOIN `hash_type` ON `hash_hash_type_id`=`hash_type_id`
               GROUP BY `breach_id`, `password_id`
             );
     ")

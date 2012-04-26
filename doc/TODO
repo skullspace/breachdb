@@ -3,6 +3,6 @@
 * Verify the order of @all_classes in breachdb_admin.rb to ensure that the caches are updated properly (by looking at the update_class function)
   * Possibly implement some smarter cache calculation?
   * It doesn't look like part of the caching is working - for example, masks aren't being generated (I don't think the code for doing the masks even existss anymore, in fact)
-* Whatever cache the top passwords list depends on isn't working
 * Create some proper testing (3 or 4 smaller breaches, a good list of submissions)
 * Allow submissions in .txt or .bz2 format
+* top_passwords isn't sorted
