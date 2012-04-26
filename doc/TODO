@@ -1,2 +1,10 @@
 * Add '^' and '$' to search operations
 * Make the 'download' links work
+* Update db.each_chunk to use the n ew standard, and ensure it works
+* Get rid of breachdb.rb, which is totally pointless
+* Verify the order of @all_classes in breachdb_admin.rb to ensure that the caches are updated properly (by looking at the update_class function)
+  * Possibly implement some smarter cache calculation?
+  * It doesn't look like part of the caching is working - for example, masks aren't being generated (I don't think the code for doing the masks even existss anymore, in fact)
+* Give some better progress information in the SubmissionBatch.process() function
+* Rename get_count_ex to get_count
+* Give query_ex the ability to temporary override variables so I don't have to worry about using clone() or old_single_column() or other nonsense

@@ -55,6 +55,7 @@ class Db
   # The query_params structure is a table with the following elements (all elements 
   # are optional):
   # * :columns  : An Array of columns. Each column is either a String representing a single column name, or a Table containing :name, :as, and :aggregate (eg. 'SUM', 'COUNT', etc).
+  # * :single_column : A string representing the one and only column we want. The return is a list rather than a table. This overrides the value in :columns.
   # * :table    : A String represting the table we're selecting from. Defaults to the class's table_name.
   # * :join     : A single Hash (or Array of hashes) containing :type (eg, 'LEFT JOIN'), :table, :column1, and :column2. 
   # * :where    : The 'where' clause, as a String.
@@ -74,6 +75,11 @@ class Db
       pagination = query_params[:pagination]
       query_params[:limit]   = { :page => pagination.page, :pagesize => pagination.count }
       query_params[:orderby] = { :column => pagination.sort, :dir => pagination.sortdir}
+    end
+
+    # Set up the :single_column variable, if applicable
+    if(!query_params[:single_column].nil?)
+      query_params[:columns] = query_params[:single_column]
     end
 
     # Default the column list to '*'
@@ -269,8 +275,8 @@ class Db
   ##
   def self.query_ex(query_params = nil)
     this_query = get_query(query_params)
-puts(this_query)
-    return result_to_list(query(this_query))
+#puts(this_query)
+    return result_to_list(query(this_query), query_params.nil? ? nil : query_params[:single_column])
   end
 
   # A handy little wrapper around query_ex to get the top rows from a table
@@ -363,44 +369,63 @@ puts(this_query)
   #    to get only what we need.
   # 2) read/write mode - This reads the entire table, and passes it to the
   #    function a little at a time. This obviously takes a lot more memory,
-  #    but will work if the function changes within the callback.
+  #    but will work if the data returned changes within the callback.
   #
   # @param column If set, only return a single column
   # @param size   The size of the chunks - the default CHUNK_SIZE is probably best
   # @param where  Add a WHERE clause to the query
   # @param is_read_only Enable/disable read-only mode
-  def self.each_chunk(column = nil, size = CHUNK_SIZE, where = nil, is_read_only = true)
-    debug("Reading table `#{table_name}` in chunks of #{size} rows #{column.nil? ? '' : "(column: #{column})"}")
+  def self.each_chunk(size = CHUNK_SIZE, is_read_only = true, query_params = nil)
+#  def self.each_chunk(column = nil, size = CHUNK_SIZE, where = nil, is_read_only = true)
+
+    query_params = query_params.nil? ? {} : query_params.clone
+
+size = 5000
+is_read_only = false
+
+    count = get_count_ex(query_params)
+
     if(is_read_only)
       i = 0
-      loop do
-        result = result_to_list(query("
-          SELECT #{column.nil? ? '*' : "`#{Mysql::quote(column)}`"}
-          FROM `#{Mysql::quote(table_name)}`
-          #{ where.nil? ? "" : "WHERE #{where}"}
-          ORDER BY `#{id_column}`
-          LIMIT #{i}, #{size}
-        "), column)
 
-        if(result.size == 0)
+      loop do
+        debug("[#{table_name}] Reading rows #{i * size} - #{((i + 1) * size) - 1} of #{count}")
+        query_params[:limit] =  {
+          :page => i,
+          :pagesize => size
+        }
+
+        result = query_ex(query_params)
+        if(result.size() == 0)
+          debug("Finished reading #{table_name}!")
           break
         end
+
         yield result
-        i = i + size
+        i = i + 1
       end
     else
-      # Get the results
-      # TODO: Can we just get the id column?
-      r = result_to_list(query("
-        SELECT #{column.nil? ? '*' : "`#{Mysql::quote(column)}`"}
-        FROM `#{Mysql::quote(table_name)}`
-        #{ where.nil? ? "" : "WHERE #{where}"}
-      "), column)
+      # Back up the two values we're changing
+      old_single_column = query_params[:single_column]
+      old_where = query_params[:where]
 
+      # Get the full table's ID column
+      query_params[:single_column] = id_column
+      id_list = query_ex(query_params)
+      query_params[:single_column] = old_single_column
+
+      # Break the id list into chunks and query on it
       i = 0
-      r.each_slice(size) do |slice|
-        i += size
-        yield slice
+      id_list.each_slice(size) do |slice|
+        debug("[#{table_name}] Reading rows #{i * size} - #{((i + 1) * size) - 1} of #{id_list.size}")
+        if(old_where.nil? || old_where == '')
+          query_params[:where] = "#{id_column} IN (#{slice.join(",")})"
+        else
+          query_params[:where] = "(#{old_where}) AND #{id_column} IN (#{slice.join(",")})"
+        end
+
+        yield query_ex(query_params)
+        i = i + 1
       end
     end
   end

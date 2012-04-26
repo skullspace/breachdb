@@ -13,7 +13,7 @@ class Breaches < Breachdb
 
   def self.cache_update()
     puts("Updating breach.c_total_hashes and breach.c_distinct_hashes...")
-    query("UPDATE `breach` SET `c_total_hashes`='0', `c_distinct_hashes`='0'")
+    query("UPDATE `breach` SET `c_total_hashes`='0', `c_distinct_hashes`='0', `c_total_passwords`='0', `c_distinct_passwords`='0'")
     query("
       UPDATE `breach` AS `b1`
         JOIN (
@@ -26,18 +26,19 @@ class Breaches < Breachdb
         `b1`.`c_distinct_hashes` = `sub`.`c_distinct_hashes`
     ")
 
-    # TODO: This doesn't actually work
-#    puts("Updating breach.c_hash_types (different types of hashes used)...")
-#    query("UPDATE `breach` SET `c_hash_types`=''")
-#    query("
-#      UPDATE `breach` AS `b1`
-#        JOIN (
-#          SELECT `hash_breach_id`, CONCAT(`hash_type_name`) AS `c_hash_types`
-#          FROM `hash` JOIN `hash_type` ON `hash_hash_type_id`=`hash_type_id`
-#          GROUP BY `hash_breach_id`
-#        ) AS `sub` ON `b1`.`breach_id` = `sub`.`hash_breach_id`
-#      SET `b1`.`c_hash_types` = `sub`.`c_hash_types`
-#    ")
+    puts("Updating breach.c_total_passwords and breach.c_distinct_passwords...")
+    query("
+      UPDATE `breach` AS `b1`
+        JOIN (
+          SELECT `hash_breach_id`, SUM(`c_hash_count`) AS `c_total_passwords`, COUNT(*) AS `c_distinct_passwords`
+          FROM `hash` JOIN `password` ON `hash_password_id`=`password_id`
+          WHERE `hash_password_id` != 0
+          GROUP BY `hash_breach_id`
+        ) AS `sub` ON `b1`.`breach_id` = `sub`.`hash_breach_id`
+      SET
+        `b1`.`c_total_passwords` = `sub`.`c_total_passwords`,
+        `b1`.`c_distinct_passwords` = `sub`.`c_distinct_passwords`
+    ")
   end
 end
 

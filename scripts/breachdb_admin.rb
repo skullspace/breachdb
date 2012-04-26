@@ -15,7 +15,8 @@ require 'passwordcache'
 
 require 'mysql'
 
-@all_classes = [ Breaches, HashTypes, Passwords, Masks, Submissions, Hashes, Crackers, SubmissionBatches, Dictionaries, DictionaryWords, PasswordCache ]
+# Note: Hashes must come before Passwords, and Passwords must come before Breaches
+@all_classes = [ Hashes, Passwords, Breaches, HashTypes, Masks, Submissions, Crackers, SubmissionBatches, Dictionaries, DictionaryWords, PasswordCache ]
 
 IMPORT_FORMAT_MULTIPLE_LINES = '1'
 IMPORT_FORMAT_UNIQ           = '2'

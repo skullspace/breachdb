@@ -56,8 +56,6 @@ class SubmissionBatches < Breachdb
     # Wait for john to finish
     Process.waitall()
 
-    debug("john the ripper finished! Reading the pot file...")
-
     # Loop through the john.pot file and extract all the passwords
     pot = File.new(potfile, 'r')
     i = 0
@@ -134,7 +132,7 @@ class SubmissionBatches < Breachdb
     # changes, do it after! And finally, you can't randomize the sorting order
     # for the same reason
     debug("Getting hashes to test with john...")
-    Hashes.each_chunk(nil, 100000, "`c_difficulty` < 8 AND `c_is_internal`='0' AND `hash_password_id`='0' AND #{hash_list_sql}") do |hashes|
+    Hashes.each_chunk(100000, true, { :where => "`c_difficulty` < 8 AND `c_is_internal`='0' AND `hash_password_id`='0' AND #{hash_list_sql}" } ) do |hashes|
       process_hashes_john(words, hashes, results)
       debug("Done the chunk of hashes! So far, we have #{results.keys.size} valid passwords representing #{results.values.flatten.size} hashes")
     end
@@ -181,12 +179,12 @@ class SubmissionBatches < Breachdb
     results = {}
 
     # First, process the submissions that don't have associated hashes
-    Submissions.each_chunk(nil, CHUNK_SIZE, where + " AND `submission_hash`=''") do |submission|
+    Submissions.each_chunk(CHUNK_SIZE, true, { :where => where + " AND `submission_hash`=''"}) do |submission|
       process_hashes(submission, nil, results)
     end
 
     # Process submissions that have an associated hash
-    Submissions.each_chunk(nil, CHUNK_SIZE, where + " AND `submission_hash`!=''") do |submission|
+    Submissions.each_chunk(CHUNK_SIZE, true, { :where => where + " AND `submission_hash`!=''"}) do |submission|
       # Get a list of the submitted hashes
       known_hashes = []
       submission.each() do |row|
