@@ -325,10 +325,7 @@ puts(this_query)
   end
 
   def self.get_count(query_params = nil)
-    query_params = query_params.nil? ? {} : query_params.clone
-
-    query_params[:columns] = { :raw_name => '1' }
-    query = get_query(query_params)
+    query = get_query(query_params, { :raw_name => '1' })
 
     result = result_to_list(query("
                     SELECT COUNT(*) AS `RESULT`
@@ -396,9 +393,6 @@ puts(this_query)
   # @param where  Add a WHERE clause to the query
   # @param is_read_only Enable/disable read-only mode
   def self.each_chunk(size = CHUNK_SIZE, is_read_only = true, query_params = nil)
-
-    query_params = query_params.nil? ? {} : query_params
-
     count = get_count(query_params)
 
     if(is_read_only)
