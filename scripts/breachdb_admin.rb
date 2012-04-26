@@ -654,7 +654,14 @@ def menu()
 end
 
 
-Breachdb.initialize()
+if(ARGV.count == 0)
+  Breachdb.initialize()
+elsif(ARGV.count == 4)
+  Breachdb.initialize(ARGV[0], ARGV[1], ARGV[2], ARGV[3])
+else
+  puts("Usage: web.rb <host> <username> <password> <db>")
+  exit
+end
 
 loop do
   menu()
