@@ -31,7 +31,7 @@ SUBMISSION_FORMAT_HASH       = '2'
 def get_with_default(prompt, default, pattern = nil)
   loop do
     print("#{prompt} [#{default}] --> ")
-    result = gets().chomp
+    result = $stdin.gets().chomp
     if(result == '')
       result = default if(result == '')
     end
