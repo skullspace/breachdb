@@ -6,4 +6,5 @@
   * Possibly implement some smarter cache calculation?
   * It doesn't look like part of the caching is working - for example, masks aren't being generated (I don't think the code for doing the masks even existss anymore, in fact)
 * Give some better progress information in the SubmissionBatch.process() function
-* Give query_ex the ability to temporary override variables so I don't have to worry about using clone() or old_single_column() or other nonsense
+* Whatever cache the top passwords list depends on isn't working
+* Create some proper testing (3 or 4 smaller breaches, a good list of submissions)

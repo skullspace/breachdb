@@ -66,9 +66,18 @@ class Db
   # There are also special arguments that can override the others:
   # * :pagination : An instance of the Pagination class; overrides :orderby and :limit
   #
+  # @param query_params The query_params structure, as defined above.
+  # @param query_params_override Same structure as query_params; for the elements defined, this structure takes prioroity. 
+  #
   ##
-  def self.get_query(query_params = nil)
+  def self.get_query(query_params = nil, query_params_override = nil)
     query_params = query_params.nil? ? {} : query_params.clone
+
+    # Perform the overrides from query_params_override
+    if(!query_params_override.nil?)
+      query_params.merge!(query_params_override)
+    end
+
 
     # If a 'pagination' was given, override :orderby and :limit
     if(!query_params[:pagination].nil?)
@@ -273,34 +282,46 @@ class Db
   # Perform a query. See the documentation for get_query() for information on
   # how the query_params argument works. 
   ##
-  def self.query_ex(query_params = nil)
-    this_query = get_query(query_params)
-#puts(this_query)
-    return result_to_list(query(this_query), query_params.nil? ? nil : query_params[:single_column])
+  def self.query_ex(query_params = nil, query_params_override = nil)
+    # Construct the query
+    this_query = get_query(query_params, query_params_override)
+
+puts(this_query)
+
+    # Get the single_column value from the override or the original query_params variable
+    single_column = query_params_override.nil? ? nil : query_params_override[:single_column]
+    if(single_column.nil?)
+      single_column = query_params.nil? ? nil : query_params[:single_column]
+    end
+
+    return result_to_list(query(this_query), single_column)
   end
 
   # A handy little wrapper around query_ex to get the top rows from a table
   def self.get_top(column, count, query_params = nil)
-    query_params = query_params.nil? ? {} : query_params.clone
-
-    query_params[:orderby] = {:column=>column, :dir=>'DESC'}
-    query_params[:limit]  = count
-
-    return query_ex(query_params)
+    return query_ex(query_params, {
+      :orderby => {
+        :column=>column,
+        :dir=>'DESC'},
+      :limit => count
+    })
   end
 
   # A handy wrapper aorund query_ex that performs a GROUP BY/SUM() on a column
   # and takes the top-x from that column on the result
   def self.get_top_sum(sum_column, groupby_column, count, query_params = nil)
-    query_params = query_params.nil? ? {} : query_params.clone
-
-    query_params[:columns] = [
+    return query_ex(query_params, {
+      :columns => [
         { :name => '*' },
         { :name => sum_column, :aggregate => 'SUM', :as => sum_column }
-    ]
-    query_params[:groupby] = groupby_column;
-
-    return get_top(sum_column, count, query_params)
+      ],
+      :orderby => {
+        :column=>groupby_column,
+        :dir=>'DESC'
+      },
+      :groupby => groupby_column,
+      :limit => count
+    })
   end
 
   def self.get_count(query_params = nil)
@@ -321,7 +342,6 @@ class Db
 
   # TODO: Pick columns
   # TODO: I'll likely have to do this in chunks
-  # TODO: Update the get_chunk function to use the new query_params
   def self.export(filename, query_params = nil)
     data = query_ex(query_params)
     keys = data.pop.keys
@@ -376,12 +396,8 @@ class Db
   # @param where  Add a WHERE clause to the query
   # @param is_read_only Enable/disable read-only mode
   def self.each_chunk(size = CHUNK_SIZE, is_read_only = true, query_params = nil)
-#  def self.each_chunk(column = nil, size = CHUNK_SIZE, where = nil, is_read_only = true)
 
-    query_params = query_params.nil? ? {} : query_params.clone
-
-size = 5000
-is_read_only = false
+    query_params = query_params.nil? ? {} : query_params
 
     count = get_count(query_params)
 
@@ -390,12 +406,8 @@ is_read_only = false
 
       loop do
         debug("[#{table_name}] Reading rows #{i * size} - #{((i + 1) * size) - 1} of #{count}")
-        query_params[:limit] =  {
-          :page => i,
-          :pagesize => size
-        }
 
-        result = query_ex(query_params)
+        result = query_ex(query_params, { :limit => { :page => i, :pagesize => size }})
         if(result.size() == 0)
           debug("Finished reading #{table_name}!")
           break
@@ -405,26 +417,20 @@ is_read_only = false
         i = i + 1
       end
     else
-      # Back up the two values we're changing
-      old_single_column = query_params[:single_column]
-      old_where = query_params[:where]
-
       # Get the full table's ID column
-      query_params[:single_column] = id_column
-      id_list = query_ex(query_params)
-      query_params[:single_column] = old_single_column
+      id_list = query_ex(query_params, {:single_column => id_column})
 
       # Break the id list into chunks and query on it
       i = 0
       id_list.each_slice(size) do |slice|
         debug("[#{table_name}] Reading rows #{i * size} - #{((i + 1) * size) - 1} of #{id_list.size}")
-        if(old_where.nil? || old_where == '')
-          query_params[:where] = "#{id_column} IN (#{slice.join(",")})"
+        if(query_params[:where].nil?)
+          where = "#{id_column} IN (#{slice.join(",")})"
         else
-          query_params[:where] = "(#{old_where}) AND #{id_column} IN (#{slice.join(",")})"
+          where = "(#{query_params[:where]}) AND #{id_column} IN (#{slice.join(",")})"
         end
 
-        yield query_ex(query_params)
+        yield query_ex(query_params, {:where => where})
         i = i + 1
       end
     end
