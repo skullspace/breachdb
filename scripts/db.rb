@@ -303,7 +303,7 @@ class Db
     return get_top(sum_column, count, query_params)
   end
 
-  def self.get_count_ex(query_params = nil)
+  def self.get_count(query_params = nil)
     query_params = query_params.nil? ? {} : query_params.clone
 
     query_params[:columns] = { :raw_name => '1' }
@@ -383,7 +383,7 @@ class Db
 size = 5000
 is_read_only = false
 
-    count = get_count_ex(query_params)
+    count = get_count(query_params)
 
     if(is_read_only)
       i = 0
