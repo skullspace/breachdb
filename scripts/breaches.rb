@@ -30,7 +30,7 @@ class Breaches < Breachdb
     query("
       UPDATE `breach` AS `b1`
         JOIN (
-          SELECT `hash_breach_id`, SUM(`c_hash_count`) AS `c_total_passwords`, COUNT(*) AS `c_distinct_passwords`
+          SELECT `hash_breach_id`, SUM(`hash_count`) AS `c_total_passwords`, COUNT(*) AS `c_distinct_passwords`
           FROM `hash` JOIN `password` ON `hash_password_id`=`password_id`
           WHERE `hash_password_id` != 0
           GROUP BY `hash_breach_id`

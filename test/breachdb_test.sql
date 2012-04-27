@@ -42,7 +42,7 @@ CREATE TABLE `breach` (
 
 LOCK TABLES `breach` WRITE;
 /*!40000 ALTER TABLE `breach` DISABLE KEYS */;
-INSERT INTO `breach` VALUES (1,'Jail Lords','0000-00-00','http://','',2557,2446,0,356),(2,'Hell Rising','0000-00-00','http://','',20219,14326,0,1641),(3,'Omploader','0000-00-00','http://','',4080,3593,0,685);
+INSERT INTO `breach` VALUES (1,'Jail Lords','0000-00-00','http://','',2557,2446,435,356),(2,'Hell Rising','0000-00-00','http://','',20219,14326,3861,1641),(3,'Omploader','0000-00-00','http://','',4080,3593,1011,685);
 /*!40000 ALTER TABLE `breach` ENABLE KEYS */;
 UNLOCK TABLES;
 
