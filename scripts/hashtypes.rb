@@ -28,7 +28,6 @@ class HashTypes < Breachdb
       line.chomp!
       id, difficulty, john_test_speed, dummy, name, is_salted, is_internal, pattern, hash_example, hash_example_plaintext, notes = line.split(/\|/)
 
-puts(id)
       lines['hash_type_id']                     << (id.nil?                     ? '' : id)
       lines['hash_type_difficulty']             << (difficulty.nil?             ? '' : difficulty)
       lines['hash_type_john_test_speed']        << (john_test_speed.nil?        ? '' : john_test_speed)
@@ -40,8 +39,6 @@ puts(id)
       lines['hash_type_hash_example_plaintext'] << (hash_example_plaintext.nil? ? '' : hash_example_plaintext)
       lines['hash_type_notes']                  << (notes.nil?                  ? '' : notes)
     end
-
-puts(lines.inspect)
 
     query("DELETE FROM `#{table_name}`")
     insert_rows(lines)
