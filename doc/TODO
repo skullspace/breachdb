@@ -4,3 +4,6 @@
   * Possibly implement some smarter cache calculation?
 * Create some proper testing (3 or 4 smaller breaches, a good list of submissions)
 * Allow submissions in .txt or .bz2 format
+* Testing TODO
+  * Passwords in hash:password format
+

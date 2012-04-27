@@ -14,14 +14,16 @@ cat ../db/breachdb.sql | mysql -h $TEST_HOST -u $TEST_USERNAME --password=$TEST_
 echo -ne "19\n../db/hash_types.csv\n0\n" | $CMD
 
 # Import the test breaches
-echo -ne "3\nFreeHack\n\n\n\n0\n" | $CMD # Create the breach
-echo -ne "14\n20\n1\n../test/freehack-md5_gen6.txt\n1\n0\n" | $CMD # Import the hashes
-
-echo -ne "3\nHell Rising\n\n\n\n0\n" | $CMD # Create the breach
-echo -ne "14\n63\n2\n../test/hellrising-sha256.txt\n1\n0\n" | $CMD # Import the hashes
-
-echo -ne "3\nOmploader\n\n\n\n0\n" | $CMD # Create the breach
-echo -ne "14\n13\n3\n../test/omploader-md5.txt\n1\n0\n" | $CMD # Import the hashes
+echo -ne "14\n20\n\nFreeHack\n\n\n\n../test/freehack-md5_gen6.txt\n1\n0\n" | $CMD
+echo -ne "14\n63\n\nHell Rising\n\n\n\n../test/hellrising-sha256.txt\n1\n0\n" | $CMD
+echo -ne "14\n13\n\nOmploader\n\n\n\n../test/omploader-md5.txt\n1\n0\n" | $CMD
 
 # Import the submissions
-#echo -ne 
+echo -ne "11\n\n\ncracker 1\n\n\n../test/passwords-1.txt\n1\n0\n" | $CMD
+echo -ne "11\n\n\ncracker 2\n\n\n../test/passwords-2.txt\n1\n0\n" | $CMD
+echo -ne "11\n\n\ncracker 3\n\n\n../test/passwords-3.txt\n1\n0\n" | $CMD
+
+# Update the caches
+echo -ne "13\n0\n" | $CMD
+echo -ne "1\n0\n" | $CMD
+

@@ -155,7 +155,6 @@ def prompt_values(table, id, data)
 
   # Loop through the possible fields
   data.each() do |d|
-
     # If there's a list function for this column, use that to get the input
     if(d[:foreign_list])
       d[:value] = d[:foreign_list].call(true, true)
@@ -461,7 +460,7 @@ def import_hashes()
   values = prompt_values(Hashes, nil,
     [
       {:name=>'Hash type', :column=>'hash_hash_type_id', :value=>'0', :foreign_table=>HashTypes, :foreign_list=>method(:list_hash_types)},
-      {:name=>'Breach', :column=>'hash_breach_id', :value=>'0', :foreign_table=>Breaches, :foreign_list=>method(:list_breaches)},
+      {:name=>'Breach', :column=>'hash_breach_id', :value=>'0', :foreign_table=>Breaches, :foreign_list=>method(:list_breaches), :foreign_create=>method(:create_breach)},
       {:name=>'File', :column=>'hash_hash',   :value=>'', :is_file=>true}
     ])
 
