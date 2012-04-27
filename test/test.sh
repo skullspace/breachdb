@@ -14,7 +14,7 @@ cat ../db/breachdb.sql | mysql -h $TEST_HOST -u $TEST_USERNAME --password=$TEST_
 echo -ne "19\n../db/hash_types.csv\n0\n" | $CMD
 
 # Import the test breaches
-echo -ne "14\n20\n\nFreeHack\n\n\n\n../test/freehack-md5_gen6.txt\n1\n0\n" | $CMD
+echo -ne "14\n20\n\nJail Lords\n\n\n\n../test/jailords-md5.txt\n1\n0\n" | $CMD
 echo -ne "14\n63\n\nHell Rising\n\n\n\n../test/hellrising-sha256.txt\n1\n0\n" | $CMD
 echo -ne "14\n13\n\nOmploader\n\n\n\n../test/omploader-md5.txt\n1\n0\n" | $CMD
 
@@ -29,7 +29,7 @@ echo -ne "1\n0\n" | $CMD
 echo -ne "1\n0\n" | $CMD
 
 # Process the hashes
-echo -ne "13\n0\n" | $CMD
+echo -ne "13\n\n0\n" | $CMD
 
 # Update the caches (TODO: Probably don't need multiple calls)
 echo -ne "1\n0\n" | $CMD
