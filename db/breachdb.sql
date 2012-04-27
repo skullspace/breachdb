@@ -33,7 +33,7 @@ CREATE TABLE `breach` (
   `c_total_passwords` int(11) NOT NULL DEFAULT '0',
   `c_distinct_passwords` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`breach_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -47,7 +47,7 @@ CREATE TABLE `cache` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `updated_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -63,7 +63,7 @@ CREATE TABLE `cracker` (
   `c_total_hashes` int(11) NOT NULL DEFAULT '0',
   `c_distinct_hashes` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`cracker_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -128,7 +128,7 @@ CREATE TABLE `hash` (
   KEY `hash_password_id_index` (`hash_password_id`),
   KEY `hash_count` (`hash_count`),
   KEY `hash_breach_id` (`hash_breach_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=1590256 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -154,7 +154,7 @@ CREATE TABLE `hash_type` (
   `c_total_passwords` int(11) NOT NULL DEFAULT '0',
   `c_distinct_passwords` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`hash_type_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=68 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -170,7 +170,7 @@ CREATE TABLE `mask` (
   `c_password_count` int(11) NOT NULL DEFAULT '0',
   `c_mask_example` varchar(256) NOT NULL DEFAULT '',
   PRIMARY KEY (`mask_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=29124 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -207,7 +207,7 @@ CREATE TABLE `password` (
   UNIQUE KEY `password_password_2` (`password_password`),
   KEY `password_password` (`password_password`),
   KEY `password_password_index` (`password_password`)
-) ENGINE=MyISAM AUTO_INCREMENT=1100385 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -230,7 +230,7 @@ CREATE TABLE `password_cache` (
   `password_cache_password_count` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`password_cache_id`),
   KEY `password_cache_password_id` (`password_cache_password_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=1847790 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -247,7 +247,7 @@ CREATE TABLE `submission` (
   `submission_password` varchar(256) NOT NULL DEFAULT '',
   PRIMARY KEY (`submission_id`),
   KEY `submission_submission_batch_id` (`submission_submission_batch_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=203301 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -267,7 +267,7 @@ CREATE TABLE `submission_batch` (
   `c_cracker_name` varchar(64) NOT NULL DEFAULT '',
   PRIMARY KEY (`submission_batch_id`),
   KEY `submission_batch_cracker_id` (`submission_batch_cracker_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -279,4 +279,4 @@ CREATE TABLE `submission_batch` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-04-25 23:07:09
+-- Dump completed on 2012-04-26 22:18:34
