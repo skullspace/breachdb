@@ -44,11 +44,11 @@ def get_hash_type_table(hash_types, pagination = nil)
   hash_types = HashTypes.calculate_cracks(hash_types)
 
   hash_types.each do |ht|
-    ht['name'] = HashTypes.html_get_link(ht['hash_type_id'], ht['hash_type_name'])
+    ht['name'] = HashTypes.html_get_link(ht['hash_type_id'], ht['hash_type_english_name'])
   end
 
   return HashTypes.html_table(hash_types, [
-          { :heading => "Name",                    :field => "name",                    :sortby => 'hash_type_name' },
+          { :heading => "Name",                    :field => "name",                    :sortby => 'hash_type_english_name' },
           { :heading => "Total hashes cracked",    :field => "c_total_cracks_string",   :sortby => 'c_total_hashes' },
           { :heading => "Distinct hashes cracked", :field => "c_distinct_cracks_string",:sortby => 'c_distinct_hashes' }
         ], nil, pagination)
@@ -165,7 +165,7 @@ get '/downloads' do
     if(hash_type['c_total_hashes'].to_i > 0)
       str = str + "
         <tr>
-          <td><a href='/hash_type/#{hash_type['hash_type_id']}'>#{hash_type['hash_type_name']}</td>
+          <td><a href='/hash_type/#{hash_type['hash_type_id']}'>#{hash_type['hash_type_english_name']}</td>
           <td><a href='/downloads/hash_type/#{hash_type['hash_type_id']}/passwords'>Passwords</a></td>
           <td><a href='/downloads/hash_type/#{hash_type['hash_type_id']}/hashes'>Hashes</a></td>
           <td><a href='/downloads/hash_type/#{hash_type['hash_type_id']}/hashes/uncracked'>Uncracked</a></td>
@@ -458,7 +458,7 @@ get /^\/hash_type\/([\d]+)$/ do |hash_type_id|
   end
 
   str = ""
-  str += "<h1>Hash type: #{hash_type['hash_type_name']}</h1>\n"
+  str += "<h1>Hash type: #{hash_type['hash_type_english_name']}</h1>\n"
   str += "<h2>Details</h2>\n"
   str += "<table>\n"
   str += "<tr><th>Pattern</th><td>#{hash_type['hash_type_pattern']}</td></tr>\n"
@@ -498,10 +498,10 @@ get /^\/hash_type\/([\d]+)\/hashes$/ do |hash_type_id|
   query[:pagination] = Pagination.new("/hash_type/#{hash_type['hash_type_id']}/hashes", params, Hashes.get_count(query), 'hash_count', 'DESC')
 
   str = ""
-  str += "<h2>Hashes for #{hash_type['hash_type_name']}</h2>\n"
+  str += "<h2>Hashes for #{hash_type['hash_type_english_name']}</h2>\n"
 
   str += "<p><a href='/'>Home</a></p>\n"
-  str += "<p><a href='/hash_type/#{hash_type['hash_type_id']}'>Back to #{hash_type['hash_type_name']}</a></p>\n"
+  str += "<p><a href='/hash_type/#{hash_type['hash_type_id']}'>Back to #{hash_type['hash_type_english_name']}</a></p>\n"
   str += query[:pagination].get_html()
   str += get_hash_table(Hashes.query_ex(query), query[:pagination])
   str += query[:pagination].get_html()
@@ -519,10 +519,10 @@ get /^\/hash_type\/([\d]+)\/hashes\/uncracked$/ do |hash_type_id|
   query[:pagination] = Pagination.new("/hash_type/#{hash_type['hash_type_id']}/hashes", params, Hashes.get_count(query), 'hash_count', 'DESC')
 
   str = ""
-  str += "<h2>Uncracked hashes for #{hash_type['hash_type_name']}</h2>\n"
+  str += "<h2>Uncracked hashes for #{hash_type['hash_type_english_name']}</h2>\n"
 
   str += "<p><a href='/'>Home</a></p>\n"
-  str += "<p><a href='/hash_type/#{hash_type['hash_type_id']}'>Back to #{hash_type['hash_type_name']}</a></p>\n"
+  str += "<p><a href='/hash_type/#{hash_type['hash_type_id']}'>Back to #{hash_type['hash_type_english_name']}</a></p>\n"
   str += query[:pagination].get_html()
   str += get_hash_table(Hashes.query_ex(query), query[:pagination])
   str += query[:pagination].get_html()
@@ -546,10 +546,10 @@ get /^\/hash_type\/([\d]+)\/passwords$/ do |hash_type_id|
   query[:pagination] = Pagination.new("/hash_type/#{hash_type['hash_type_id']}/passwords", params, PasswordCache.get_count(query), 'password_cache_password_count', 'DESC')
 
   str = ""
-  str += "<h2>Passwords for #{hash_type['hash_type_name']}</h2>\n"
+  str += "<h2>Passwords for #{hash_type['hash_type_english_name']}</h2>\n"
 
   str += "<p><a href='/'>Home</a></p>\n"
-  str += "<p><a href='/hash_type/#{hash_type['hash_type_id']}'>Back to #{hash_type['hash_type_name']}</a></p>\n"
+  str += "<p><a href='/hash_type/#{hash_type['hash_type_id']}'>Back to #{hash_type['hash_type_english_name']}</a></p>\n"
   str += query[:pagination].get_html()
   str += get_password_cache_table(PasswordCache.query_ex(query), query[:pagination])
   str += query[:pagination].get_html()

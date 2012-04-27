@@ -23,7 +23,16 @@ echo -ne "11\n\n\ncracker 1\n\n\n../test/passwords-1.txt\n1\n0\n" | $CMD
 echo -ne "11\n\n\ncracker 2\n\n\n../test/passwords-2.txt\n1\n0\n" | $CMD
 echo -ne "11\n\n\ncracker 3\n\n\n../test/passwords-3.txt\n1\n0\n" | $CMD
 
-# Update the caches
+# Update the caches (TODO: This shouldn't be necessary)
+echo -ne "1\n0\n" | $CMD
+echo -ne "1\n0\n" | $CMD
+echo -ne "1\n0\n" | $CMD
+
+# Process the hashes
 echo -ne "13\n0\n" | $CMD
+
+# Update the caches (TODO: Probably don't need multiple calls)
+echo -ne "1\n0\n" | $CMD
+echo -ne "1\n0\n" | $CMD
 echo -ne "1\n0\n" | $CMD
 

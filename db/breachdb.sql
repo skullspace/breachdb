@@ -140,7 +140,8 @@ DROP TABLE IF EXISTS `hash_type`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `hash_type` (
   `hash_type_id` int(11) NOT NULL AUTO_INCREMENT,
-  `hash_type_name` varchar(64) NOT NULL DEFAULT '',
+  `hash_type_john_name` varchar(64) NOT NULL DEFAULT '',
+  `hash_type_english_name` varchar(64) NOT NULL DEFAULT '',
   `hash_type_difficulty` int(11) NOT NULL DEFAULT '0',
   `hash_type_john_test_speed` int(11) NOT NULL DEFAULT '0',
   `hash_type_is_salted` tinyint(1) NOT NULL DEFAULT '0',
@@ -279,4 +280,4 @@ CREATE TABLE `submission_batch` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-04-26 22:18:34
+-- Dump completed on 2012-04-26 22:55:15

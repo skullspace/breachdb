@@ -502,7 +502,8 @@ def list_hash_types(brief = true, prompt = false)
 
   show_list(HashTypes.query_ex(), [
     {:name=>'hash_type_id',   :english=>'ID'},
-    {:name=>'hash_type_name', :english=>'John name'}], brief)
+    {:name=>'hash_type_john_name', :english=>'John name'},
+    {:name=>'hash_type_english_name', :english=>'English name'}], brief)
 
   # Get the input from the user
   if(prompt)
@@ -515,7 +516,8 @@ def go_hash_type(id = nil)
   puts("-----------------")
   values = prompt_values(HashTypes, id,
     [
-      {:name=>'Name',                      :column=>'hash_type_name',                   :value=>''},
+      {:name=>'John name',                 :column=>'hash_type_john_name',              :value=>''},
+      {:name=>'English name',              :column=>'hash_type_english_name',           :value=>''},
       {:name=>'Difficulty (0 - 10)',       :column=>'hash_type_difficulty',             :value=>'', :regex=>/^[0-9]$/},
       {:name=>'John test speed (numeric)', :column=>'hash_type_john_test_speed',        :value=>''},
       {:name=>'Is salted?',                :column=>'hash_type_is_salted',              :value=>'', :regex=>/^[0-1]$/},

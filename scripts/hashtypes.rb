@@ -16,7 +16,8 @@ class HashTypes < Breachdb
       lines['hash_type_id']                     = []
       lines['hash_type_difficulty']             = []
       lines['hash_type_john_test_speed']        = []
-      lines['hash_type_name']                   = []
+      lines['hash_type_john_name']              = []
+      lines['hash_type_english_name']           = []
       lines['hash_type_is_salted']              = []
       lines['hash_type_is_internal']            = []
       lines['hash_type_pattern']                = []
@@ -26,12 +27,13 @@ class HashTypes < Breachdb
 
     IO.readlines(filename).each do |line|
       line.chomp!
-      id, difficulty, john_test_speed, dummy, name, is_salted, is_internal, pattern, hash_example, hash_example_plaintext, notes = line.split(/\|/)
+      id, difficulty, john_test_speed, john_name, english_name, is_salted, is_internal, pattern, hash_example, hash_example_plaintext, notes = line.split(/\|/)
 
       lines['hash_type_id']                     << (id.nil?                     ? '' : id)
       lines['hash_type_difficulty']             << (difficulty.nil?             ? '' : difficulty)
       lines['hash_type_john_test_speed']        << (john_test_speed.nil?        ? '' : john_test_speed)
-      lines['hash_type_name']                   << (name.nil?                   ? '' : name)
+      lines['hash_type_john_name']              << (john_name.nil?              ? '' : john_name)
+      lines['hash_type_english_name']           << (english_name.nil?           ? '' : english_name)
       lines['hash_type_is_salted']              << (is_salted.nil?              ? '' : is_salted)
       lines['hash_type_is_internal']            << (is_internal.nil?            ? '' : is_internal)
       lines['hash_type_pattern']                << (pattern.nil?                ? '' : pattern)

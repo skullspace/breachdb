@@ -6,4 +6,6 @@
 * Allow submissions in .txt or .bz2 format
 * Testing TODO
   * Passwords in hash:password format
+* Make Submissions::process() not depend on cached fields
+* >> [hash] Reading rows 200000 - 299999 of 41969
 
