@@ -8,3 +8,5 @@
   * Passwords in hash:password format
 * Make Submissions::process() not depend on cached fields
 * >> [hash] Reading rows 200000 - 299999 of 41969
+* Counts for mask don't appear to be working
+  * -> Fix caches throughout, really

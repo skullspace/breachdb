@@ -53,6 +53,35 @@ class Masks < Breachdb
   end
 
   def self.cache_update()
+    puts("Generating password masks...")
+    Passwords.each_chunk(CHUNK_SIZE, true, {:where => "`password_mask_id`='0'"}) do |passwords|
+      # Create a list of password_id->mask mappings
+      masks = {}
+      passwords.each do |p|
+        masks[p['password_id']] = get_mask(p['password_password'])
+      end
+
+      # Ensure all the masks are in the database
+      insert_if_required(masks.values)
+
+      # Get the IDs
+      mask_ids = get_ids('mask_mask', masks.values, true)
+
+      # Update passwords to point at the proper masks
+      updates = []
+      masks.each() do |password_id, mask|
+        mask_id = mask_ids[mask]
+        updates << "WHEN '#{Mysql.quote(password_id)}' THEN '#{Mysql.quote(mask_id[0])}'"
+      end
+
+      query("UPDATE `password`
+            SET `password_mask_id` = CASE `password_id`
+              #{updates.join("\n")}
+            END
+          WHERE `password_id` IN (#{masks.keys.join(',')})")
+
+    end
+
     puts("Updating mask.c_password_count...")
     query("UPDATE `mask` SET `c_password_count`='0'")
     query("

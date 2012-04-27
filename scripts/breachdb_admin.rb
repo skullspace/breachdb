@@ -15,7 +15,7 @@ require 'passwordcache'
 
 require 'mysql'
 
-# Note: Hashes must come before Passwords, and Passwords must come before Breaches
+# The order no longer matters here
 @all_classes = [ Hashes, Passwords, Breaches, HashTypes, Masks, Submissions, Crackers, SubmissionBatches, Dictionaries, DictionaryWords, PasswordCache ]
 
 IMPORT_FORMAT_MULTIPLE_LINES = '1'
