@@ -145,7 +145,6 @@ class SubmissionBatches < Breachdb
             `hash_type_difficulty` < 8 AND
             `hash_type_is_internal`='1' AND
             `hash_password_id`='0'
-        ORDER BY RAND()
         ")).each_slice(CHUNK_SIZE) do |hashes|
       process_hashes_internal(words, hashes, results)
       debug("Done the chunk of hashes! So far, we have #{results.size} valid passwords")
