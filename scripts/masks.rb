@@ -27,59 +27,43 @@ class Masks < Breachdb
     return mask
   end
 
-  ##
-  # Inserts the masks into the database, as necessary.
-  ##
-  def self.insert_if_required(masks)
-    # Get the IDs for the masks that we already have
-    mask_ids = Masks.get_ids('mask_mask', masks, false)
-
-    # Figure out which masks are missing and insert them
-    missing = []
-    masks.each() do |p|
-      if(mask_ids[p].nil?)
-        missing << p
-      end
-    end
-
-    if(missing.size() > 0)
-      missing.collect!() do |m| "('" + Mysql::quote(m) + "')" end
-      query("INSERT INTO `mask`
-        (`mask_mask`)
-          VALUES
-        #{missing.join(',')}
-      ")
-    end
-  end
-
   def self.cache_update()
     puts("Generating password masks...")
     Passwords.each_chunk(CHUNK_SIZE, true, {:where => "`password_mask_id`='0'"}) do |passwords|
       # Create a list of password_id->mask mappings
       masks = {}
       passwords.each do |p|
-        masks[p['password_id']] = get_mask(p['password_password'])
+        # Generate the mask for this password
+        mask = get_mask(p['password_password'])
+
+        # Make each element in the masks hash an array containing all applicable passwords
+        if(masks[mask].nil?)
+          masks[mask] = [ p['password_id'] ]
+        else
+          masks[mask] << p['password_id']
+        end
       end
 
       # Ensure all the masks are in the database
-      insert_if_required(masks.values)
+      mask_ids = insert_if_required('mask_mask', masks.keys)
 
-      # Get the IDs
-      mask_ids = get_ids('mask_mask', masks.values, true)
-
-      # Update passwords to point at the proper masks
+      # Loop through the masks to point the password ids at the proper place
       updates = []
-      masks.each() do |password_id, mask|
+      masks.each() do |mask, password_ids|
         mask_id = mask_ids[mask]
-        updates << "WHEN '#{Mysql.quote(password_id)}' THEN '#{Mysql.quote(mask_id[0])}'"
+
+        # Loop through the passwords that should point to this mask
+        password_ids.each do |password_id|
+          updates << "WHEN '#{Mysql.quote(password_id)}' THEN '#{Mysql.quote(mask_id[0])}'"
+        end
       end
 
-      query("UPDATE `password`
+      update_query = "UPDATE `password`
             SET `password_mask_id` = CASE `password_id`
               #{updates.join("\n")}
             END
-          WHERE `password_id` IN (#{masks.keys.join(',')})")
-
+          WHERE `password_id` IN (#{masks.values.flatten.join(',')})"
+      query(update_query)
     end
 
     puts("Updating mask.c_password_count...")

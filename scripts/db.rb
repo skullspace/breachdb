@@ -472,7 +472,7 @@ class Db
     # back per hash
     if(verify_all)
       if(ids.keys.size() != values.size())
-        puts("ERROR! Expected #{values.size()} values, got #{ids.keys.size} from table #{table_name}! (Error written to file)")
+        puts("ERROR! Expected #{values.size()} values, got #{ids.keys.size} from table #{table_name}! (Error written to file /tmp/db.*)")
         File.open("/tmp/db.expected", "w").puts(values)
         File.open("/tmp/db.got", "w").puts(ids.keys)
         File.open("/tmp/db.err", "w").puts(query)
@@ -558,6 +558,38 @@ class Db
 
       query("UPDATE `#{table_name()}` SET #{rows.join(', ')} WHERE `#{id_column()}`='#{Mysql::quote(id.to_s)}'")
       return id
+    end
+  end
+
+  ##
+  # Ensure that all values in the array 'values' are present in the database in
+  # the field 'field'. Any that aren't are inserted. An table is returned with
+  # keys matching 'values' and the id of the row as the key.
+  ##
+  def self.insert_if_required(field_name, values)
+    # Get a list of the ids
+    ids = get_ids(field_name, values, false)
+
+    # Loop through the returned values and check which ones we should insert
+    missing = []
+    values.each() do |v|
+      if(ids[v].nil?)
+        missing << v
+      end
+    end
+
+    if(missing.size() == 0)
+      return ids
+    else
+      missing.collect!() do |m| "('" + Mysql::quote(m) + "')" end
+      insert_query = "INSERT INTO `#{table_name}`
+        (`#{Mysql::quote(field_name)}`)
+          VALUES
+        #{missing.join(',')}
+      "
+      query(insert_query)
+
+      return get_ids(field_name, values, true)
     end
   end
 

@@ -666,7 +666,6 @@ def menu()
   end
 end
 
-
 if(ARGV.count == 0)
   Breachdb.initialize()
 elsif(ARGV.count == 4)
@@ -675,6 +674,8 @@ else
   puts("Usage: web.rb <host> <username> <password> <db>")
   exit
 end
+
+Masks.cache_update()
 
 loop do
   menu()

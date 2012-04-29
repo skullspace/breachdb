@@ -1,4 +1,3 @@
--1|0|-1|Plaintext|Plaintext|0|0|^.*$|Password|Password|Plaintext passwords (not hashed at all)"||
 1|4|2780000|DES|Traditional DES|1|0|^[A-Za-z0-9+/]{13}$|CCNf8Sbh3HDfQ|U*U*U*U*|||
 2|8|93184|BSDI|BSDI DES (x725)|1|0|^.*$|_K9..SaltNrQgIYUAeoY|726 even|||
 3|9|12878|MD5|FreeBSD MD5|1|0|^$1$[^$]+$[A-Za-z0-9+/]+$|$1$12345678$aIccj83HRDBo6ux1bVx7D1|0123456789ABCDE|Used by default on most Linux systems"||
