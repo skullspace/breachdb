@@ -408,7 +408,7 @@ class Db
       # Break the id list into chunks and query on it
       i = 0
       id_list.each_slice(size) do |slice|
-        debug("[#{table_name}] Reading rows #{i * size} - #{((i + 1) * size) - 1} of #{id_list.size}")
+        debug("[#{table_name}] Reading rows #{i} - #{[i + size - 1, count].min} of #{count}")
         if(query_params[:where].nil?)
           where = "#{id_column} IN (#{slice.join(",")})"
         else
@@ -416,7 +416,7 @@ class Db
         end
 
         yield query_ex(query_params, {:where => where})
-        i = i + 1
+        i = i + size
       end
     end
   end

@@ -675,10 +675,6 @@ else
   exit
 end
 
-#Hashes.each_chunk() do |h|
-#end
-#exit
-
 loop do
   menu()
 end
