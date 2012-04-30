@@ -159,13 +159,10 @@ class Db
         query_params[:join] = [ query_params[:join] ]
       end
 
-      query_params[:join].each do |join|
-        type  = join[:type].nil? ? join[:type] : 'JOIN'
-        table = join[:table]
-        col1  = join[:column1]
-        col2  = join[:column2]
-
-        join << "\t#{type} `#{table}` ON `#{col1}`=`#{col2}`"
+      join = []
+      query_params[:join].each do |this_join|
+        type  = this_join[:type].nil? ? 'JOIN' : this_join[:type]
+        join << "\t#{type} `#{this_join[:table]}` ON `#{this_join[:column1]}`=`#{this_join[:column2]}`"
       end
       join = join.join("\n")
     end

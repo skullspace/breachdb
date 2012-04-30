@@ -29,12 +29,12 @@ class SubmissionBatches < Breachdb
     hash_types = {}
     hashes.each() do |hash|
       # Create a file for this hash type if it doesn't already exist
-      if(!files[hash['c_hash_type']]) then
-        files[hash['c_hash_type']] = File.new("%s/%s.tmp" % [JOHN_PATH, hash['c_hash_type']], 'w')
+      if(!files[hash['hash_type_john_name']]) then
+        files[hash['hash_type_john_name']] = File.new("%s/%s.tmp" % [JOHN_PATH, hash['hash_type_john_name']], 'w')
       end
 
       # Add the hash to the file
-      files[hash['c_hash_type']] << ("%s\n" % hash['hash_hash'])
+      files[hash['hash_type_john_name']] << ("%s\n" % hash['hash_hash'])
     end
 
     # Close our temporary john files so we can actually work on them
@@ -129,25 +129,24 @@ class SubmissionBatches < Breachdb
     # Loop through chunks of john hashes
     # IMPORTANT NOTE for future generations: you can't change the 'hash' table
     # in this loop, or it'll screw up the chunking. If you're going to make
-    # changes, do it after! And finally, you can't randomize the sorting order
-    # for the same reason
+    # changes, do it after! 
     debug("Getting hashes to test with john...")
-    Hashes.each_chunk(100000, true, { :where => "`c_difficulty` < 8 AND `c_is_internal`='0' AND `hash_password_id`='0' AND #{hash_list_sql}" } ) do |hashes|
+    Hashes.each_chunk(100000, true, {
+      :where => "`hash_type_difficulty` < 8 AND `hash_type_is_internal`='0' AND `hash_password_id`='0' AND #{hash_list_sql}",
+      :join => { :table => 'hash_type', :column1 => 'hash_hash_type_id', :column2 => 'hash_type_id' }
+    }) do |hashes|
       process_hashes_john(words, hashes, results)
       debug("Done the chunk of hashes! So far, we have #{results.keys.size} valid passwords representing #{results.values.flatten.size} hashes")
     end
 
     debug("Getting hashes to test internally...")
-    result_to_list(query("
-          SELECT *
-          FROM `hash` JOIN `hash_type` ON `hash_hash_type_id`=`hash_type_id`
-          WHERE
-            `hash_type_difficulty` < 8 AND
-            `hash_type_is_internal`='1' AND
-            `hash_password_id`='0'
-        ")).each_slice(CHUNK_SIZE) do |hashes|
+
+    Hashes.each_chunk(100000, true, {
+      :where => "`hash_type_difficulty` < 8 AND `hash_type_is_internal`='1' AND `hash_password_id`='0' AND #{hash_list_sql}",
+      :join => { :table => 'hash_type', :column1 => 'hash_hash_type_id', :column2 => 'hash_type_id' }
+    }) do |hashes|
       process_hashes_internal(words, hashes, results)
-      debug("Done the chunk of hashes! So far, we have #{results.size} valid passwords")
+      debug("Done the chunk of hashes! So far, we have #{results.keys.size} valid passwords representing #{results.values.flatten.size} hashes")
     end
   end
 
