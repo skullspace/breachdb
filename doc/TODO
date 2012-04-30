@@ -3,4 +3,3 @@
   * Possibly implement some smarter cache calculation?
 * Allow submissions in .txt or .bz2 format
 * Get rid of (or fix) the Password.c_hash_count column (again)
-* Figure out why hash:password submission format gives slightly invalid results
