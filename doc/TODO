@@ -7,4 +7,3 @@
 * Testing TODO
   * Passwords in hash:password format
 * >> [hash] Reading rows 200000 - 299999 of 41969
-* Make test data immune to date changes in the .sql file

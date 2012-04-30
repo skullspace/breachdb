@@ -30,7 +30,9 @@ echo -ne "13\n\n0\n" | $CMD
 echo -ne "1\n0\n" | $CMD
 
 # Output the database
-mysqldump -u breachdb_test --password=breachdb_test breachdb_test | grep -v 'Dump completed' > test_output.sql
+mysqldump -u breachdb_test --password=breachdb_test breachdb_test |
+  grep -v 'Dump completed' |
+  sed 's/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/????-??-??/g' |
+  sed 's/[0-9][0-9]:[0-9][0-9]:[0-9][0-9]/??:??:??/g' > test_output.sql
+
 md5sum *.sql
-
-
