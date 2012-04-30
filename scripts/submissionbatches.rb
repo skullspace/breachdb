@@ -190,7 +190,7 @@ class SubmissionBatches < Breachdb
       end
 
       # Convert the hashes to IDs (assuming they're in the database)
-      Hashes.get_ids(known_hashes, false).each_value do |hash_ids|
+      Hashes.get_ids('hash_hash', known_hashes, false).each_value do |hash_ids|
         known_hashes = known_hashes + hash_ids
       end
 

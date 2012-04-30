@@ -20,7 +20,7 @@ echo -ne "14\n13\n\nOmploader\n\n\n\n../test/omploader-md5.txt\n1\n0\n" | $CMD
 
 # Import the submissions
 echo -ne "11\n\n\ncracker 1\n\n\n../test/passwords-1.txt\n1\n0\n" | $CMD
-echo -ne "11\n\n\ncracker 2\n\n\n../test/passwords-2.txt\n1\n0\n" | $CMD
+echo -ne "11\n\n\ncracker 2\n\n\n../test/passwords-2.txt\n2\n0\n" | $CMD
 echo -ne "11\n\n\ncracker 3\n\n\n../test/passwords-3.txt\n1\n0\n" | $CMD
 
 # Process the hashes
