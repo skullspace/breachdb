@@ -581,14 +581,11 @@ class Db
     if(missing.size() == 0)
       return ids
     else
-      missing.collect!() do |m| "('" + Mysql::quote(m) + "')" end
-      insert_query = "INSERT INTO `#{table_name}`
-        (`#{Mysql::quote(field_name)}`)
-          VALUES
-        #{missing.join(',')}
-      "
-      query(insert_query)
+      # Insert the values
+      insert = {field_name=>missing}
+      insert_rows(insert)
 
+      # Return the new values
       return get_ids(field_name, values, true)
     end
   end
