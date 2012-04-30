@@ -675,7 +675,9 @@ else
   exit
 end
 
-Masks.cache_update()
+#Hashes.each_chunk() do |h|
+#end
+#exit
 
 loop do
   menu()

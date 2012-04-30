@@ -1,9 +1,6 @@
 * Add '^' and '$' to search operations
 * Make the 'download' links work
-* Verify the order of @all_classes in breachdb_admin.rb to ensure that the caches are updated properly (by looking at the update_class function)
   * Possibly implement some smarter cache calculation?
-* Create some proper testing (3 or 4 smaller breaches, a good list of submissions)
 * Allow submissions in .txt or .bz2 format
 * Testing TODO
   * Passwords in hash:password format
-* >> [hash] Reading rows 200000 - 299999 of 41969

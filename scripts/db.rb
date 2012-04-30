@@ -66,7 +66,7 @@ class Db
   # * :where    : The 'where' clause, as a String.
   # * :orderby  : A String, representing which column to order by; a Hash, containing :column and (optionally) :dir; or an Array of such hashes.
   # * :groupby  : A String or an Array of strings that list which columns to put in the GROUP BY clause.
-  # * :limit    : A String, Fixnum, or Hash that contains :page and :pagesize
+  # * :limit    : A String, Fixnum, or Hash that contains either :page and :pagesize (for pagination) or :start and :count (for more manual chunks)
   # 
   # There are also special arguments that can override the others:
   # * :pagination : An instance of the Pagination class; overrides :orderby and :limit
@@ -254,30 +254,31 @@ class Db
 
       # Convert a String or Fixnum size to a Hash
       if(query_params[:limit].is_a?(String) || query_params[:limit].is_a?(Fixnum))
-        query_params[:limit] = { :pagesize => query_params[:limit] }
+        query_params[:limit] = { :start => 0, :count => query_params[:limit] }
       end
 
-      # Handle the Hash
-      page      = query_params[:limit][:page].to_i || 1
-      page_size = query_params[:limit][:pagesize].to_i || 10
+      # If page is set, use a p agination query
+      if(!query_params[:limit][:page].nil?)
+        page      = query_params[:limit][:page].to_i || 1
+        page_size = query_params[:limit][:pagesize].to_i || 10
 
-      # Make sure we don't try to get a negative page
-      if(page < 1)
-        page = 1
+        # Make sure we don't try to get a negative page
+        if(page < 1)
+          page = 1
+        end
+
+        limit = "LIMIT #{(page-1) * page_size}, #{page_size}"
+      elsif(!query_params[:limit][:start].nil?)
+        start = query_params[:limit][:start].to_i || 0
+        count = query_params[:limit][:count].to_i || 10
+
+        limit = "LIMIT #{start}, #{count}"
+      else
+        throw :BadType
       end
-
-      limit = "LIMIT #{(page-1) * page_size}, #{page_size}"
     end
 
-    return "
-#{columns}
-#{table}
-#{join}
-#{where}
-#{groupby}
-#{orderby}
-#{limit}
-"
+    return " #{columns} #{table} #{join} #{where} #{groupby} #{orderby} #{limit} "
   end
 
   ##
@@ -396,19 +397,9 @@ class Db
     count = get_count(query_params)
 
     if(is_read_only)
-      i = 0
-
-      loop do
-        debug("[#{table_name}] Reading rows #{i * size} - #{((i + 1) * size) - 1} of #{count}")
-
-        result = query_ex(query_params, { :limit => { :page => i, :pagesize => size }})
-        if(result.size() == 0)
-          debug("Finished reading #{table_name}!")
-          break
-        end
-
-        yield result
-        i = i + 1
+      0.step(count - 1, size) do |i|
+        debug("[#{table_name}] Reading rows #{i} - #{[i + size - 1, count].min} of #{count}")
+        yield query_ex(query_params, { :limit => { :start => i, :count => size }})
       end
     else
       # Get the full table's ID column
