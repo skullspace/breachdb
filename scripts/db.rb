@@ -565,8 +565,11 @@ class Db
   # Ensure that all values in the array 'values' are present in the database in
   # the field 'field'. Any that aren't are inserted. An table is returned with
   # keys matching 'values' and the id of the row as the key.
+  # 
+  # If extra_values is set, it's an associative array where the key is a column
+  # name, and the value is the value to put in that column.
   ##
-  def self.insert_if_required(field_name, values)
+  def self.insert_if_required(field_name, values, extra_values = nil)
     # Get a list of the ids
     ids = get_ids(field_name, values, false)
 
@@ -583,6 +586,9 @@ class Db
     else
       # Insert the values
       insert = {field_name=>missing}
+      if(!extra_values.nil?)
+        insert = insert.merge(extra_values)
+      end
       insert_rows(insert)
 
       # Return the new values

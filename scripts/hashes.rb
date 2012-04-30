@@ -14,7 +14,6 @@ class Hashes < Breachdb
   def self.update_with_passwords(passwords, cracker_id)
     # First, make sure all the passwords are inserted
     debug("Inserting passwords as required..")
-    Passwords.insert_if_required(passwords.keys)
 
     # Get a list of all hashes
     hashes = []
@@ -24,6 +23,7 @@ class Hashes < Breachdb
 
     # Get the password and hash IDs
     debug("Looking up the passwords' ids...")
+    password_ids = Passwords.insert_if_required('password_password', passwords.keys, {'password_date'=>Time.new().strftime("%Y-%m-%d")})
     password_ids = Passwords.get_ids('password_password', passwords.keys(), true)
     debug("Looking up the hashes' ids...")
     hash_ids     = Hashes.get_ids('hash_hash', hashes, true)
