@@ -711,7 +711,6 @@ class Db
       puts("Exporting to " + filename + "...")
 
       out = Bzip2::Writer.new(File.open(filename, 'wb'))
-      #out = File.open(filename, 'w')
 
       # If we need a header, generate it
       if(show_header)
