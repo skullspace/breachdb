@@ -82,38 +82,44 @@ class PasswordCache < Breachdb
             :groupby => 'password_cache_password_id',
           }
       },
-#      {
-#        :filename => "data/passwords_with_hash.txt.bz2",
-#        :description => "A list of all passwords with their associated hashes",
-#        :query => 
-#          {
-#            :columns => [
-#              { :name => 'password_cache_hash_hash', :as => 'hash' },
-#              { :name => 'password_cache_password_password', :as => 'password' },
-#            ],
-#            :orderby => {
-#              :column=>'hash',
-#              :dir=>'DESC'
-#            },
-#            :groupby => 'password_cache_hash_hash',
-#          }
-#      },
-#      {
-#        :filename => "data/passwords_with_details.txt.bz2",
-#        :description => "[TODO] A list of all passwords",
-#        :query => 
-#          {
-#            :columns => [
-#              { :name => 'password_cache_password_count', :aggregate => 'SUM', :as => 'count' },
-#              { :name => 'password_cache_password_password', :as => 'password' },
-#            ],
-#            :orderby => {
-#              :column=>'count',
-#              :dir=>'DESC'
-#            },
-#            :groupby => 'password_cache_password_id',
-#          }
-#      },
+      {
+        :filename => "data/passwords_with_hash.txt.bz2",
+        :description => "A list of all passwords with their associated hashes",
+        :show_header => true,
+        :query => 
+          {
+            :columns => [
+              { :name => 'password_cache_hash_type_name',    :as => 'hash_type' },
+              { :name => 'password_cache_hash_hash',         :as => 'hash' },
+              { :name => 'password_cache_password_password', :as => 'password' },
+            ],
+            :orderby => {
+              :column=>'hash',
+              :dir=>'ASC'
+            },
+            :groupby => 'password_cache_hash_hash',
+          }
+      },
+      {
+        :filename => "data/passwords_with_details.txt.bz2",
+        :description => "A list of all passwords with detailed information",
+        :show_header => true,
+        :query => 
+          {
+            :columns => [
+              { :name => 'password_cache_password_count',    :as => 'count' },
+              { :name => 'password_cache_password_password', :as => 'password' },
+              { :name => 'password_cache_hash_hash',         :as => 'hash' },
+              { :name => 'password_cache_breach_name',       :as => 'breach' },
+              { :name => 'password_cache_mask_mask',         :as => 'mask' },
+              { :name => 'password_cache_hash_type_name',    :as => 'hash_type' },
+            ],
+            :orderby => {
+              :column=>'password_cache_password_password',
+              :dir=>'ASC'
+            }
+          }
+      },
     ]
   end
 end
