@@ -47,5 +47,72 @@ class PasswordCache < Breachdb
             );
     ")
   end
+
+  def self.export_files()
+    return [
+      {
+        :filename => "data/passwords.txt.bz2",
+        :description => "A list of all passwords",
+        :show_header => false,
+        :query => 
+          {
+            :columns => [
+              { :name => 'password_cache_password_password' },
+            ],
+            :groupby => 'password_cache_password_id',
+            :orderby => 'password_cache_password_password',
+          }
+      },
+      {
+        :filename => "data/passwords_with_count.txt.bz2",
+        :description => "A list of all passwords",
+        :show_header => true,
+        :query => 
+          {
+            :columns => [
+              { :name => 'password_cache_password_count', :aggregate => 'SUM', :as => 'count' },
+              { :name => 'password_cache_password_password', :as => 'password' },
+            ],
+            :orderby => {
+              :column=>'count',
+              :dir=>'DESC'
+            },
+            :groupby => 'password_cache_password_id',
+          }
+      },
+#      {
+#        :filename => "data/passwords_with_hash.txt.bz2",
+#        :description => "A list of all passwords with their associated hashes",
+#        :query => 
+#          {
+#            :columns => [
+#              { :name => 'password_cache_hash_hash', :as => 'hash' },
+#              { :name => 'password_cache_password_password', :as => 'password' },
+#            ],
+#            :orderby => {
+#              :column=>'hash',
+#              :dir=>'DESC'
+#            },
+#            :groupby => 'password_cache_hash_hash',
+#          }
+#      },
+#      {
+#        :filename => "data/passwords_with_details.txt.bz2",
+#        :description => "[TODO] A list of all passwords",
+#        :query => 
+#          {
+#            :columns => [
+#              { :name => 'password_cache_password_count', :aggregate => 'SUM', :as => 'count' },
+#              { :name => 'password_cache_password_password', :as => 'password' },
+#            ],
+#            :orderby => {
+#              :column=>'count',
+#              :dir=>'DESC'
+#            },
+#            :groupby => 'password_cache_password_id',
+#          }
+#      },
+    ]
+  end
 end
 

@@ -369,26 +369,6 @@ class Db
     return result.pop['RESULT'].to_i
   end
 
-  # TODO: Pick columns
-  # TODO: I'll likely have to do this in chunks
-  def self.export(filename, query_params = nil)
-    data = query_ex(query_params)
-    keys = data.pop.keys
-
-    test = Bzip2::Writer.new(File.open(filename, 'wb'))
-    test.write(keys.join(',') + "\n")
-    data.each do |datum|
-      this_line = []
-      keys.each do |key|
-        this_line = this_line << datum[key]
-      end
-
-      test.write(this_line.join(',') + "\n")
-    end
-    test.close()
-    puts(filename)
-  end
-
   ##
   # Convert the result from a MySQL call into an array. This is either an
   # associative array (if column is nil) or an array representing a single
@@ -715,6 +695,38 @@ class Db
   ##
   def self.cache_update()
     throw :NotImplementedError
+  end
+
+  def self.export()
+    # Get a list of the files we're going to export
+    files = export_files()
+
+    # Loop across the list of files
+    files.each do |file|
+      # Open the output file  
+      filename     = file[:filename]
+      show_header  = file[:show_header]
+      query_params = file[:query]
+
+      puts("Exporting to " + filename + "...")
+
+      #out = Bzip2::Writer.new(File.open(filename, 'wb'))
+      out = File.open(filename, 'w')
+
+      # If we need a header, generate it
+      if(show_header)
+        header_row = query_ex(query_params.merge({ :limit => "1" }))
+        out.write(header_row.pop.keys.join(',') + "\n")
+      end
+
+      # Now grab the data in chunks and write it to the file
+      each_chunk(50000, true, query_params) do |chunk|
+        chunk.each do |line|
+          out.write(line.values.join(',') + "\n")
+        end
+      end
+      out.close()
+    end
   end
 end
 

@@ -4,3 +4,5 @@
 * Allow submissions in .txt or .bz2 format
 * Dictionaries
 * Go through the tables and make sure that the values make sense
+* Allow aggregates in the 'order by' field, and update the Password.export stuff to order passwords properly
+* Rename fields to get rid of prefix?

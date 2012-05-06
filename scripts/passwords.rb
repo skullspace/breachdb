@@ -13,5 +13,11 @@ class Passwords < Breachdb
   def self.cache_update()
     # Do nothing
   end
+
+  def self.export_files()
+    return [ ]
+  end
+
+
 end
 
