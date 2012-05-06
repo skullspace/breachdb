@@ -83,6 +83,20 @@ class Hashes < Breachdb
     }
 
     files << {
+      :filename => "data/uncracked_hashes.csv.bz2",
+      :description => "A list of all hashes",
+      :show_header => false,
+      :query => {
+        :columns => [
+          { :name => 'hash_hash' },
+        ],
+        :groupby => 'hash_hash',
+        :orderby => 'hash_hash',
+        :where => "`hash_password_id`='0'"
+      }
+    }
+
+    files << {
       :filename => "data/hashes_with_password.csv.bz2",
       :description => "A list of all hashes with passwords",
       :show_header => true,
@@ -107,20 +121,6 @@ class Hashes < Breachdb
         ],
         :groupby => 'hash_hash',
         :orderby => 'hash_hash',
-      }
-    }
-
-    files << {
-      :filename => "data/uncracked_hashes.csv.bz2",
-      :description => "A list of all hashes",
-      :show_header => false,
-      :query => {
-        :columns => [
-          { :name => 'hash_hash' },
-        ],
-        :groupby => 'hash_hash',
-        :orderby => 'hash_hash',
-        :where => "`hash_password_id`='0'"
       }
     }
 

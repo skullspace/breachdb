@@ -272,6 +272,11 @@ def cache_update()
     puts("Updating cache for #{c.name}...")
     c.cache_update()
   end
+
+  @all_classes.each do |c|
+    puts("Exporting data for #{c.name}...")
+    c.export()
+  end
   @should_update_cache = false
 end
 
