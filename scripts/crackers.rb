@@ -34,4 +34,8 @@ class Crackers < Breachdb
         `b1`.`c_distinct_hashes` = `sub`.`c_distinct_hashes`
     ")
   end
+
+  def self.export_files()
+    return []
+  end
 end

@@ -85,4 +85,8 @@ class Masks < Breachdb
           SET `c_mask_example`=`password_password`
     ")
   end
+
+  def self.export_files()
+    return []
+  end
 end

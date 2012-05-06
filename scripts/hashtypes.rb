@@ -77,5 +77,9 @@ class HashTypes < Breachdb
         `b1`.`c_distinct_passwords` = `sub`.`c_distinct_passwords`
     ")
   end
+
+  def self.export_files()
+    return []
+  end
 end
 

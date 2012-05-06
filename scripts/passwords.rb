@@ -15,9 +15,7 @@ class Passwords < Breachdb
   end
 
   def self.export_files()
-    return [ ]
+    return []
   end
-
-
 end
 

@@ -237,5 +237,9 @@ class SubmissionBatches < Breachdb
     query("UPDATE `submission_batch` JOIN `cracker` ON `submission_batch_cracker_id`=`cracker_id` SET `c_cracker_name`=`cracker_name` ")
  
   end
+
+  def self.export_files()
+    return []
+  end
 end
 

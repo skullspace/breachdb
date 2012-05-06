@@ -13,4 +13,8 @@ class Dictionaries < Breachdb
   def self.cache_update()
     # Not necessary
   end
+
+  def self.export_files()
+    return []
+  end
 end
