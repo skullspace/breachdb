@@ -158,172 +158,88 @@ class Hashes < Breachdb
       }
     }
 
-#    # Loop through the breaches and add files for each of them
-#    Breaches.query_ex().each do |breach|
-#      name_clean = breach['breach_name'].downcase.sub(' ', '_').sub(/[^a-zA-Z0-9_-]/, '')
-#
-#      # Passwords for the breach
-#      files << {
-#        :filename => "data/#{name_clean}_passwords.csv.bz2",
-#        :description => "Cracked passwords from " + breach['breach_name'],
-#        :show_header => false,
-#        :query => {
-#          :columns => [
-#            { :name => 'password_cache_password_password', :as => 'password' },
-#          ],
-#          :orderby => {
-#            :column=>'password_cache_password_password',
-#            :dir=>'ASC'
-#          },
-#          :groupby => "password_cache_password_id",
-#          :where => "password_cache_breach_id = '#{breach['breach_id']}'"
-#        }
-#      }
-#
-#      # Passwords + counts for the breach
-#      files << {
-#        :filename => "data/#{name_clean}_passwords_with_count.csv.bz2",
-#        :description => "Cracked passwords from " + breach['breach_name'] + " with count",
-#        :show_header => true,
-#        :query => {
-#          :columns => [
-#            { :name => 'password_cache_password_count', :aggregate => 'SUM', :as => 'count' },
-#            { :name => 'password_cache_password_password', :as => 'password' },
-#          ],
-#          :orderby => {
-#            :column=>'count',
-#            :dir=>'DESC'
-#          },
-#          :groupby => 'password_cache_password_id',
-#          :where => "password_cache_breach_id = '#{breach['breach_id']}'"
-#        },
-#      }
-#
-#      files << {
-#        :filename => "data/#{name_clean}_passwords_with_hash.csv.bz2",
-#        :description => "Cracked passwords from " + breach['breach_name'] + " with hash",
-#        :show_header => true,
-#        :query => {
-#          :columns => [
-#            { :name => 'password_cache_password_count',    :as => 'count' },
-#            { :name => 'password_cache_hash_type_name',    :as => 'hash_type' },
-#            { :name => 'password_cache_hash_hash',         :as => 'hash' },
-#            { :name => 'password_cache_password_password', :as => 'password' },
-#          ],
-#          :orderby => {
-#            :column=>'hash',
-#            :dir=>'ASC'
-#          },
-#          :groupby => 'password_cache_hash_hash',
-#          :where => "password_cache_breach_id = '#{breach['breach_id']}'"
-#        }
-#      }
-#
-#      files << {
-#        :filename => "data/#{name_clean}_passwords_with_details.csv.bz2",
-#        :description => "Cracked passwords from " + breach['breach_name'] + " with details",
-#        :show_header => true,
-#        :query => {
-#          :columns => [
-#            { :name => 'password_cache_password_count',    :as => 'count' },
-#            { :name => 'password_cache_password_password', :as => 'password' },
-#            { :name => 'password_cache_hash_hash',         :as => 'hash' },
-#            { :name => 'password_cache_breach_name',       :as => 'breach' },
-#            { :name => 'password_cache_mask_mask',         :as => 'mask' },
-#            { :name => 'password_cache_hash_type_name',    :as => 'hash_type' },
-#          ],
-#          :orderby => {
-#            :column=>'password_cache_password_password',
-#            :dir=>'ASC'
-#          },
-#          :where => "password_cache_breach_id = '#{breach['breach_id']}'"
-#        }
-#      }
-#    end
-#
-#    # Loop through the hash types and add files for each of them
-#    HashTypes.query_ex({ :where => "`c_total_passwords` != 0" }).each do |hash_type|
-#      name_clean = hash_type['hash_type_english_name'].downcase.sub(' ', '_').sub(/[^a-zA-Z0-9_-]/, '')
-#
-#      # Passwords for the hash_type
-#      files << {
-#        :filename => "data/#{name_clean}_passwords.csv.bz2",
-#        :description => "Cracked passwords of type " + hash_type['hash_type_english_name'],
-#        :show_header => false,
-#        :query => {
-#          :columns => [
-#            { :name => 'password_cache_password_password', :as => 'password' },
-#          ],
-#          :orderby => {
-#            :column=>'password_cache_password_password',
-#            :dir=>'ASC'
-#          },
-#          :groupby => "password_cache_password_id",
-#          :where => "password_cache_hash_type_id = '#{hash_type['hash_type_id']}'"
-#        }
-#      }
-#
-#      # Passwords + counts for the hash_type
-#      files << {
-#        :filename => "data/#{name_clean}_passwords_with_count.csv.bz2",
-#        :description => "Cracked passwords of type " + hash_type['hash_type_english_name'] + " with count",
-#        :show_header => true,
-#        :query => {
-#          :columns => [
-#            { :name => 'password_cache_password_count', :aggregate => 'SUM', :as => 'count' },
-#            { :name => 'password_cache_password_password', :as => 'password' },
-#          ],
-#          :orderby => {
-#            :column=>'count',
-#            :dir=>'DESC'
-#          },
-#          :groupby => 'password_cache_password_id',
-#          :where => "password_cache_hash_type_id = '#{hash_type['hash_type_id']}'"
-#        },
-#      }
-#
-#      files << {
-#        :filename => "data/#{name_clean}_passwords_with_hash.csv.bz2",
-#        :description => "Cracked passwords of type " + hash_type['hash_type_english_name'] + " with hash",
-#        :show_header => true,
-#        :query => {
-#          :columns => [
-#            { :name => 'password_cache_password_count',    :as => 'count' },
-#            { :name => 'password_cache_hash_type_name',    :as => 'hash_type' },
-#            { :name => 'password_cache_hash_hash',         :as => 'hash' },
-#            { :name => 'password_cache_password_password', :as => 'password' },
-#          ],
-#          :orderby => {
-#            :column=>'hash',
-#            :dir=>'ASC'
-#          },
-#          :groupby => 'password_cache_hash_hash',
-#          :where => "password_cache_hash_type_id = '#{hash_type['hash_type_id']}'"
-#        }
-#      }
-#
-#      files << {
-#        :filename => "data/#{name_clean}_passwords_with_details.csv.bz2",
-#        :description => "Cracked passwords of type " + hash_type['hash_type_english_name'] + " with details",
-#        :show_header => true,
-#        :query => {
-#          :columns => [
-#            { :name => 'password_cache_password_count',    :as => 'count' },
-#            { :name => 'password_cache_password_password', :as => 'password' },
-#            { :name => 'password_cache_hash_hash',         :as => 'hash' },
-#            { :name => 'password_cache_breach_name',       :as => 'breach' },
-#            { :name => 'password_cache_mask_mask',         :as => 'mask' },
-#            { :name => 'password_cache_hash_type_name',    :as => 'hash_type' },
-#          ],
-#          :orderby => {
-#            :column=>'password_cache_password_password',
-#            :dir=>'ASC'
-#          },
-#          :where => "password_cache_hash_type_id = '#{hash_type['hash_type_id']}'"
-#        }
-#      }
-#    end
-#
+    # Loop through the breaches and add files for each of them
+    Breaches.query_ex().each do |breach|
+      name_clean = breach['breach_name'].downcase.sub(' ', '_').sub(/[^a-zA-Z0-9_-]/, '')
+
+      # Hashes for the breach
+      files << {
+        :filename => "data/#{name_clean}_hashes.csv.bz2",
+        :description => "Hashes from " + breach['breach_name'],
+        :show_header => false,
+        :query => {
+          :columns => [
+            { :name => 'hash_hash', :as => 'hash' },
+          ],
+          :orderby => {
+            :column=>'hash_hash',
+            :dir=>'ASC'
+          },
+          :groupby => "hash_hash",
+          :where => "hash_breach_id = '#{breach['breach_id']}'"
+        }
+      }
+
+      # Uncracked hashes for the breach
+      files << {
+        :filename => "data/#{name_clean}_uncracked_hashes.csv.bz2",
+        :description => "Hashes from " + breach['breach_name'],
+        :show_header => false,
+        :query => {
+          :columns => [
+            { :name => 'hash_hash', :as => 'hash' },
+          ],
+          :orderby => {
+            :column=>'hash_hash',
+            :dir=>'ASC'
+          },
+          :groupby => "hash_hash",
+          :where => "hash_breach_id = '#{breach['breach_id']}' AND `hash_password_id` = '0'"
+        }
+      }
+    end
+
+    # Loop through the hash types and add files for each of them
+    HashTypes.query_ex({ :where => "`c_total_passwords` != 0" }).each do |hash_type|
+      name_clean = hash_type['hash_type_english_name'].downcase.sub(' ', '_').sub(/[^a-zA-Z0-9_-]/, '')
+
+      # Hashes for the hash type
+      files << {
+        :filename => "data/#{name_clean}_hashes.csv.bz2",
+        :description => "Hashes from " + hash_type['hash_type_english_name'],
+        :show_header => false,
+        :query => {
+          :columns => [
+            { :name => 'hash_hash', :as => 'hash' },
+          ],
+          :orderby => {
+            :column=>'hash_hash',
+            :dir=>'ASC'
+          },
+          :groupby => "hash_hash",
+          :where => "hash_hash_type_id = '#{hash_type['hash_type_id']}'"
+        }
+      }
+
+      # Uncracked hashes for the hash_type
+      files << {
+        :filename => "data/#{name_clean}_uncracked_hashes.csv.bz2",
+        :description => "Hashes from " + hash_type['hash_type_english_name'],
+        :show_header => false,
+        :query => {
+          :columns => [
+            { :name => 'hash_hash', :as => 'hash' },
+          ],
+          :orderby => {
+            :column=>'hash_hash',
+            :dir=>'ASC'
+          },
+          :groupby => "hash_hash",
+          :where => "hash_hash_type_id = '#{hash_type['hash_type_id']}' AND `hash_password_id` = '0'"
+        }
+      }
+    end
+
     return files
   end
 end
