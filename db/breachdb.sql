@@ -228,6 +228,7 @@ CREATE TABLE `password_cache` (
   `password_cache_hash_type_id` int(11) NOT NULL DEFAULT '0',
   `password_cache_hash_type_name` varchar(64) NOT NULL DEFAULT '',
   `password_cache_password_count` int(11) NOT NULL DEFAULT '0',
+  `password_cache_hash_hash` varbinary(256) NOT NULL DEFAULT '',
   PRIMARY KEY (`password_cache_id`),
   KEY `password_cache_password_id` (`password_cache_password_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
@@ -279,4 +280,4 @@ CREATE TABLE `submission_batch` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-05-06 16:51:33
+-- Dump completed on 2012-05-06 17:45:12

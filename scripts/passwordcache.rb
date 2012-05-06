@@ -25,7 +25,8 @@ class PasswordCache < Breachdb
               `password_cache_mask_mask`,
               `password_cache_hash_type_id`,
               `password_cache_hash_type_name`,
-              `password_cache_password_count`
+              `password_cache_password_count`,
+              `password_cache_hash_hash`
             )
             (
               SELECT 
@@ -37,7 +38,8 @@ class PasswordCache < Breachdb
                 `mask_mask`              AS `password_cache_mask_mask`,
                 `hash_type_id`           AS `password_cache_hash_type_id`,
                 `hash_type_english_name` AS `password_cache_hash_type_name`,
-                SUM(`hash_count`)        AS `password_cache_hash_count`
+                SUM(`hash_count`)        AS `password_cache_hash_count`,
+                `hash_hash`              AS `password_cache_hash_hash`
               FROM `password` 
                 LEFT JOIN `hash`      ON `hash_password_id`=`password_id`
                 LEFT JOIN `breach`    ON `hash_breach_id`=`breach_id`
