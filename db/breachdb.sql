@@ -203,7 +203,6 @@ CREATE TABLE `password` (
   `password_mask_id` int(11) NOT NULL DEFAULT '0',
   `password_password` varbinary(64) NOT NULL DEFAULT '',
   `password_date` date NOT NULL DEFAULT '1900-01-01',
-  `c_hash_count` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`password_id`),
   UNIQUE KEY `password_password_2` (`password_password`),
   KEY `password_password` (`password_password`),
@@ -280,4 +279,4 @@ CREATE TABLE `submission_batch` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-04-26 22:55:15
+-- Dump completed on 2012-05-06 16:51:33

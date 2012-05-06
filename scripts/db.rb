@@ -308,7 +308,7 @@ class Db
     })
   end
 
-  # A handy wrapper aorund query_ex that performs a GROUP BY/SUM() on a column
+  # A handy wrapper around query_ex that performs a GROUP BY/SUM() on a column
   # and takes the top-x from that column on the result
   def self.get_top_sum(sum_column, groupby_column, count, query_params = nil)
     return query_ex(query_params, {
@@ -323,6 +323,37 @@ class Db
       :groupby => groupby_column,
       :limit => count
     })
+  end
+
+  # A wrapper around query_ex that performs a GROUP BY/aggregate function on a
+  # column.
+  def self.get_aggregate(aggregate_column, groupby_column, aggregate, query_params = nil)
+    return query_ex(query_params, {
+      :columns => [
+        { :name => '*' },
+        { :name => aggregate_column, :aggregate => aggregate, :as => aggregate_column }
+      ],
+      :orderby => {
+        :column=>aggregate_column,
+        :dir=>'DESC'
+      },
+      :groupby => groupby_column,
+    })
+  end
+
+  def self.get_aggregate_count(aggregate_column, groupby_column, aggregate, query_params = nil)
+    query_params = query_params || {}
+    return get_count(query_params.merge({
+      :columns => [
+        { :name => '*' },
+        { :name => aggregate_column, :aggregate => aggregate, :as => 'dummy' }
+      ],
+      :orderby => {
+        :column=>aggregate_column,
+        :dir=>'DESC'
+      },
+      :groupby => groupby_column,
+    }))
   end
 
   def self.get_count(query_params = nil)

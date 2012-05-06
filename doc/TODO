@@ -2,4 +2,5 @@
 * Make the 'download' links work
   * Possibly implement some smarter cache calculation?
 * Allow submissions in .txt or .bz2 format
-* Get rid of (or fix) the Password.c_hash_count column (again)
+* Dictionaries
+* Go through the tables and make sure that the values make sense

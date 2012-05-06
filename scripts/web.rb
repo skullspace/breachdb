@@ -70,17 +70,6 @@ def get_hash_search(default = nil)
     </form>"
 end
 
-def get_password_table(passwords, pagination = nil)
-  passwords.each do |p|
-    p['password'] = Passwords.html_get_link(p['password_id'], p['password_password'])
-  end
-
-  return Passwords.html_table(passwords, [
-          { :heading => "Password", :field => "password",     :sortby => 'password_password' },
-          { :heading => "Count",    :field => "c_hash_count", :sortby => 'c_hash_count' },
-        ], nil, pagination)
-end
-
 def get_password_cache_table(passwords, pagination = nil)
   passwords.each do |p|
     p['password'] = Passwords.html_get_link(p['password_cache_password_id'], p['password_cache_password_password'])
@@ -293,13 +282,16 @@ get '/hash_types' do
 end
 
 get '/passwords' do
-  pagination = Pagination.new('/passwords', params, Passwords.get_count, 'c_hash_count', 'DESC')
+  count = PasswordCache.get_aggregate_count('password_cache_password_count', 'password_cache_password_id', 'SUM')
+  pagination = Pagination.new('/passwords', params, count, 'password_cache_password_count', 'DESC')
+  table = PasswordCache.get_aggregate('password_cache_password_count', 'password_cache_password_id', 'SUM', {:pagination => pagination})
+  
 
   str = ''
   str += "<h1>Passwords</h1>\n"
   str += "<p><a href='/'>Home</a></p>\n"
   str += pagination.get_html()
-  str += get_password_table(Passwords.query_ex({:pagination => pagination}), pagination)
+  str += get_password_cache_table(table, pagination)
   str += pagination.get_html()
 
   return str
