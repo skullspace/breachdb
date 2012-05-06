@@ -69,7 +69,7 @@ class PasswordCache < Breachdb
 
     files << {
       :filename => "data/passwords_with_count.csv.bz2",
-      :description => "A list of all passwords",
+      :description => "A list of all passwords with count",
       :show_header => true,
       :query => {
         :columns => [
