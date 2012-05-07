@@ -167,7 +167,7 @@ get '/' do
   str += "<h1>Top passwords</h1>\n"
   str += get_password_search()
   str += get_password_cache_table(PasswordCache.get_top_sum('password_cache_password_count', 'password_cache_password_id', TOP_SIZE))
-  str += "<p><a href='/passwords'>More passwords...</a> [<a href='/downloads/passwords.csv.bz2'>download</a> | <a href='/downloads/passwords_with_count.csv.bz2'>download w/ counts</a>]</p>"
+  str += "<p><a href='/passwords'>More passwords...</a> [<a href='/downloads/passwords.csv.bz2'>Download</a> | <a href='/downloads/passwords_with_count.csv.bz2'>Download w/ count</a> | <a href='/downloads/passwords_with_hash.csv.bz2'>Download w/ hash</a> | <a href='/downloads/passwords_with_details.csv.bz2'>Download w/ details</a>]</p>\n"
 
   str += "<h1>Top hashes</h1>"
   str += get_hash_search()
@@ -195,6 +195,7 @@ get '/breaches' do
   str = ''
   str += "<h1>Breaches</h1>\n"
   str += "<p><a href='/'>Home</a></p>\n"
+  str += "<p><a href='/downloads/breaches.csv.bz2'>Download</a></p>\n"
   str += pagination.get_html()
   str += get_breach_table(Breaches.query_ex({ :pagination => pagination }))
   str += pagination.get_html()
@@ -208,6 +209,7 @@ get '/hash_types' do
   str = ''
   str += "<h1>Hash Types</h1>\n"
   str += "<p><a href='/'>Home</a></p>\n"
+  str += "<p><a href='/downloads/hash_types.csv.bz2'>Download</a></p>\n"
   str += pagination.get_html()
   str += get_hash_type_table(HashTypes.query_ex({:pagination => pagination}), pagination)
   str += pagination.get_html()
@@ -223,6 +225,7 @@ get '/passwords' do
 
   str = ''
   str += "<h1>Passwords</h1>\n"
+  str += "<p><a href='/downloads/passwords.csv.bz2'>Download</a> | <a href='/downloads/passwords_with_count.csv.bz2'>Download w/ count</a> | <a href='/downloads/passwords_with_hash.csv.bz2'>Download w/ hash</a> | <a href='/downloads/passwords_with_details.csv.bz2'>Download w/ details</a> </p>\n"
   str += "<p><a href='/'>Home</a></p>\n"
   str += pagination.get_html()
   str += get_password_cache_table(table, pagination)
@@ -237,6 +240,7 @@ get '/hashes' do
   str = ''
   str += "<h1>Hashes</h1>\n"
   str += "<p><a href='/'>Home</a></p>\n"
+  str += "<p><a href='/downloads/hashes.csv.bz2'>Download</a> | <a href='/downloads/hashes_with_count.csv.bz2'>Download w/ count</a> </p>\n"
   str += pagination.get_html()
   str += get_hash_table(Hashes.query_ex({:pagination => pagination}), pagination)
   str += pagination.get_html()
@@ -251,6 +255,7 @@ get '/hashes/uncracked' do
   str = ''
   str += "<h1>Uncracked hashes</h1>\n"
   str += "<p><a href='/'>Home</a></p>\n"
+  str += "<p><a href='/downloads/uncracked_hashes.csv.bz2'>Download</a> | <a href='/downloads/uncracked_hashes_with_count.csv.bz2'>Download w/ count</a> </p>\n"
   str += query[:pagination].get_html()
   str += get_hash_table(Hashes.query_ex(query), query[:pagination])
   str += query[:pagination].get_html()
@@ -264,6 +269,7 @@ get '/masks' do
   str = ''
   str += "<h1>Masks</h1>\n"
   str += "<p><a href='/'>Home</a></p>\n"
+  str += "<p><a href='/downloads/masks.csv.bz2'>Download</a></p>\n"
   str += pagination.get_html()
   str += get_mask_table(Masks.query_ex({:pagination => pagination}), pagination)
   str += pagination.get_html()
@@ -277,6 +283,7 @@ get '/crackers' do
   str = ''
   str += "<h1>Crackers</h1>\n"
   str += "<p><a href='/'>Home</a></p>\n"
+  str += "<p><a href='/downloads/crackers.csv.bz2'>Download</a></p>\n"
   str += pagination.get_html()
   str += get_cracker_table(Crackers.query_ex({:pagination => pagination}), pagination)
   str += pagination.get_html()
@@ -290,12 +297,27 @@ get /^\/breach\/([\d]+)$/ do |breach_id|
     return 'Breach not found'
   end
 
+  clean_name = Db.get_filename(breach['breach_name'])
+
   str = ""
   str += "<h1>Breach: #{breach['breach_name']}</h1>\n"
   str += "<h2>Details</h2>\n"
   str += "<table>\n"
   str += "<tr><th>Date of breach</th><td>#{breach['breach_date']}</td></tr>\n"
   str += "<tr><th>URL</th><td>#{breach['breach_url']}</td></tr>\n"
+
+  str += "<tr><th>Download passwords</th><td>"
+  str += " <a href='/downloads/#{clean_name}_passwords.csv.bz2'>list</a> | "
+  str += " <a href='/downloads/#{clean_name}_passwords_with_count.csv.bz2'>w/ count</a> | "
+  str += " <a href='/downloads/#{clean_name}_passwords_with_hash.csv.bz2'>w/ hash</a> | "
+  str += " <a href='/downloads/#{clean_name}_passwords_with_details.csv.bz2'>w/ details</a>"
+  str += "</td></tr>\n"
+
+  str += "<tr><th>Download hashes</th><td>"
+  str += " <a href='/downloads/#{clean_name}_hashes.csv.bz2'>all</a> | "
+  str += " <a href='/downloads/#{clean_name}_uncracked_hashes.csv.bz2'>uncracked</a> "
+  str += "</td></tr>\n"
+
   str += "<tr><th>Notes</th><td>#{breach['breach_notes']}</td></tr>\n"
   str += "</table>\n"
   str += "<a href='/breaches'>Back to breach list</a>\n"
@@ -331,6 +353,7 @@ get /^\/breach\/([\d]+)\/hashes$/ do |breach_id|
 
   str += "<p><a href='/'>Home</a></p>\n"
   str += "<p><a href='/breach/#{breach['breach_id']}'>Back to #{breach['breach_name']}</a></p>\n"
+  str += "<p><a href='/downloads/#{Db.get_filename(breach['breach_name'])}_hashes.csv.bz2'>Download</a></p>"
   str += query[:pagination].get_html()
   str += get_hash_table(Hashes.query_ex(query), query[:pagination])
   str += query[:pagination].get_html()
@@ -351,6 +374,7 @@ get /^\/breach\/([\d]+)\/hashes\/uncracked$/ do |breach_id|
 
   str += "<p><a href='/'>Home</a></p>\n"
   str += "<p><a href='/breach/#{breach['breach_id']}'>Back to #{breach['breach_name']}</a></p>\n"
+  str += "<p><a href='/downloads/#{Db.get_filename(breach['breach_name'])}_uncracked_hashes.csv.bz2'>Download</a></p>"
   str += query[:pagination].get_html()
   str += get_hash_table(Hashes.query_ex(query))
   str += query[:pagination].get_html()
@@ -371,6 +395,13 @@ get /^\/breach\/([\d]+)\/passwords$/ do |breach_id|
 
   str += "<p><a href='/'>Home</a></p>\n"
   str += "<p><a href='/breach/#{breach['breach_id']}'>Back to #{breach['breach_name']}</a></p>\n"
+
+  clean_name = Db.get_filename(breach['breach_name'])
+  str += "<p><a href='/downloads/#{clean_name}_passwords.csv.bz2'>Download list</a></p>"
+  str += "<p><a href='/downloads/#{clean_name}_passwords_with_count.csv.bz2'>Download list w/ count</a></p>"
+  str += "<p><a href='/downloads/#{clean_name}_passwords_with_hash.csv.bz2'>Download list w/ hash</a></p>"
+  str += "<p><a href='/downloads/#{clean_name}_passwords_with_details.csv.bz2'>Download list w/ details</a></p>"
+
   str += query[:pagination].get_html()
   str += get_password_cache_table(PasswordCache.query_ex(query), query[:pagination])
   str += query[:pagination].get_html()
@@ -395,6 +426,20 @@ get /^\/hash_type\/([\d]+)$/ do |hash_type_id|
   str += "<tr><th>Distinct hashes</th><td>#{hash_type['c_distinct_hashes']}</td></tr>\n"
   str += "<tr><th>Total cracked passwords</th><td>#{hash_type['c_total_passwords']}</td></tr>\n"
   str += "<tr><th>Distinct cracked passwords</th><td>#{hash_type['c_distinct_passwords']}</td></tr>\n"
+
+  clean_name = Db.get_filename(hash_type['hash_type_english_name'])
+  str += "<tr><th>Download passwords</th><td>"
+  str += " <a href='/downloads/#{clean_name}_passwords.csv.bz2'>list</a> | "
+  str += " <a href='/downloads/#{clean_name}_passwords_with_count.csv.bz2'>w/ count</a> | "
+  str += " <a href='/downloads/#{clean_name}_passwords_with_hash.csv.bz2'>w/ hash</a> | "
+  str += " <a href='/downloads/#{clean_name}_passwords_with_details.csv.bz2'>w/ details</a>"
+  str += "</td></tr>\n"
+
+  str += "<tr><th>Download hashes</th><td>"
+  str += " <a href='/downloads/#{clean_name}_hashes.csv.bz2'>all</a> | "
+  str += " <a href='/downloads/#{clean_name}_uncracked_hashes.csv.bz2'>uncracked</a> "
+  str += "</td></tr>\n"
+
   str += "</table>\n"
   str += "<a href='/hashes'>Back to hash list</a>\n"
 
@@ -428,6 +473,7 @@ get /^\/hash_type\/([\d]+)\/hashes$/ do |hash_type_id|
 
   str += "<p><a href='/'>Home</a></p>\n"
   str += "<p><a href='/hash_type/#{hash_type['hash_type_id']}'>Back to #{hash_type['hash_type_english_name']}</a></p>\n"
+  str += "<p><a href='/downloads/#{Db.get_filename(hash_type['hash_type_english_name'])}_hashes.csv.bz2'>Download</a></p>"
   str += query[:pagination].get_html()
   str += get_hash_table(Hashes.query_ex(query), query[:pagination])
   str += query[:pagination].get_html()
@@ -449,6 +495,7 @@ get /^\/hash_type\/([\d]+)\/hashes\/uncracked$/ do |hash_type_id|
 
   str += "<p><a href='/'>Home</a></p>\n"
   str += "<p><a href='/hash_type/#{hash_type['hash_type_id']}'>Back to #{hash_type['hash_type_english_name']}</a></p>\n"
+  str += "<p><a href='/downloads/#{Db.get_filename(hash_type['hash_type_english_name'])}_uncracked_hashes.csv.bz2'>Download</a></p>"
   str += query[:pagination].get_html()
   str += get_hash_table(Hashes.query_ex(query), query[:pagination])
   str += query[:pagination].get_html()
@@ -463,7 +510,7 @@ get /^\/hash_type\/([\d]+)\/passwords$/ do |hash_type_id|
 
   query = { :columns => [
               {:name => '*'},
-              {:name => 'password_cache_password_count', :aggregate => 'sum', :as => 'password_cache_password_count' }
+              {:name => 'password_cache_password_count', :aggregate => 'sum', :as => 'password_count' }
             ],
             :where => "`password_cache_hash_type_id`='#{hash_type['hash_type_id']}'",
             :groupby => "password_cache_password_id"
@@ -476,6 +523,13 @@ get /^\/hash_type\/([\d]+)\/passwords$/ do |hash_type_id|
 
   str += "<p><a href='/'>Home</a></p>\n"
   str += "<p><a href='/hash_type/#{hash_type['hash_type_id']}'>Back to #{hash_type['hash_type_english_name']}</a></p>\n"
+
+  clean_name = Db.get_filename(hash_type['hash_type_english_name'])
+  str += "<p><a href='/downloads/#{clean_name}_passwords.csv.bz2'>Download list</a></p>"
+  str += "<p><a href='/downloads/#{clean_name}_passwords_with_count.csv.bz2'>Download list w/ count</a></p>"
+  str += "<p><a href='/downloads/#{clean_name}_passwords_with_hash.csv.bz2'>Download list w/ hash</a></p>"
+  str += "<p><a href='/downloads/#{clean_name}_passwords_with_details.csv.bz2'>Download list w/ details</a></p>"
+
   str += query[:pagination].get_html()
   str += get_password_cache_table(PasswordCache.query_ex(query), query[:pagination])
   str += query[:pagination].get_html()

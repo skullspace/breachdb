@@ -727,5 +727,10 @@ class Db
       out.close()
     end
   end
+
+  # Convert a name to a filename (remove illegal characters, etc.)
+  def self.get_filename(name)
+    return name.downcase.sub(' ', '_').sub(/[^a-zA-Z0-9_-]/, '')
+  end
 end
 

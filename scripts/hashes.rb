@@ -180,7 +180,7 @@ class Hashes < Breachdb
 
     # Loop through the breaches and add files for each of them
     Breaches.query_ex().each do |breach|
-      name_clean = breach['breach_name'].downcase.sub(' ', '_').sub(/[^a-zA-Z0-9_-]/, '')
+      name_clean = get_filename(breach['breach_name'])
 
       # Hashes for the breach
       files << {
@@ -221,7 +221,7 @@ class Hashes < Breachdb
 
     # Loop through the hash types and add files for each of them
     HashTypes.query_ex({ :where => "`c_total_passwords` != 0" }).each do |hash_type|
-      name_clean = hash_type['hash_type_english_name'].downcase.sub(' ', '_').sub(/[^a-zA-Z0-9_-]/, '')
+      name_clean = get_filename(hash_type['hash_type_english_name'])
 
       # Hashes for the hash type
       files << {
