@@ -130,7 +130,7 @@ class PasswordCache < Breachdb
       # Passwords for the breach
       files << {
         :filename => "downloads/#{name_clean}_passwords.csv.bz2",
-        :description => "Cracked passwords from " + breach['breach_name'],
+        :description => "Passwords from " + breach['breach_name'],
         :show_header => false,
         :query => {
           :columns => [
@@ -148,7 +148,7 @@ class PasswordCache < Breachdb
       # Passwords + counts for the breach
       files << {
         :filename => "downloads/#{name_clean}_passwords_with_count.csv.bz2",
-        :description => "Cracked passwords from " + breach['breach_name'] + " with count",
+        :description => "Passwords from " + breach['breach_name'] + " with count",
         :show_header => true,
         :query => {
           :columns => [
@@ -166,7 +166,7 @@ class PasswordCache < Breachdb
 
       files << {
         :filename => "downloads/#{name_clean}_passwords_with_hash.csv.bz2",
-        :description => "Cracked passwords from " + breach['breach_name'] + " with hash",
+        :description => "Passwords from " + breach['breach_name'] + " with hash",
         :show_header => true,
         :query => {
           :columns => [
@@ -186,7 +186,7 @@ class PasswordCache < Breachdb
 
       files << {
         :filename => "downloads/#{name_clean}_passwords_with_details.csv.bz2",
-        :description => "Cracked passwords from " + breach['breach_name'] + " with details",
+        :description => "Passwords from " + breach['breach_name'] + " with details",
         :show_header => true,
         :query => {
           :columns => [
@@ -213,7 +213,7 @@ class PasswordCache < Breachdb
       # Passwords for the hash_type
       files << {
         :filename => "downloads/#{name_clean}_passwords.csv.bz2",
-        :description => "Cracked passwords of type " + hash_type['hash_type_english_name'],
+        :description => "Passwords of type " + hash_type['hash_type_english_name'],
         :show_header => false,
         :query => {
           :columns => [
@@ -231,7 +231,7 @@ class PasswordCache < Breachdb
       # Passwords + counts for the hash_type
       files << {
         :filename => "downloads/#{name_clean}_passwords_with_count.csv.bz2",
-        :description => "Cracked passwords of type " + hash_type['hash_type_english_name'] + " with count",
+        :description => "Passwords of type " + hash_type['hash_type_english_name'] + " with count",
         :show_header => true,
         :query => {
           :columns => [
@@ -249,7 +249,7 @@ class PasswordCache < Breachdb
 
       files << {
         :filename => "downloads/#{name_clean}_passwords_with_hash.csv.bz2",
-        :description => "Cracked passwords of type " + hash_type['hash_type_english_name'] + " with hash",
+        :description => "Passwords of type " + hash_type['hash_type_english_name'] + " with hash",
         :show_header => true,
         :query => {
           :columns => [
@@ -269,7 +269,7 @@ class PasswordCache < Breachdb
 
       files << {
         :filename => "downloads/#{name_clean}_passwords_with_details.csv.bz2",
-        :description => "Cracked passwords of type " + hash_type['hash_type_english_name'] + " with details",
+        :description => "Passwords of type " + hash_type['hash_type_english_name'] + " with details",
         :show_header => true,
         :query => {
           :columns => [

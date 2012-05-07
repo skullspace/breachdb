@@ -79,7 +79,30 @@ class HashTypes < Breachdb
   end
 
   def self.export_files()
-    return []
+    files = []
+
+    files << {
+      :filename => "downloads/hash_types.csv.bz2",
+      :description => "A list of all hash types",
+      :show_header => true,
+      :query => {
+        :columns => [
+          { :name => 'hash_type_john_name',              :as => 'john_name' },
+          { :name => 'hash_type_english_name',           :as => 'english_name' },
+          { :name => 'hash_type_difficulty',             :as => 'difficulty' },
+          { :name => 'hash_type_john_test_speed',        :as => 'john_test_speed' },
+          { :name => 'hash_type_is_salted',              :as => 'is_salted' },
+          { :name => 'hash_type_hash_example',           :as => 'example' },
+          { :name => 'hash_type_hash_example_plaintext', :as => 'example_plaintext' },
+          { :name => 'c_total_hashes',                   :as => 'total_hashes' },
+          { :name => 'c_distinct_hashes',                :as => 'distinct_hashes' },
+          { :name => 'c_total_passwords',                :as => 'total_passwords' },
+          { :name => 'c_distinct_passwords',             :as => 'distinct_passwords' },
+        ],
+        :orderby => 'hash_type_english_name',
+        :where => '`c_total_hashes` > 0'
+      }
+    }
   end
 end
 

@@ -42,7 +42,25 @@ class Breaches < Breachdb
   end
 
   def self.export_files()
-    return []
+    files = []
+
+    files << {
+      :filename => "downloads/breaches.csv.bz2",
+      :description => "A list of all breaches",
+      :show_header => true,
+      :query => {
+        :columns => [
+          { :name => 'breach_name',       :as => 'name' },
+          { :name => 'breach_date',       :as => 'date' },
+          { :name => 'breach_url',        :as => 'url' },
+          { :name => 'c_total_hashes',    :as => 'total_hashes' },
+          { :name => 'c_distinct_hashes', :as => 'distinct_hashes' },
+          { :name => 'c_total_passwords', :as => 'cracked_passwords' },
+          { :name => 'c_distinct_hashes', :as => 'distinct_cracked_passwords' },
+        ],
+        :orderby => 'breach_name',
+      }
+    }
   end
 end
 

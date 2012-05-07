@@ -87,6 +87,24 @@ class Masks < Breachdb
   end
 
   def self.export_files()
-    return []
+    files = []
+
+    files << {
+      :filename => "downloads/masks.csv.bz2",
+      :description => "A list of all masks",
+      :show_header => true,
+      :query => {
+        :columns => [
+          { :name => 'mask_mask',        :as => 'mask' },
+          { :name => 'c_password_count', :as => 'count' },
+          { :name => 'c_mask_example',   :as => 'example' },
+        ],
+        :orderby => {
+          :column=>'count',
+          :dir=>'DESC'
+        },
+
+      }
+    }
   end
 end

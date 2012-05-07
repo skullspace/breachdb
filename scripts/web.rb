@@ -155,33 +155,33 @@ get '/' do
 
   str += "<h1>Top breaches</h1>\n"
   str += get_breach_table(Breaches.get_top('c_total_hashes', TOP_SIZE))
-  str += "<p><a href='/breaches'>More breaches...</a></p>"
+  str += "<p><a href='/breaches'>More breaches...</a> [<a href='/downloads/breaches.csv.bz2'>download</a>]</p>"
          
   str += "<h1>Top hash types</h1>\n"
   str += get_hash_type_table(HashTypes.get_top('c_total_hashes', TOP_SIZE))
-  str += "<p><a href='/hash_types'>More hash_types...</a></p>"
+  str += "<p><a href='/hash_types'>More hash types...</a> [<a href='/downloads/hash_types.csv.bz2'>download</a>]</p>"
 
   str += "<h1>Top passwords</h1>\n"
   str += get_password_search()
   str += get_password_cache_table(PasswordCache.get_top_sum('password_cache_password_count', 'password_cache_password_id', TOP_SIZE))
-  str += "<p><a href='/passwords'>More passwords...</a></p>"
+  str += "<p><a href='/passwords'>More passwords...</a> [<a href='/downloads/passwords.csv.bz2'>download</a> | <a href='/downloads/passwords_with_count.csv.bz2'>download w/ counts</a>]</p>"
 
   str += "<h1>Top hashes</h1>"
   str += get_hash_search()
   str += get_hash_table(Hashes.get_top('hash_count', TOP_SIZE))
-  str += "<p><a href='/hashes'>More hashes...</a></p>"
+  str += "<p><a href='/hashes'>More hashes...</a> [<a href='/downloads/hashes.csv.bz2'>download</a> | <a href='/downloads/hashes_with_count.csv.bz2'>download w/ counts</a>]</p>"
 
   str += "<h1>Top uncracked hashes</h1>"
   str += get_hash_table(Hashes.get_top('hash_count', TOP_SIZE, {:where => "`hash_password_id`='0'"}))
-  str += "<p><a href='/hashes/uncracked'>More uncracked hashes...</a></p>"
+  str += "<p><a href='/hashes/uncracked'>More uncracked hashes...</a> [<a href='/downloads/uncracked_hashes.csv.bz2'>download</a> | <a href='/downloads/uncracked_hashes_with_count.csv.bz2'>download w/ counts</a>]</p>"
 
   str += "<h1>Top masks</h1>"
   str += get_mask_table(Masks.get_top('c_password_count', TOP_SIZE))
-  str += "<p><a href='/masks'>More masks...</a></p>"
+  str += "<p><a href='/masks'>More masks...</a> [<a href='/downloads/masks.csv.bz2'>download</a>]</p>"
 
   str += "<h1>Top crackers</h1>"
   str += get_cracker_table(Crackers.get_top('c_total_hashes', TOP_SIZE))
-  str += "<p><a href='/crackers'>More crackers...</a></p>"
+  str += "<p><a href='/crackers'>More crackers...</a> [<a href='/downloads/crackers.csv.bz2'>download</a>]</p>"
 
   return str
 end

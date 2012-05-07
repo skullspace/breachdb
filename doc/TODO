@@ -1,8 +1,7 @@
 * Add '^' and '$' to search operations
-* Make the 'download' links work
-  * Possibly implement some smarter cache calculation?
 * Allow submissions in .txt or .bz2 format
 * Dictionaries
+  * Add to Web interface
+  * Update masks to incorporate dictionaries
 * Go through the tables and make sure that the values make sense
-* Allow aggregates in the 'order by' field, and update the Password.export stuff to order passwords properly
 * Rename fields to get rid of prefix?

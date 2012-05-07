@@ -36,6 +36,24 @@ class Crackers < Breachdb
   end
 
   def self.export_files()
-    return []
+    files = []
+
+    files << {
+      :filename => "downloads/crackers.csv.bz2",
+      :description => "A list of all crackers",
+      :show_header => true,
+      :query => {
+        :columns => [
+          { :name => 'cracker_name',      :as => 'name' },
+          { :name => 'c_total_hashes',    :as => 'total_hashes' },
+          { :name => 'c_distinct_hashes', :as => 'distinct_hashes' },
+        ],
+        :orderby => {
+          :column=>'total_hashes',
+          :dir=>'DESC'
+        },
+
+      }
+    }
   end
 end

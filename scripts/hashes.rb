@@ -158,6 +158,26 @@ class Hashes < Breachdb
       }
     }
 
+    files << {
+      :filename => "downloads/uncracked_hashes_with_count.csv.bz2",
+      :description => "A list of uncracked hashes with count",
+      :show_header => true,
+      :query => {
+        :columns => [
+          { :name => 'hash_count', :aggregate => 'SUM', :as => 'count' },
+          { :name => 'hash_hash', :as => 'hash' },
+          { :name => 'c_password', :as => 'password' },
+          { :name => 'c_hash_type', :as => "hash_type" },
+        ],
+        :orderby => {
+          :column=>'count',
+          :dir=>'DESC'
+        },
+        :groupby => 'hash_hash',
+        :where => "`hash_password_id`='0'"
+      }
+    }
+
     # Loop through the breaches and add files for each of them
     Breaches.query_ex().each do |breach|
       name_clean = breach['breach_name'].downcase.sub(' ', '_').sub(/[^a-zA-Z0-9_-]/, '')
@@ -183,7 +203,7 @@ class Hashes < Breachdb
       # Uncracked hashes for the breach
       files << {
         :filename => "downloads/#{name_clean}_uncracked_hashes.csv.bz2",
-        :description => "Hashes from " + breach['breach_name'],
+        :description => "Uncracked hashes from " + breach['breach_name'],
         :show_header => false,
         :query => {
           :columns => [
@@ -206,7 +226,7 @@ class Hashes < Breachdb
       # Hashes for the hash type
       files << {
         :filename => "downloads/#{name_clean}_hashes.csv.bz2",
-        :description => "Hashes from " + hash_type['hash_type_english_name'],
+        :description => "Hashes of type " + hash_type['hash_type_english_name'],
         :show_header => false,
         :query => {
           :columns => [
@@ -224,7 +244,7 @@ class Hashes < Breachdb
       # Uncracked hashes for the hash_type
       files << {
         :filename => "downloads/#{name_clean}_uncracked_hashes.csv.bz2",
-        :description => "Hashes from " + hash_type['hash_type_english_name'],
+        :description => "Uncracked hashes of type " + hash_type['hash_type_english_name'],
         :show_header => false,
         :query => {
           :columns => [
