@@ -84,7 +84,7 @@ class Hashes < Breachdb
 
     files << {
       :filename => "downloads/uncracked_hashes.csv.bz2",
-      :description => "A list of all hashes",
+      :description => "A list of all uncracked hashes",
       :show_header => false,
       :query => {
         :columns => [
@@ -126,7 +126,7 @@ class Hashes < Breachdb
 
     files << {
       :filename => "downloads/uncracked_hashes_with_type.csv.bz2",
-      :description => "A list of all hashes",
+      :description => "A list of uncracked hashes with types",
       :show_header => true,
       :query => {
         :columns => [
