@@ -70,7 +70,7 @@ class Hashes < Breachdb
     files = []
 
     files << {
-      :filename => "data/hashes.csv.bz2",
+      :filename => "downloads/hashes.csv.bz2",
       :description => "A list of all hashes",
       :show_header => false,
       :query => {
@@ -83,7 +83,7 @@ class Hashes < Breachdb
     }
 
     files << {
-      :filename => "data/uncracked_hashes.csv.bz2",
+      :filename => "downloads/uncracked_hashes.csv.bz2",
       :description => "A list of all hashes",
       :show_header => false,
       :query => {
@@ -97,7 +97,7 @@ class Hashes < Breachdb
     }
 
     files << {
-      :filename => "data/hashes_with_password.csv.bz2",
+      :filename => "downloads/hashes_with_password.csv.bz2",
       :description => "A list of all hashes with passwords",
       :show_header => true,
       :query => {
@@ -111,7 +111,7 @@ class Hashes < Breachdb
     }
 
     files << {
-      :filename => "data/hashes_with_type.csv.bz2",
+      :filename => "downloads/hashes_with_type.csv.bz2",
       :description => "A list of all hashes with type",
       :show_header => true,
       :query => {
@@ -125,7 +125,7 @@ class Hashes < Breachdb
     }
 
     files << {
-      :filename => "data/uncracked_hashes_with_type.csv.bz2",
+      :filename => "downloads/uncracked_hashes_with_type.csv.bz2",
       :description => "A list of all hashes",
       :show_header => true,
       :query => {
@@ -140,7 +140,7 @@ class Hashes < Breachdb
     }
 
     files << {
-      :filename => "data/hashes_with_count.csv.bz2",
+      :filename => "downloads/hashes_with_count.csv.bz2",
       :description => "A list of all hashes with count",
       :show_header => true,
       :query => {
@@ -164,7 +164,7 @@ class Hashes < Breachdb
 
       # Hashes for the breach
       files << {
-        :filename => "data/#{name_clean}_hashes.csv.bz2",
+        :filename => "downloads/#{name_clean}_hashes.csv.bz2",
         :description => "Hashes from " + breach['breach_name'],
         :show_header => false,
         :query => {
@@ -182,7 +182,7 @@ class Hashes < Breachdb
 
       # Uncracked hashes for the breach
       files << {
-        :filename => "data/#{name_clean}_uncracked_hashes.csv.bz2",
+        :filename => "downloads/#{name_clean}_uncracked_hashes.csv.bz2",
         :description => "Hashes from " + breach['breach_name'],
         :show_header => false,
         :query => {
@@ -205,7 +205,7 @@ class Hashes < Breachdb
 
       # Hashes for the hash type
       files << {
-        :filename => "data/#{name_clean}_hashes.csv.bz2",
+        :filename => "downloads/#{name_clean}_hashes.csv.bz2",
         :description => "Hashes from " + hash_type['hash_type_english_name'],
         :show_header => false,
         :query => {
@@ -223,7 +223,7 @@ class Hashes < Breachdb
 
       # Uncracked hashes for the hash_type
       files << {
-        :filename => "data/#{name_clean}_uncracked_hashes.csv.bz2",
+        :filename => "downloads/#{name_clean}_uncracked_hashes.csv.bz2",
         :description => "Hashes from " + hash_type['hash_type_english_name'],
         :show_header => false,
         :query => {
