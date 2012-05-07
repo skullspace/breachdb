@@ -46,7 +46,7 @@ class Breaches < Breachdb
 
     files << {
       :filename => "downloads/breaches.csv.bz2",
-      :description => "A list of all breaches",
+      :description => "Breaches",
       :show_header => true,
       :query => {
         :columns => [

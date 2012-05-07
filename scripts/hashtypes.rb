@@ -83,7 +83,7 @@ class HashTypes < Breachdb
 
     files << {
       :filename => "downloads/hash_types.csv.bz2",
-      :description => "A list of all hash types",
+      :description => "Hash types",
       :show_header => true,
       :query => {
         :columns => [

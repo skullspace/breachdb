@@ -91,7 +91,7 @@ class Masks < Breachdb
 
     files << {
       :filename => "downloads/masks.csv.bz2",
-      :description => "A list of all masks",
+      :description => "Masks",
       :show_header => true,
       :query => {
         :columns => [

@@ -40,7 +40,7 @@ class Crackers < Breachdb
 
     files << {
       :filename => "downloads/crackers.csv.bz2",
-      :description => "A list of all crackers",
+      :description => "Crackers",
       :show_header => true,
       :query => {
         :columns => [

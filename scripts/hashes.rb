@@ -71,7 +71,7 @@ class Hashes < Breachdb
 
     files << {
       :filename => "downloads/hashes.csv.bz2",
-      :description => "A list of all hashes",
+      :description => "Hashes",
       :show_header => false,
       :query => {
         :columns => [
@@ -84,7 +84,7 @@ class Hashes < Breachdb
 
     files << {
       :filename => "downloads/uncracked_hashes.csv.bz2",
-      :description => "A list of all uncracked hashes",
+      :description => "Uncracked hashes",
       :show_header => false,
       :query => {
         :columns => [
@@ -98,7 +98,7 @@ class Hashes < Breachdb
 
     files << {
       :filename => "downloads/hashes_with_password.csv.bz2",
-      :description => "A list of all hashes with passwords",
+      :description => "Hashes with passwords",
       :show_header => true,
       :query => {
         :columns => [
@@ -112,7 +112,7 @@ class Hashes < Breachdb
 
     files << {
       :filename => "downloads/hashes_with_type.csv.bz2",
-      :description => "A list of all hashes with type",
+      :description => "Hashes with type",
       :show_header => true,
       :query => {
         :columns => [
@@ -126,7 +126,7 @@ class Hashes < Breachdb
 
     files << {
       :filename => "downloads/uncracked_hashes_with_type.csv.bz2",
-      :description => "A list of uncracked hashes with types",
+      :description => "Uncracked hashes with types",
       :show_header => true,
       :query => {
         :columns => [
@@ -141,7 +141,7 @@ class Hashes < Breachdb
 
     files << {
       :filename => "downloads/hashes_with_count.csv.bz2",
-      :description => "A list of all hashes with count",
+      :description => "Hashes with count",
       :show_header => true,
       :query => {
         :columns => [
@@ -160,7 +160,7 @@ class Hashes < Breachdb
 
     files << {
       :filename => "downloads/uncracked_hashes_with_count.csv.bz2",
-      :description => "A list of uncracked hashes with count",
+      :description => "Uncracked hashes with count",
       :show_header => true,
       :query => {
         :columns => [

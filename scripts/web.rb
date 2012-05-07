@@ -133,11 +133,14 @@ get '/downloads' do
 
   str += "<ul>"
 
+  links = []
   @@all_classes.each do |c|
     c.export_files().each do |file|
-      str += "<li><a href='#{file[:filename]}'>#{file[:description]}</a></li>\n"
+      links << "<li><a href='#{file[:filename]}'>#{file[:description]}</a></li>"
     end
   end
+
+  str += links.sort.join("\n")
 
   str += "</ul>"
 end

@@ -56,7 +56,7 @@ class PasswordCache < Breachdb
 
     files << {
       :filename => "downloads/passwords.csv.bz2",
-      :description => "A list of all passwords",
+      :description => "Passwords",
       :show_header => false,
       :query => {
         :columns => [
@@ -69,7 +69,7 @@ class PasswordCache < Breachdb
 
     files << {
       :filename => "downloads/passwords_with_count.csv.bz2",
-      :description => "A list of all passwords with count",
+      :description => "Passwords with count",
       :show_header => true,
       :query => {
         :columns => [
@@ -86,7 +86,7 @@ class PasswordCache < Breachdb
 
     files << {
       :filename => "downloads/passwords_with_hash.csv.bz2",
-      :description => "A list of all passwords with their associated hashes",
+      :description => "Passwords with their associated hashes",
       :show_header => true,
       :query => {
         :columns => [
@@ -105,7 +105,7 @@ class PasswordCache < Breachdb
 
     files << {
       :filename => "downloads/passwords_with_details.csv.bz2",
-      :description => "A list of all passwords with detailed information",
+      :description => "Passwords with detailed information",
       :show_header => true,
       :query => {
         :columns => [
