@@ -432,7 +432,7 @@ def import_submissions()
 
   # Read the file into the appropriate place
   submissions = IO.readlines(values['submission_password'])
-  Submissions.import_submissions(submissions, nil, nil, values['submission_submission_batch_id'])
+  Submissions.import_submissions_with_batch_id(submissions, values['submission_submission_batch_id'])
   @should_update_cache = true
 end
 

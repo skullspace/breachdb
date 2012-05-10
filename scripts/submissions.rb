@@ -20,26 +20,7 @@ class Submissions < Breachdb
     return []
   end
 
-  # submissions is an array of submissions
-  # cracker_name is a string representing the submissions
-  def self.import_submissions(submissions, cracker_name = nil, ip = nil, batch_id = nil)
-    if(batch_id.nil?)
-      # Insert or find the cracker by their name
-      cracker = Crackers.query_ex({ :where => "`cracker_name`='#{cracker_name}'"})
-      if(cracker.size > 0)
-        cracker_id = cracker[0]['cracker_id']
-      else
-        cracker_id = Crackers.insert_rows({'cracker_name' => cracker_name})
-      end
-
-      # Insert a new batch, and get the id
-      batch_id = SubmissionBatches.insert_rows({
-          'submission_batch_cracker_id' => cracker_id,
-          'submission_batch_date' => Time.new().strftime('%Y-%m-%d'),
-          'submission_batch_ip' => ip,
-      })
-    end
-
+  def self.import_submissions_with_batch_id(submissions, batch_id)
     submissions.each do |s| 
       s.chomp!
     end
@@ -82,6 +63,27 @@ class Submissions < Breachdb
     values['submission_hash'] = hashes
   
     Submissions.insert_rows(values)
+  end
+
+  # submissions is an array of submissions
+  # cracker_name is a string representing the submissions
+  def self.import_submissions(submissions, cracker_name, ip, batch_id = nil)
+    # Insert or find the cracker by their name
+    cracker = Crackers.query_ex({ :where => "`cracker_name`='#{cracker_name}'"})
+    if(cracker.size > 0)
+      cracker_id = cracker[0]['cracker_id']
+    else
+      cracker_id = Crackers.insert_rows({'cracker_name' => cracker_name})
+    end
+
+    # Insert a new batch, and get the id
+    batch_id = SubmissionBatches.insert_rows({
+        'submission_batch_cracker_id' => cracker_id,
+        'submission_batch_date' => Time.new().strftime('%Y-%m-%d'),
+        'submission_batch_ip' => ip,
+    })
+
+    import_submissions_with_batch_id(submissions, batch_id)
   end
 end
 

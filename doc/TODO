@@ -1,6 +1,4 @@
-* Submissions
-  * Finish submissions
-  * Allow submissions in .txt or .bz2 format
+* Allow submissions in .bz2 format
 * Dictionaries
   * Add to Web interface
   * Update masks to incorporate dictionaries
@@ -8,4 +6,3 @@
 * Rename fields to get rid of prefix?
 * Make the db reconnect automatically if it goes away
 * Make sure submissions from the web are giving credit to the right cracker and generating an appropriate submissionbatch
-* We can probably split Submissions.import_submissions() into two functions, depending on whether you give a name or an id for the submission batch
