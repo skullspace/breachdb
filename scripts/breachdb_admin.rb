@@ -431,17 +431,8 @@ def import_submissions()
     ])
 
   # Read the file into the appropriate place
-  submissions = read_file_submissions(values['submission_password'])
-  words = []
-  hashes = []
-  submissions.each do |submission|
-    words << submission[:word]
-    hashes << submission[:hash]
-  end
-  values['submission_password'] = words
-  values['submission_hash'] = hashes
-
-  Submissions.insert_rows(values)
+  submissions = IO.readlines(values['submission_password'])
+  Submissions.import_submissions(submissions, nil, nil, values['submission_submission_batch_id'])
   @should_update_cache = true
 end
 

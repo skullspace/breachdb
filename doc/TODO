@@ -7,3 +7,5 @@
 * Go through the tables and make sure that the values make sense
 * Rename fields to get rid of prefix?
 * Make the db reconnect automatically if it goes away
+* Make sure submissions from the web are giving credit to the right cracker and generating an appropriate submissionbatch
+* We can probably split Submissions.import_submissions() into two functions, depending on whether you give a name or an id for the submission batch

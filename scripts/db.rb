@@ -715,7 +715,11 @@ class Db
       # If we need a header, generate it
       if(show_header)
         header_row = query_ex(query_params.merge({ :limit => "1" }))
-        out.write(header_row.pop.keys.join(',') + "\n")
+        if(header_row.nil?)
+          puts("ERROR: No data found for file #{file[:filename]}")
+        else
+          out.write(header_row.pop.keys.join(',') + "\n")
+        end
       end
 
       # Now grab the data in chunks and write it to the file
