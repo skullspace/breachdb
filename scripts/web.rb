@@ -676,7 +676,17 @@ get '/submissions' do
   <p>Your name, if you want credit: <input type='text' name='cracker' value='anonymous'></p>
   <p><input type='submit' value='Submit'></p>
 </form>
+
+<form action='/submissions/test' method='post' enctype='multipart/form-data'>
+  <p>File: <input type='file' name='file'></p>
+  <p>Your name, if you want credit: <input type='text' name='cracker' value='anonymous'></p>
+  <p><input type='submit' value='Submit'></p>
+</form>
 "
+end
+
+post '/submissions/test' do
+  return params['file'][:tempfile].readlines.sort
 end
 
 post '/submissions/submit' do

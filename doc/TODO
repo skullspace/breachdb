@@ -1,6 +1,9 @@
-* Allow submissions in .txt or .bz2 format
+* Submissions
+  * Finish submissions
+  * Allow submissions in .txt or .bz2 format
 * Dictionaries
   * Add to Web interface
   * Update masks to incorporate dictionaries
 * Go through the tables and make sure that the values make sense
 * Rename fields to get rid of prefix?
+* Make the db reconnect automatically if it goes away
