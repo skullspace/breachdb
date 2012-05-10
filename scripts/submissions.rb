@@ -40,7 +40,7 @@ class Submissions < Breachdb
       })
     end
 
-    submissions.collect! do |s| 
+    submissions.each do |s| 
       s.chomp!
     end
   
