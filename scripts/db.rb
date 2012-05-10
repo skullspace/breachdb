@@ -715,10 +715,11 @@ class Db
       # If we need a header, generate it
       if(show_header)
         header_row = query_ex(query_params.merge({ :limit => "1" }))
+        header_row = header_row.pop
         if(header_row.nil?)
-          puts("ERROR: No data found for file #{file[:filename]}")
+          $stderr.puts("ERROR: No data found for file #{file[:filename]}")
         else
-          out.write(header_row.pop.keys.join(',') + "\n")
+          out.write(header_row.keys.join(',') + "\n")
         end
       end
 
