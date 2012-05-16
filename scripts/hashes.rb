@@ -56,13 +56,12 @@ class Hashes < Breachdb
     query(" UPDATE `hash` JOIN `breach` ON `hash_breach_id`=`breach_id` SET `c_breach_name`=`breach_name` ")
 
     puts("Updating hash.c_hash_type...")
-    query(" UPDATE `hash` JOIN `hash_type` ON `hash_hash_type_id`=`hash_type_id` SET `c_hash_type`=`hash_type_john_name` ")
-
-    puts("Updating hash.c_is_internal...")
-    query(" UPDATE `hash` JOIN `hash_type` ON `hash_hash_type_id`=`hash_type_id` SET `c_is_internal`=`hash_type_is_internal` ")
-
-    puts("Updating hash.c_difficulty...")
-    query(" UPDATE `hash` JOIN `hash_type` ON `hash_hash_type_id`=`hash_type_id` SET `c_difficulty`=`hash_type_difficulty` ")
+    query(" UPDATE `hash`
+              JOIN `hash_type` ON `hash_hash_type_id`=`hash_type_id`
+            SET
+              `c_hash_type`=`hash_type_john_name`,
+              `c_is_internal`=`hash_type_is_internal`,
+              `c_difficulty`=`hash_type_difficulty` ")
   end
 
   def self.export_files()
