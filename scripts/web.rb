@@ -679,6 +679,8 @@ get '/submissions' do
 
 <form action='/submissions/test' method='post' enctype='multipart/form-data'>
   <p>File: <input type='file' name='file'></p>
+  <p>Note: Format can be .txt or .bz2.</p>
+  <p>One password per line, optionally with the hash and a colon before the password (eg, '1a2b3c:password')
   <p>Your name, if you want credit: <input type='text' name='cracker' value='anonymous'></p>
   <p><input type='submit' value='Submit'></p>
 </form>
@@ -686,7 +688,12 @@ get '/submissions' do
 end
 
 post '/submissions/test' do
-  submissions = params['file'][:tempfile].readlines
+  file = params['file'][:tempfile]
+  if(params['file'][:filename] =~ /\.bz2$/)
+    file = Bzip2::Reader.new(params['file'][:tempfile])
+  end
+    
+  submissions = file.readlines
   Submissions.import_submissions(submissions, params['cracker'], @env['REMOTE_ADDR'])
 
   return "<p>Your #{submissions.count} submissions have been saved and will be rolled into the active set at our next batch update. Thanks for your help!</p>
