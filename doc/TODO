@@ -1,7 +1,5 @@
-* Allow submissions in .bz2 format
 * Dictionaries
   * Add to Web interface
   * Update masks to incorporate dictionaries
 * Go through the tables and make sure that the values make sense
 * Make the db reconnect automatically if it goes away
-* Make sure submissions from the web are giving credit to the right cracker and generating an appropriate submissionbatch
