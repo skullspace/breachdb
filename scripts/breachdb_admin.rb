@@ -568,7 +568,6 @@ def go_dictionary(id = nil)
   values = prompt_values(Dictionaries, id,
     [
       {:name=>'Name',              :column=>'dictionary_name',      :value=>''},
-      {:name=>'Breach',            :column=>'dictionary_breach_id', :value=>'0', :foreign_table=>Breaches, :foreign_list=>method(:list_breaches)},
       {:name=>'Date (YYYY-MM-DD)', :column=>'dictionary_date',      :value=>'0000-00-00', :regex=>/\d\d\d\d-\d\d-\d\d/},
       {:name=>'Notes',             :column=>'dictionary_notes',     :value=>''},
     ])

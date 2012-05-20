@@ -26,6 +26,9 @@ echo -ne "11\n\n\ncracker 3\n\n\n../test/passwords-3.txt\n1\n0\n" | $CMD
 # Process the hashes
 echo -ne "13\n\n0\n" | $CMD
 
+# Create a dictionary and populate it
+echo -ne "21\nTest Dictionary\n\n\n23\n1\n../test/passwords-1.txt\n1\n0\n" | $CMD
+
 # Update the caches
 echo -ne "1\n0\n" | $CMD
 

@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.1.56, for pc-linux-gnu (x86_64)
 --
--- Host: localhost    Database: breachdb
+-- Host: localhost    Database: breachdb_test
 -- ------------------------------------------------------
 -- Server version	5.1.56-log
 
@@ -47,7 +47,7 @@ CREATE TABLE `cache` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `updated_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -79,8 +79,9 @@ CREATE TABLE `dictionary` (
   `dictionary_name` varchar(64) NOT NULL DEFAULT '',
   `dictionary_notes` text NOT NULL,
   `dictionary_date` date NOT NULL DEFAULT '1900-01-01',
+  `c_word_count` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`dictionary_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -98,7 +99,7 @@ CREATE TABLE `dictionary_word` (
   PRIMARY KEY (`dictionary_word_id`),
   KEY `dictionary_word_dictionary_id` (`dictionary_word_dictionary_id`),
   KEY `dictionary_word_index` (`dictionary_word_word`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -171,7 +172,7 @@ CREATE TABLE `mask` (
   `c_password_count` int(11) NOT NULL DEFAULT '0',
   `c_mask_example` varchar(256) NOT NULL DEFAULT '',
   PRIMARY KEY (`mask_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -207,7 +208,7 @@ CREATE TABLE `password` (
   UNIQUE KEY `password_password_2` (`password_password`),
   KEY `password_password` (`password_password`),
   KEY `password_password_index` (`password_password`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -231,7 +232,7 @@ CREATE TABLE `password_cache` (
   `password_cache_hash_hash` varbinary(256) NOT NULL DEFAULT '',
   PRIMARY KEY (`password_cache_id`),
   KEY `password_cache_password_id` (`password_cache_password_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -280,4 +281,4 @@ CREATE TABLE `submission_batch` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-05-06 17:45:12
+-- Dump completed on 2012-05-20 13:42:40
