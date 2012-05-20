@@ -44,6 +44,16 @@ def get_breach_table(breaches, pagination = nil)
         ], nil, pagination)
 end
 
+def get_dictionary_table(dictionaries, pagination = nil)
+
+  return Dictionaries.html_table(dictionaries, [
+          { :heading => "Name",                    :field => "dictionary_name",         :sortby => 'dictionary_name' },
+          { :heading => "Date",                    :field => "dictionary_date",         :sortby => 'dictionary_date' },
+          { :heading => "Total words",             :field => "c_word_count",            :sortby => 'c_word_count' },
+          { :heading => "Distinct words",          :field => "c_distinct_word_count",   :sortby => 'c_distinct_word_count' },
+        ], nil, pagination)
+end
+
 def get_hash_type_table(hash_types, pagination = nil)
   hash_types = HashTypes.calculate_cracks(hash_types)
 
@@ -159,6 +169,10 @@ get '/' do
   str += "<h1>Top breaches</h1>\n"
   str += get_breach_table(Breaches.get_top('c_total_hashes', TOP_SIZE))
   str += "<p><a href='/breaches'>More breaches...</a> [<a href='/downloads/breaches.csv.bz2'>download</a>]</p>"
+
+  str += "<h1>Top dictionaries</h1>\n"
+  str += get_dictionary_table(Dictionaries.get_top('c_word_count', TOP_SIZE))
+  str += "<p><a href='/dictionaries'>More dictionaries...</a> [<a href='/downloads/dictionaries.csv.bz2'>download</a>]</p>"
          
   str += "<h1>Top hash types</h1>\n"
   str += get_hash_type_table(HashTypes.get_top('c_total_hashes', TOP_SIZE))

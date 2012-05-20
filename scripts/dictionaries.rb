@@ -16,12 +16,15 @@ class Dictionaries < Breachdb
     query("
       UPDATE `dictionary` AS `b1`
         JOIN (
-          SELECT `dictionary_word_dictionary_id`, SUM(`dictionary_word_count`) AS `c_word_count`
+          SELECT `dictionary_word_dictionary_id`,
+                  SUM(`dictionary_word_count`) AS `c_word_count`,
+                  COUNT(*) AS `c_distinct_word_count`
           FROM `dictionary_word`
           GROUP BY `dictionary_word_dictionary_id`
         ) AS `sub` ON `b1`.`dictionary_id` = `sub`.`dictionary_word_dictionary_id`
       SET
-        `b1`.`c_word_count` = `sub`.`c_word_count`
+        `b1`.`c_word_count` = `sub`.`c_word_count`,
+        `b1`.`c_distinct_word_count` = `sub`.`c_distinct_word_count`
     ")
     
   end

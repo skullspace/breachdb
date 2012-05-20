@@ -27,9 +27,9 @@ echo -ne "11\n\n\ncracker 3\n\n\n../test/passwords-3.txt\n1\n0\n" | $CMD
 echo -ne "13\n\n0\n" | $CMD
 
 # Create a dictionary and populate it
-echo -ne "21\nTest Dictionary 1\n\n\n23\n1\n../test/dictionary-1.txt\n1\n0\n" | $CMD
-echo -ne "21\nTest Dictionary 2\n\n\n23\n2\n../test/dictionary-2.txt\n1\n0\n" | $CMD
-echo -ne "21\nTest Dictionary 3\n\n\n23\n3\n../test/dictionary-3.txt\n1\n0\n" | $CMD
+echo -ne "21\nTest Dictionary 1\n\n\n23\n1\n../test/dictionary-1.txt\n3\n0\n" | $CMD
+echo -ne "21\nTest Dictionary 2\n\n\n23\n2\n../test/dictionary-2.txt\n3\n0\n" | $CMD
+echo -ne "21\nTest Dictionary 3\n\n\n23\n3\n../test/dictionary-3.txt\n3\n0\n" | $CMD
 
 # Update the caches
 echo -ne "1\n0\n" | $CMD

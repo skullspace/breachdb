@@ -75,11 +75,11 @@ DROP TABLE IF EXISTS `dictionary`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `dictionary` (
   `dictionary_id` int(11) NOT NULL AUTO_INCREMENT,
-  `dictionary_breach_id` int(11) NOT NULL DEFAULT '0',
   `dictionary_name` varchar(64) NOT NULL DEFAULT '',
   `dictionary_notes` text NOT NULL,
   `dictionary_date` date NOT NULL DEFAULT '1900-01-01',
   `c_word_count` int(11) NOT NULL DEFAULT '0',
+  `c_distinct_word_count` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`dictionary_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -172,7 +172,7 @@ CREATE TABLE `mask` (
   `c_password_count` int(11) NOT NULL DEFAULT '0',
   `c_mask_example` varchar(256) NOT NULL DEFAULT '',
   PRIMARY KEY (`mask_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -208,7 +208,7 @@ CREATE TABLE `password` (
   UNIQUE KEY `password_password_2` (`password_password`),
   KEY `password_password` (`password_password`),
   KEY `password_password_index` (`password_password`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -232,7 +232,7 @@ CREATE TABLE `password_cache` (
   `password_cache_hash_hash` varbinary(256) NOT NULL DEFAULT '',
   PRIMARY KEY (`password_cache_id`),
   KEY `password_cache_password_id` (`password_cache_password_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -281,4 +281,4 @@ CREATE TABLE `submission_batch` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-05-20 13:42:40
+-- Dump completed on 2012-05-20 14:07:14
