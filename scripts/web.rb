@@ -395,18 +395,6 @@ get /^\/dictionary\/([\d]+)$/ do |dictionary_id|
   str += "<tr><th>Creation date</th><td>#{dictionary['dictionary_date']}</td></tr>\n"
   str += "<tr><th>Notes</th><td>#{dictionary['dictionary_notes']}</td></tr>\n"
   str += "<tr><th>Download</th><td><a href='/downloads/#{clean_name}_words.csv.bz2'>Download</a></td></tr>\n"
-
-  str += "<tr><th>Download passwords</th><td>"
-  str += " <a href='/downloads/#{clean_name}_passwords.csv.bz2'>list</a> | "
-  str += " <a href='/downloads/#{clean_name}_passwords_with_count.csv.bz2'>w/ count</a> | "
-  str += " <a href='/downloads/#{clean_name}_passwords_with_hash.csv.bz2'>w/ hash</a> | "
-  str += " <a href='/downloads/#{clean_name}_passwords_with_details.csv.bz2'>w/ details</a>"
-  str += "</td></tr>\n"
-
-  str += "<tr><th>Download hashes</th><td>"
-  str += " <a href='/downloads/#{clean_name}_hashes.csv.bz2'>all</a> | "
-  str += " <a href='/downloads/#{clean_name}_uncracked_hashes.csv.bz2'>uncracked</a> "
-  str += "</td></tr>\n"
   str += "</table>\n"
 
   str += "<a href='/dictionaries'>Back to dictionary list</a>\n"
