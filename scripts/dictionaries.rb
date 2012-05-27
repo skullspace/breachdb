@@ -30,6 +30,23 @@ class Dictionaries < Breachdb
   end
 
   def self.export_files()
-    return []
+    files = []
+
+    files << {
+      :filename => "downloads/dictionaries.csv.bz2",
+      :description => "Dictionaries",
+      :show_header => true,
+      :query => {   
+        :columns => [
+          { :name => 'dictionary_name',   :as => 'name' },
+          { :name => 'dictionary_date',   :as => 'date' },
+          { :name => 'dictionary_notes',  :as => 'notes' },
+          { :name => 'c_word_count',      :as => 'size' },
+        ],
+        :orderby => 'dictionary_name',
+      }
+    }
+
+    return files
   end
 end
