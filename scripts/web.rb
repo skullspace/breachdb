@@ -217,6 +217,20 @@ get '/breaches' do
   return str
 end
 
+get '/dictionaries' do
+  pagination = Pagination.new('/dictionaries', params, Dictionaries.get_count, 'c_word_count', 'DESC')
+
+  str = ''
+  str += "<h1>Dictionaries</h1>\n"
+  str += "<p><a href='/'>Home</a></p>\n"
+  str += "<p><a href='/downloads/dictionaries.csv.bz2'>Download</a></p>\n"
+  str += pagination.get_html()
+  str += get_dictionary_table(Dictionaries.query_ex({ :pagination => pagination }))
+  str += pagination.get_html()
+
+  return str
+end
+
 get '/hash_types' do
   pagination = Pagination.new('/hash_types', params, HashTypes.get_count, 'c_total_hashes', 'DESC')
 
