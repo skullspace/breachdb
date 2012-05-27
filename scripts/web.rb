@@ -99,6 +99,16 @@ def get_password_cache_table(passwords, pagination = nil)
         ], nil, pagination)
 end
 
+def get_dictionary_words_table(dictionary_words, pagination = nil)
+  dictionary_words.each do |p|
+    p['dictionary_word'] = DictionaryWords.html_get_link(p['dictionary_word_id'], p['dictionary_word_word'])
+  end
+
+  return DictionaryWords.html_table(dictionary_words, [
+          { :heading => "Word",  :field => "dictionary_word_word",   :sortby => 'dictionary_word_word' },
+        ], nil, pagination)
+end
+
 def get_hash_table(hashes, pagination = nil)
   hashes.each do |h|
     h['hash']     = Hashes.html_get_search(h['hash_hash'], h['hash_hash'])
@@ -367,6 +377,53 @@ get /^\/breach\/([\d]+)$/ do |breach_id|
   str += get_password_cache_table(PasswordCache.get_top_sum('password_cache_password_count', 'password_cache_password_id', TOP_SIZE, { :where => "`password_cache_breach_id`='#{Mysql::quote(breach_id)}'"}))
   str += "<p><a href='/breach/#{breach['breach_id']}/passwords'>More passwords...</a></p>"
   
+  return str
+end
+
+get /^\/dictionary\/([\d]+)$/ do |dictionary_id|
+  dictionary = Dictionaries.get(dictionary_id)
+  if(dictionary.nil?)
+    return 'Dictionary not found'
+  end
+
+  clean_name = Db.get_filename(dictionary['dictionary_name'])
+
+  str = ""
+  str += "<h1>Dictionary: #{dictionary['dictionary_name']}</h1>\n"
+  str += "<h2>Details</h2>\n"
+  str += "<table>\n"
+  str += "<tr><th>Creation date</th><td>#{dictionary['dictionary_date']}</td></tr>\n"
+  str += "<tr><th>Notes</th><td>#{dictionary['dictionary_notes']}</td></tr>\n"
+  str += "<tr><th>Download</th><td><a href='/downloads/#{clean_name}_words.csv.bz2'>Download</a></td></tr>\n"
+
+  str += "<tr><th>Download passwords</th><td>"
+  str += " <a href='/downloads/#{clean_name}_passwords.csv.bz2'>list</a> | "
+  str += " <a href='/downloads/#{clean_name}_passwords_with_count.csv.bz2'>w/ count</a> | "
+  str += " <a href='/downloads/#{clean_name}_passwords_with_hash.csv.bz2'>w/ hash</a> | "
+  str += " <a href='/downloads/#{clean_name}_passwords_with_details.csv.bz2'>w/ details</a>"
+  str += "</td></tr>\n"
+
+  str += "<tr><th>Download hashes</th><td>"
+  str += " <a href='/downloads/#{clean_name}_hashes.csv.bz2'>all</a> | "
+  str += " <a href='/downloads/#{clean_name}_uncracked_hashes.csv.bz2'>uncracked</a> "
+  str += "</td></tr>\n"
+  str += "</table>\n"
+
+  str += "<a href='/dictionaries'>Back to dictionary list</a>\n"
+
+  query = { :where => "`dictionary_word_dictionary_id`='#{dictionary['dictionary_id']}'" }
+
+  query[:pagination] = Pagination.new("/dictionary/#{dictionary['dictionary_id']}", params, DictionaryWords.get_count(query), 'dictionary_word_word', 'ASC')
+
+  str += "<h2>Words</h2>\n"
+
+  str += "<p><a href='/'>Home</a></p>\n"
+  str += query[:pagination].get_html()
+  str += get_dictionary_words_table(DictionaryWords.query_ex(query), query[:pagination])
+  str += query[:pagination].get_html()
+  return str
+
+
   return str
 end
 
