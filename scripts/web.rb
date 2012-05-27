@@ -46,6 +46,10 @@ end
 
 def get_dictionary_table(dictionaries, pagination = nil)
 
+  dictionaries.each do |d|
+    d['dictionary_name'] = Dictionaries.html_get_link(d['dictionary_id'], d['dictionary_name'])
+  end
+
   return Dictionaries.html_table(dictionaries, [
           { :heading => "Name",                    :field => "dictionary_name",         :sortby => 'dictionary_name' },
           { :heading => "Date",                    :field => "dictionary_date",         :sortby => 'dictionary_date' },
