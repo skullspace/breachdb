@@ -81,7 +81,7 @@ class Masks < Breachdb
     puts("Updating mask.c_mask_example...")
     query("UPDATE `mask` SET `c_mask_example`=''")
     query("
-      UPDATE `mask` JOIN ( SELECT * FROM `password`) AS a ON `password_mask_id`=`mask_id`
+      UPDATE `mask` JOIN ( SELECT * FROM `password` ORDER BY `password_password`) AS a ON `password_mask_id`=`mask_id`
           SET `c_mask_example`=`password_password`
     ")
   end
