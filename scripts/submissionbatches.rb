@@ -74,6 +74,16 @@ class SubmissionBatches < Breachdb
     File.delete(potfile)
   end
 
+  # This is a simple loop that assumes all passwords are in plaintext.
+  # I wrote this to help simplify the logic of cracking hashes without
+  # treating plaintext hashes special all over the place.
+  def self.process_hashes_plaintext(hashes, results)
+    hashes.each() do |hash|
+      hash = hash['hash_hash']
+      results[hash] = [hash]
+    end
+  end
+
   # Take an array of words and try them against the list of hashes (each of
   # which is a database row). The results argument is an array where the
   # results are stored.
@@ -130,23 +140,32 @@ class SubmissionBatches < Breachdb
     # IMPORTANT NOTE for future generations: you can't change the 'hash' table
     # in this loop, or it'll screw up the chunking. If you're going to make
     # changes, do it after! 
-    debug("Getting hashes to test with john...")
+
+    debug("Auto-cracking plaintext hashes (what a time saver!)")
+    Hashes.each_chunk(100000, true, {
+      :where => "`hash_type_id` = -1 AND `hash_password_id`='0' AND #{hash_list_sql}",
+      :join => { :table => 'hash_type', :column1 => 'hash_hash_type_id', :column2 => 'hash_type_id' }
+    }) do |hashes|
+      process_hashes_plaintext(hashes, results)
+      debug("[plaintext] Done the chunk of hashes! So far, we have #{results.keys.size} valid passwords representing #{results.values.flatten.size} hashes")
+    end
+
+    debug("Cracking passwords with john...")
     Hashes.each_chunk(100000, true, {
       :where => "`hash_type_difficulty` < 8 AND `hash_type_is_internal`='0' AND `hash_password_id`='0' AND #{hash_list_sql}",
       :join => { :table => 'hash_type', :column1 => 'hash_hash_type_id', :column2 => 'hash_type_id' }
     }) do |hashes|
       process_hashes_john(words, hashes, results)
-      debug("Done the chunk of hashes! So far, we have #{results.keys.size} valid passwords representing #{results.values.flatten.size} hashes")
+      debug("[john] Done the chunk of hashes! So far, we have #{results.keys.size} valid passwords representing #{results.values.flatten.size} hashes")
     end
 
-    debug("Getting hashes to test internally...")
-
+    debug("Cracking hashes that john doesn't handle...")
     Hashes.each_chunk(100000, true, {
       :where => "`hash_type_difficulty` < 8 AND `hash_type_is_internal`='1' AND `hash_password_id`='0' AND #{hash_list_sql}",
       :join => { :table => 'hash_type', :column1 => 'hash_hash_type_id', :column2 => 'hash_type_id' }
     }) do |hashes|
       process_hashes_internal(words, hashes, results)
-      debug("Done the chunk of hashes! So far, we have #{results.keys.size} valid passwords representing #{results.values.flatten.size} hashes")
+      debug("[internal] Done the chunk of hashes! So far, we have #{results.keys.size} valid passwords representing #{results.values.flatten.size} hashes")
     end
   end
 
