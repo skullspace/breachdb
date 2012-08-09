@@ -5,4 +5,5 @@
 * Make the db reconnect automatically if it goes away
 * Support plaintext hashes on breaches
 * Remove counts from 'dictionaries'
+* Breaches with plaintext passwords
 
