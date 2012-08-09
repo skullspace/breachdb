@@ -80,7 +80,11 @@ class SubmissionBatches < Breachdb
   def self.process_hashes_plaintext(hashes, results)
     hashes.each() do |hash|
       hash = hash['hash_hash']
-      results[hash] = [hash]
+      if(results[hash].nil?)
+        results[hash] = [hash]
+      else
+        results[hash] << hash
+      end
     end
   end
 
