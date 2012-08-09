@@ -39,8 +39,6 @@ def get_with_default(prompt, default, pattern = nil)
     if(pattern.nil? || result =~ pattern)
       return result
     end
-
-    puts("Invalid entry: #{result}")
   end
 end
 
@@ -283,7 +281,7 @@ end
 def prompt_for_key(table)
   value = '0'
   loop do
-    value = get_with_default(table.table_name + "::id", value, /^[0-9]+$/)
+    value = get_with_default(table.table_name + "::id", value, /^(-)?[0-9]+$/)
     if(!table.get(value).nil? || value == '0')
       return value
     end
