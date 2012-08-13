@@ -52,6 +52,11 @@ echo "SELECT password_cache_password_password, password_cache_breach_name, passw
 echo "SELECT submission_hash, submission_hash FROM submission ORDER BY submission_hash" | mysql -h $TEST_HOST -u $TEST_USERNAME --password=$TEST_PASSWORD -D $TEST_DB  | sort >> $OUTFILE
 echo "SELECT submission_batch_date, submission_batch_ip, submission_batch_done, c_submission_count, c_cracker_name FROM submission_batch ORDER BY submission_batch_date" | mysql -h $TEST_HOST -u $TEST_USERNAME --password=$TEST_PASSWORD -D $TEST_DB  | sort >> $OUTFILE
 
+sed -i 's/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/####-##-##/g' $EXPECTED
+sed -i 's/[0-9][0-9]:[0-9][0-9]:[0-9][0-9]/##:##:##/g' $EXPECTED
+sed -i 's/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/####-##-##/g' $OUTFILE
+sed -i 's/[0-9][0-9]:[0-9][0-9]:[0-9][0-9]/##:##:##/g' $OUTFILE
+
 echo -n "Expected: "
 md5sum $EXPECTED
 echo -n "We got:   "
