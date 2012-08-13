@@ -330,9 +330,10 @@ def list_crackers(brief = true, prompt = false)
   puts("--------")
 
   show_list(Crackers.query_ex(), [
-    {:name=>'cracker_id',   :english=>'ID'},
-    {:name=>'cracker_name', :english=>'Name'},
-    {:name=>'c_total_hashes', :english=>'Hashes cracked'}], brief) # TODO: Other fields
+    {:name=>'cracker_id',        :english=>'ID'},
+    {:name=>'cracker_name',      :english=>'Name'},
+    {:name=>'c_total_hashes',    :english=>'Total hashes cracked'},
+    {:name=>'c_distinct_hashes', :english=>'Distinct hashes cracked'}], brief)
 
   # Get the input from the user
   if(prompt)
@@ -600,6 +601,23 @@ def import_dictionary_words()
   @should_update_cache = true
 end
 
+def list_dictionary_words(brief = true)
+  dictionary_id = list_dictionaries(true, true)
+
+  puts("Entries:")
+  puts("-------")
+
+  if(dictionary_id == '0')
+    where = nil
+  else
+    where = "`dictionary_word_dictionary_id`='#{Mysql::quote(dictionary_id)}'"
+  end
+
+  show_list(DictionaryWords.query_ex({:where => where}), [
+    {:name=>'dictionary_word_word',    :english=>'Word'},
+  ], brief)
+end
+
 def menu()
   menu = [
     {:name=>'Quit',                    :function=>nil},
@@ -635,7 +653,7 @@ def menu()
     {:name=>'Dictionary::edit',        :function=>method(:edit_dictionary)},
 
     {:name=>'DictionaryWords::import', :function=>method(:import_dictionary_words)},
-#    {:name=>'DictionaryWords::view',  :function=>method(:view_submissions)}, TODO
+    {:name=>'DictionaryWords::view',   :function=>method(:list_dictionary_words)},
   ]
 
   puts()

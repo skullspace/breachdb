@@ -150,6 +150,8 @@ def get_cracker_table(crackers, pagination = nil)
         ], nil, pagination)
 end
 
+# TODO: Check if the mysql connection is still alive
+
 get '/downloads' do
   str = "<h1>Downloads</h1>
     <p><a href='/'>Home</a></p>"
