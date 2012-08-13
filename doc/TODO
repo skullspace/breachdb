@@ -1,2 +1,6 @@
-* Go through the tables and make sure that the values make sense
+* Sanity check the web pages
+* Import real data
+  * Make sure it looks okay
+  * Make sure performance is okay
 * Make the db reconnect automatically if it goes away
+
