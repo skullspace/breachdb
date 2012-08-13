@@ -608,7 +608,6 @@ class Db
   #  * :class - [optional] the css class for the column (default is :field)
   #  * :link - [optional] a url to link to in the field
   # @param css_class [optional] The table's class (default is the table name)
-  # TODO
   #
   # @return An HTML table.
   ##

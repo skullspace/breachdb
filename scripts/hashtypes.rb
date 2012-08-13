@@ -61,7 +61,6 @@ class HashTypes < Breachdb
         `b1`.`c_distinct_hashes` = `sub`.`c_distinct_hashes`
     ")
 
-    # TODO: I'm not positive that c_distinct_passwords is right...
     puts("Updating hash_type.c_total_passwords and hash_type.c_distinct_passwords...")
     query("UPDATE `hash_type` SET `c_total_passwords`='0', `c_distinct_passwords`='0'")
     query("
