@@ -3,7 +3,4 @@
   * Update masks to incorporate dictionaries
 * Go through the tables and make sure that the values make sense
 * Make the db reconnect automatically if it goes away
-* Support plaintext hashes on breaches
 * Remove counts from 'dictionaries'
-* Breaches with plaintext passwords
-
