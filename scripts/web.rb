@@ -51,10 +51,9 @@ def get_dictionary_table(dictionaries, pagination = nil)
   end
 
   return Dictionaries.html_table(dictionaries, [
-          { :heading => "Name",                    :field => "dictionary_name",         :sortby => 'dictionary_name' },
-          { :heading => "Date",                    :field => "dictionary_date",         :sortby => 'dictionary_date' },
-          { :heading => "Total words",             :field => "c_word_count",            :sortby => 'c_word_count' },
-          { :heading => "Distinct words",          :field => "c_distinct_word_count",   :sortby => 'c_distinct_word_count' },
+          { :heading => "Name",                :field => "dictionary_name",         :sortby => 'dictionary_name' },
+          { :heading => "Date",                :field => "dictionary_date",         :sortby => 'dictionary_date' },
+          { :heading => "entries",             :field => "c_word_count",            :sortby => 'c_word_count' },
         ], nil, pagination)
 end
 

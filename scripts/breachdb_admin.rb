@@ -591,11 +591,9 @@ def import_dictionary_words()
   counts = read_file_import(values['dictionary_word_word'])
 
   values['dictionary_word_word']  = []
-  values['dictionary_word_count'] = []
 
   counts.each_pair() do |word, count|
     values['dictionary_word_word'] << word
-    values['dictionary_word_count'] << count.to_s
   end
 
   DictionaryWords.insert_rows(values)
