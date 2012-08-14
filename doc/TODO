@@ -1,5 +1,10 @@
-* Sanity check the web pages
-* Import real data
-  * Make sure it looks okay
-  * Make sure performance is okay
-* Export dictionaries to .bz2 output file
+Basically, all that's left is to release a beta and see how it goes!
+* Clean up the web page a bit, if necessary
+  * Definitely need to clean up the /downloads page
+* Look into logging in Sinatra
+* Put some beta instructions at the top
+* Import some real data
+* Look over and sanity check pages
+* Import a bunch of real data
+* Ask for beta testers!!!
+
