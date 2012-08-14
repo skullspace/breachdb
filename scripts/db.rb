@@ -1,5 +1,5 @@
 require 'rubygems'
-require 'mysql'
+require 'mysql2'
 require 'bzip2-ruby'
 
 require 'pagination'
@@ -26,11 +26,12 @@ class Db
     # Only initialize the database once (not really threadsafe, but not a big
     # deal)
     if(@@my.nil?)
-      @@my = Mysql::new(
-        host.nil?     ? DB_HOST     : host,
-        username.nil? ? DB_USERNAME : username,
-        password.nil? ? DB_PASSWORD : password,
-        db.nil?       ? DB_DB       : db
+      @@my = Mysql2::Client.new(
+        :host => host.nil?     ? DB_HOST     : host,
+        :username => username.nil? ? DB_USERNAME : username,
+        :password => password.nil? ? DB_PASSWORD : password,
+        :database => db.nil?       ? DB_DB       : db,
+        :reconnect => true
       )
     end
   end
@@ -51,7 +52,7 @@ class Db
       end
     end
 
-    return @@my.query(query)
+    return @@my.query(query, :cast => false)
   end
 
   ##
@@ -381,7 +382,7 @@ class Db
   #  the single given column
   def self.result_to_list(result, column = nil)
     list = []
-    result.each_hash() do |r|
+    result.each(:as => :hash) do |r|
       if(column.nil?)
         list << r
       else
@@ -459,7 +460,7 @@ class Db
     result = query(query)
 
     ids = {}
-    result.each_hash() do |i|
+    result.each(:as => :hash) do |i|
       if(ids[i['field']].nil?)
         ids[i['field']] = [i['id']]
       else
@@ -547,7 +548,7 @@ class Db
         query("INSERT INTO `#{table_name()}` (#{columns.join(',')}) VALUES #{slice.join(',')}")
       end
 
-      return @@my.insert_id.to_s
+      return @@my.last_id.to_s
     else
       rows = []
 
