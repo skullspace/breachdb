@@ -676,9 +676,9 @@ def menu()
 end
 
 if(ARGV.count == 0)
-  Breachdb.initialize()
+  Breachdb.init()
 elsif(ARGV.count == 4)
-  Breachdb.initialize(ARGV[0], ARGV[1], ARGV[2], ARGV[3])
+  Breachdb.init(ARGV[0], ARGV[1], ARGV[2], ARGV[3])
 else
   puts("Usage: web.rb <host> <username> <password> <db>")
   exit

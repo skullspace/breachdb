@@ -22,7 +22,7 @@ class Db
   # This needs to be called at the start of the program to initiate the
   # database connection.
   ##
-  def self.initialize(host = nil, username = nil, password = nil, db = nil)
+  def self.init(host = nil, username = nil, password = nil, db = nil)
     # Only initialize the database once (not really threadsafe, but not a big
     # deal)
     if(@@my.nil?)
