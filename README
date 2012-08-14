@@ -20,3 +20,20 @@ to set up (since I wrote this for myself and not for others). Basically:
 
 You should be good to go!
 
+If you want to take advantage of some test data I wrote, do this:
+
+- Create a MySQL database called breachdb_test
+
+- Create a user called breachdb_test with the password breachdb_test and grant
+it full access to the breachdb_test database
+
+- cd test ; ./test.sh
+
+That should load a bunch of test data into the database and get it going. 
+You can then use:
+
+- cd test ; ./test_web.sh
+
+To fire up a web server that points to that test database.
+
+
