@@ -23,7 +23,7 @@ class DictionaryWords < Breachdb
       name_clean = get_filename(dictionary['dictionary_name'])
 
       files << {
-        :filename => "downloads/#{name_clean}.csv.bz2",
+        :filename => "downloads/#{name_clean}_words.csv.bz2",
         :description => "Words from dictionary #{dictionary['dictionary_name']}",
         :show_header => false,
         :query => {
