@@ -1,0 +1,22 @@
+If you want to run your own BreachDB service, you're totally welcome to
+(particularly for testing / development, I imagine). It just takes a few steps
+to set up (since I wrote this for myself and not for others). Basically:
+
+- Create a MySQL database, and create a user with select/update/insert
+  permissions
+
+- In the db/ folder, there's a file called breachdb.sql; import it with the
+  following command:
+  $ mysql -u root -p -D <database name> < breacndb.sql
+
+- Create a file in your home directory called auth.rb that looks like this:
+  DB_HOST='localhost'
+  DB_USERNAME='breachdb'
+  DB_PASSWORD='breachdb_password'
+  DB_DB='breachdb'
+
+- Run web.rb:
+  ruby ./web.rb
+
+You should be good to go!
+

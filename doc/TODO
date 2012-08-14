@@ -2,4 +2,4 @@
 * Import real data
   * Make sure it looks okay
   * Make sure performance is okay
-
+* Export dictionaries to .bz2 output file

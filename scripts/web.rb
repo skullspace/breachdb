@@ -9,10 +9,9 @@ require 'passwords'
 require 'passwordcache'
 require 'hashtypes'
 require 'masks'
+require 'pagination'
 require 'submissions'
 require 'submissionbatches'
-
-require 'pagination'
 
 @@all_classes = [ Hashes, Passwords, Breaches, HashTypes, Masks, Submissions, Crackers, SubmissionBatches, Dictionaries, DictionaryWords, PasswordCache ]
 
@@ -26,6 +25,12 @@ else
 end
 
 set :port, 2022
+
+# This is authentication for the beta version only. The release will be free
+# for anybody who wants to use it to use!
+use Rack::Auth::Basic, "BreachDB Beta" do |username, password|
+  [username, password] == ['breachdb', 'breachdb']
+end
 
 TOP_SIZE  = 10
 
