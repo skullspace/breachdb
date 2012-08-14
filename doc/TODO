@@ -2,5 +2,4 @@
 * Import real data
   * Make sure it looks okay
   * Make sure performance is okay
-* Make the db reconnect automatically if it goes away
 
