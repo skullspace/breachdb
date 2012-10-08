@@ -66,3 +66,4 @@
 65|3|-1|raw-sha512|Raw SHA-512|0|1|^[A-Fa-f0-9]{128}$|b109f3bbbc244eb82441917ed06d618b9008dd09b3befd1b5e07394c706a8bb980b1d7785e5976ec049b46df5f1326af5a2ea6d103fd07c95385ffab0cacbc86|password|||
 66|2|-1|ripe-md160|RIPEMD-160|0|1|^[A-Fa-f0-9]{40}$|2c08e8f5884750a7b99f6f2f342fc638db25ff31|password|||
 67|2|6361000|truncated-md5|Truncated MD5|0|1|^[A-Fa-f0-9]{8}$|e10adc39|123456|The first 8 characters (32 bits) of a md5 hash (used by rootkit.com)||
+68|3|3153000|linkedin-sha1|LinkedIn SHA-1|0|1|^.*$|000000090e92232ed07092ebed6dc6170457a21d|azertyuiop2|The first 6 characters may be set to '0' (used by whoever stole the LinkedIn.com passwords)||
