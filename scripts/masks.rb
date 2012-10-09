@@ -45,25 +45,27 @@ class Masks < Breachdb
       end
 
       # Ensure all the masks are in the database
-      mask_ids = insert_if_required('mask_mask', masks.keys)
+      if(masks.keys.size > 0) then
+        mask_ids = insert_if_required('mask_mask', masks.keys)
 
       # Loop through the masks to point the password ids at the proper place
       updates = []
       masks.each() do |mask, password_ids|
         mask_id = mask_ids[mask]
 
-        # Loop through the passwords that should point to this mask
-        password_ids.each do |password_id|
-          updates << "WHEN '#{Mysql.quote(password_id)}' THEN '#{Mysql.quote(mask_id[0])}'"
+          # Loop through the passwords that should point to this mask
+          password_ids.each do |password_id|
+            updates << "WHEN '#{Mysql.quote(password_id)}' THEN '#{Mysql.quote(mask_id[0])}'"
+          end
         end
-      end
 
-      update_query = "UPDATE `password`
-            SET `password_mask_id` = CASE `password_id`
-              #{updates.join("\n")}
-            END
-          WHERE `password_id` IN (#{masks.values.flatten.join(',')})"
-      query(update_query)
+        update_query = "UPDATE `password`
+              SET `password_mask_id` = CASE `password_id`
+                #{updates.join("\n")}
+              END
+            WHERE `password_id` IN (#{masks.values.flatten.join(',')})"
+        query(update_query)
+      end
     end
 
     puts("Updating mask.c_password_count...")

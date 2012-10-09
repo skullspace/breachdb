@@ -49,11 +49,11 @@ class Hashes < Breachdb
 
   def self.cache_update()
     puts("Updating hash.c_password...")
-    query("UPDATE `hash` SET `c_password`=''")
-    query(" UPDATE `hash` JOIN `password` ON `hash_password_id`=`password_id` SET `c_password`=`password_password` ")
+    #query("UPDATE `hash` SET `c_password`=''")
+    query(" UPDATE `hash` JOIN `password` ON `hash_password_id`=`password_id` SET `c_password`=`password_password` where `c_password`=''")
 
     puts("Updating hash.c_breach_name...")
-    query(" UPDATE `hash` JOIN `breach` ON `hash_breach_id`=`breach_id` SET `c_breach_name`=`breach_name` ")
+    query(" UPDATE `hash` JOIN `breach` ON `hash_breach_id`=`breach_id` SET `c_breach_name`=`breach_name` where `c_breach_name`=''")
 
     puts("Updating hash.c_hash_type...")
     query(" UPDATE `hash`
@@ -61,7 +61,8 @@ class Hashes < Breachdb
             SET
               `c_hash_type`=`hash_type_john_name`,
               `c_is_internal`=`hash_type_is_internal`,
-              `c_difficulty`=`hash_type_difficulty` ")
+              `c_difficulty`=`hash_type_difficulty`
+            WHERE `c_hash_type`='' ")
   end
 
   def self.export_files()
@@ -78,6 +79,7 @@ class Hashes < Breachdb
         ],
         :groupby => 'hash_hash',
         :orderby => 'hash_hash',
+        :where   => '`hash_hash_type_id` > 0'
       }
     }
 
@@ -91,7 +93,7 @@ class Hashes < Breachdb
         ],
         :groupby => 'hash_hash',
         :orderby => 'hash_hash',
-        :where => "`hash_password_id`='0'"
+        :where => "`hash_password_id`='0' and `hash_hash_type_id` > 0"
       }
     }
 
@@ -106,6 +108,7 @@ class Hashes < Breachdb
         ],
         :groupby => 'hash_hash',
         :orderby => 'hash_hash',
+        :where   => '`hash_hash_type_id` > 0'
       }
     }
 
@@ -120,6 +123,7 @@ class Hashes < Breachdb
         ],
         :groupby => 'hash_hash',
         :orderby => 'hash_hash',
+        :where   => '`hash_hash_type_id` > 0'
       }
     }
 
@@ -134,7 +138,7 @@ class Hashes < Breachdb
         ],
         :groupby => 'hash_hash',
         :orderby => 'hash_hash',
-        :where => "`hash_password_id`='0'"
+        :where => "`hash_password_id`='0' and `hash_hash_type_id` > 0"
       }
     }
 
@@ -154,6 +158,7 @@ class Hashes < Breachdb
           :dir=>'DESC'
         },
         :groupby => 'hash_hash',
+        :where   => '`hash_hash_type_id` > 0'
       }
     }
 
@@ -173,7 +178,7 @@ class Hashes < Breachdb
           :dir=>'DESC'
         },
         :groupby => 'hash_hash',
-        :where => "`hash_password_id`='0'"
+        :where => "`hash_password_id`='0' and `hash_hash_type_id`>'0'"
       }
     }
 

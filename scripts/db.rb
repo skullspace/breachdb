@@ -406,7 +406,7 @@ class Db
   # @param where  Add a WHERE clause to the query
   # @param is_read_only Enable/disable read-only mode
   def self.each_chunk(size = CHUNK_SIZE, is_read_only = true, query_params = nil)
-    count = get_count(query_params)
+    count = get_count(query_params) # TODO: This line slows things down quite a lot
 
     if(is_read_only)
       0.step(count - 1, size) do |i|

@@ -270,7 +270,9 @@ def cache_update()
     puts("Updating cache for #{c.name}...")
     c.cache_update()
   end
+end
 
+def export_data()
   @all_classes.each do |c|
     puts("Exporting data for #{c.name}...")
     c.export()
@@ -654,6 +656,8 @@ def menu()
 
     {:name=>'DictionaryWords::import', :function=>method(:import_dictionary_words)},
     {:name=>'DictionaryWords::view',   :function=>method(:list_dictionary_words)},
+
+    {:name=>'Export data',             :function=>method(:export_data)},
   ]
 
   puts()

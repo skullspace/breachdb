@@ -1,10 +1,11 @@
 Basically, all that's left is to release a beta and see how it goes!
 * Clean up the web page a bit, if necessary
   * Definitely need to clean up the /downloads page
-* Look into logging in Sinatra
 * Put some beta instructions at the top
-* Import some real data
 * Look over and sanity check pages
-* Import a bunch of real data
 * Ask for beta testers!!!
+* Stop showing plaintext on 'hash' pages
+* Searching for hashes is too slow
+* Implemented LinkedIn-SHA1
+* Figure out why bcrypt isn't working
 
