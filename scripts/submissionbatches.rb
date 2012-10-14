@@ -146,9 +146,9 @@ class SubmissionBatches < Breachdb
     # changes, do it after! 
 
     debug("Auto-cracking plaintext hashes (what a time saver!)")
-    Hashes.each_chunk(100000, true, {
-      :where => "`hash_type_id` = -1 AND `hash_password_id`='0' AND #{hash_list_sql}",
-      :join => { :table => 'hash_type', :column1 => 'hash_hash_type_id', :column2 => 'hash_type_id' }
+    Hashes.each_chunk(500000, true, {
+      :columns => 'hash_hash',
+      :where   => "`hash_hash_type_id` = -1 AND `hash_password_id`='0'",
     }) do |hashes|
       process_hashes_plaintext(hashes, results)
       debug("[plaintext] Done the chunk of hashes! So far, we have #{results.keys.size} valid passwords representing #{results.values.flatten.size} hashes")

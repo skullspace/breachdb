@@ -8,4 +8,5 @@ Basically, all that's left is to release a beta and see how it goes!
 * Searching for hashes is too slow
 * Implemented LinkedIn-SHA1
 * Figure out why bcrypt isn't working
+* Look at the TODO notes in the codebase
 

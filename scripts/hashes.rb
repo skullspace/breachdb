@@ -108,7 +108,7 @@ class Hashes < Breachdb
         ],
         :groupby => 'hash_hash',
         :orderby => 'hash_hash',
-        :where   => '`hash_hash_type_id` > 0'
+        :where   => '`hash_password_id` != 0 and `hash_hash_type_id` > 0'
       }
     }
 
