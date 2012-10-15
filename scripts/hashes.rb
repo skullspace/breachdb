@@ -47,13 +47,20 @@ class Hashes < Breachdb
         WHERE `hash_id` IN (#{hash_ids.values().join(',')})")
   end
 
+  # TODO: This might not be necessary with hash_cache
   def self.cache_update()
     puts("Updating hash.c_password...")
     #query("UPDATE `hash` SET `c_password`=''")
-    query(" UPDATE `hash` JOIN `password` ON `hash_password_id`=`password_id` SET `c_password`=`password_password` where `c_password`=''")
+    query(" UPDATE `hash`
+              JOIN `password` ON `hash_password_id`=`password_id`
+            SET `c_password`=`password_password`
+            WHERE `c_password`=''")
 
     puts("Updating hash.c_breach_name...")
-    query(" UPDATE `hash` JOIN `breach` ON `hash_breach_id`=`breach_id` SET `c_breach_name`=`breach_name` where `c_breach_name`=''")
+    query(" UPDATE `hash`
+              JOIN `breach` ON `hash_breach_id`=`breach_id`
+            SET `c_breach_name`=`breach_name`
+            WHERE `c_breach_name`=''")
 
     puts("Updating hash.c_hash_type...")
     query(" UPDATE `hash`
@@ -66,121 +73,7 @@ class Hashes < Breachdb
   end
 
   def self.export_files()
-    # Add some basic password stuff
     files = []
-
-    files << {
-      :filename => "downloads/hashes.csv.bz2",
-      :description => "Hashes",
-      :show_header => false,
-      :query => {
-        :columns => [
-          { :name => 'hash_hash' },
-        ],
-        :groupby => 'hash_hash',
-        :orderby => 'hash_hash',
-        :where   => '`hash_hash_type_id` > 0'
-      }
-    }
-
-    files << {
-      :filename => "downloads/uncracked_hashes.csv.bz2",
-      :description => "Uncracked hashes",
-      :show_header => false,
-      :query => {
-        :columns => [
-          { :name => 'hash_hash' },
-        ],
-        :groupby => 'hash_hash',
-        :orderby => 'hash_hash',
-        :where => "`hash_password_id`='0' and `hash_hash_type_id` > 0"
-      }
-    }
-
-    files << {
-      :filename => "downloads/hashes_with_password.csv.bz2",
-      :description => "Hashes with passwords",
-      :show_header => true,
-      :query => {
-        :columns => [
-          { :name => 'hash_hash', :as => "hash" },
-          { :name => 'c_password', :as => "password" },
-        ],
-        :groupby => 'hash_hash',
-        :orderby => 'hash_hash',
-        :where   => '`hash_password_id` != 0 and `hash_hash_type_id` > 0'
-      }
-    }
-
-    files << {
-      :filename => "downloads/hashes_with_type.csv.bz2",
-      :description => "Hashes with type",
-      :show_header => true,
-      :query => {
-        :columns => [
-          { :name => 'hash_hash', :as => "hash" },
-          { :name => 'c_hash_type', :as => "hash_type" },
-        ],
-        :groupby => 'hash_hash',
-        :orderby => 'hash_hash',
-        :where   => '`hash_hash_type_id` > 0'
-      }
-    }
-
-    files << {
-      :filename => "downloads/uncracked_hashes_with_type.csv.bz2",
-      :description => "Uncracked hashes with types",
-      :show_header => true,
-      :query => {
-        :columns => [
-          { :name => 'hash_hash', :as => "hash_hash" },
-          { :name => 'c_hash_type', :as => "hash_type" },
-        ],
-        :groupby => 'hash_hash',
-        :orderby => 'hash_hash',
-        :where => "`hash_password_id`='0' and `hash_hash_type_id` > 0"
-      }
-    }
-
-    files << {
-      :filename => "downloads/hashes_with_count.csv.bz2",
-      :description => "Hashes with count",
-      :show_header => true,
-      :query => {
-        :columns => [
-          { :name => 'hash_count', :aggregate => 'SUM', :as => 'count' },
-          { :name => 'hash_hash', :as => 'hash' },
-          { :name => 'c_password', :as => 'password' },
-          { :name => 'c_hash_type', :as => "hash_type" },
-        ],
-        :orderby => {
-          :column=>'count',
-          :dir=>'DESC'
-        },
-        :groupby => 'hash_hash',
-        :where   => '`hash_hash_type_id` > 0'
-      }
-    }
-
-    files << {
-      :filename => "downloads/uncracked_hashes_with_count.csv.bz2",
-      :description => "Uncracked hashes with count",
-      :show_header => true,
-      :query => {
-        :columns => [
-          { :name => 'hash_count', :aggregate => 'SUM', :as => 'count' },
-          { :name => 'hash_hash', :as => 'hash' },
-          { :name => 'c_password', :as => 'password' },
-          { :name => 'c_hash_type', :as => "hash_type" },
-        ],
-        :orderby => {
-          :column=>'count',
-          :dir=>'DESC'
-        },
-        :groupby => 'hash_hash',
-        :where => "`hash_password_id`='0' and `hash_hash_type_id`>'0'"
-      }
-    }
 
     # Loop through the breaches and add files for each of them
     Breaches.query_ex().each do |breach|
@@ -219,47 +112,6 @@ class Hashes < Breachdb
           },
           :groupby => "hash_hash",
           :where => "hash_breach_id = '#{breach['breach_id']}' AND `hash_password_id` = '0'"
-        }
-      }
-    end
-
-    # Loop through the hash types and add files for each of them
-    HashTypes.query_ex({ :where => "`c_total_passwords` != 0" }).each do |hash_type|
-      name_clean = get_filename(hash_type['hash_type_english_name'])
-
-      # Hashes for the hash type
-      files << {
-        :filename => "downloads/#{name_clean}_hashes.csv.bz2",
-        :description => "Hashes of type " + hash_type['hash_type_english_name'],
-        :show_header => false,
-        :query => {
-          :columns => [
-            { :name => 'hash_hash', :as => 'hash' },
-          ],
-          :orderby => {
-            :column=>'hash_hash',
-            :dir=>'ASC'
-          },
-          :groupby => "hash_hash",
-          :where => "hash_hash_type_id = '#{hash_type['hash_type_id']}'"
-        }
-      }
-
-      # Uncracked hashes for the hash_type
-      files << {
-        :filename => "downloads/#{name_clean}_uncracked_hashes.csv.bz2",
-        :description => "Uncracked hashes of type " + hash_type['hash_type_english_name'],
-        :show_header => false,
-        :query => {
-          :columns => [
-            { :name => 'hash_hash', :as => 'hash' },
-          ],
-          :orderby => {
-            :column=>'hash_hash',
-            :dir=>'ASC'
-          },
-          :groupby => "hash_hash",
-          :where => "hash_hash_type_id = '#{hash_type['hash_type_id']}' AND `hash_password_id` = '0'"
         }
       }
     end

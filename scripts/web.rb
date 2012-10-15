@@ -26,6 +26,8 @@ end
 
 set :port, 2022
 
+# TODO: Change the hash pages here to use hash_cache instead of hash
+
 # This is authentication for the beta version only. The release will be free
 # for anybody who wants to use it to use!
 use Rack::Auth::Basic, "BreachDB Beta" do |username, password|

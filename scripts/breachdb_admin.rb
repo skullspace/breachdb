@@ -2,6 +2,7 @@
 
 require 'breachdb'
 require 'breaches'
+require 'hashcache'
 require 'hashtypes'
 require 'passwords'
 require 'masks'
@@ -16,7 +17,7 @@ require 'passwordcache'
 require 'mysql'
 
 # The order no longer matters here
-@all_classes = [ Hashes, Passwords, Breaches, HashTypes, Masks, Submissions, Crackers, SubmissionBatches, Dictionaries, DictionaryWords, PasswordCache ]
+@all_classes = [ Hashes, Passwords, Breaches, HashTypes, Masks, Submissions, Crackers, SubmissionBatches, Dictionaries, DictionaryWords, PasswordCache, HashCache ]
 
 IMPORT_FORMAT_MULTIPLE_LINES = '1'
 IMPORT_FORMAT_UNIQ           = '2'
