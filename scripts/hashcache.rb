@@ -22,7 +22,9 @@ class HashCache < Breachdb
               `hash_cache_password_password`,
               `hash_cache_hash_type_id`,
               `hash_cache_hash_type_name`,
-              `hash_cache_hash_count`
+              `hash_cache_hash_count`,
+              `hash_cache_hash_type_difficulty`,
+              `hash_cache_hash_type_is_internal`
             )
             (
               SELECT 
@@ -30,8 +32,10 @@ class HashCache < Breachdb
                 `password_id`            AS `hash_cache_password_id`,
                 `password_password`      AS `hash_cache_password_password`,
                 `hash_type_id`           AS `hash_cache_hash_type_id`,
-                `hash_type_english_name` AS `hash_cache_hash_type_name`,
-                SUM(`hash_count`)        AS `hash_cache_hash_count`
+                `hash_type_john_name`    AS `hash_cache_hash_type_name`,
+                SUM(`hash_count`)        AS `hash_cache_hash_count`,
+                `hash_type_difficulty`   AS `hash_cache_hash_type_difficulty`,
+                `hash_type_is_internal`  AS `hash_cache_hash_type_is_internal`
 
               FROM `hash` 
                 LEFT JOIN `password`  ON `hash_password_id`=`password_id`

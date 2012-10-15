@@ -93,7 +93,7 @@ class Hashes < Breachdb
             :dir=>'ASC'
           },
           :groupby => "hash_hash",
-          :where => "hash_breach_id = '#{breach['breach_id']}'"
+          :where => "hash_breach_id = '#{breach['breach_id']}' AND `hash_hash_type_id` > 0"
         }
       }
 
@@ -111,7 +111,7 @@ class Hashes < Breachdb
             :dir=>'ASC'
           },
           :groupby => "hash_hash",
-          :where => "hash_breach_id = '#{breach['breach_id']}' AND `hash_password_id` = '0'"
+          :where => "hash_breach_id = '#{breach['breach_id']}' AND `hash_password_id` = '0' AND `hash_hash_type_id` > 0"
         }
       }
     end

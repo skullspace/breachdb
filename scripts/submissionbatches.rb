@@ -29,12 +29,12 @@ class SubmissionBatches < Breachdb
     hash_types = {}
     hashes.each() do |hash|
       # Create a file for this hash type if it doesn't already exist
-      if(!files[hash['hash_type_john_name']]) then
-        files[hash['hash_type_john_name']] = File.new("%s/%s.tmp" % [JOHN_PATH, hash['hash_type_john_name']], 'w')
+      if(!files[hash['hash_type_name']]) then
+        files[hash['hash_type_name']] = File.new("%s/%s.tmp" % [JOHN_PATH, hash['hash_type_name']], 'w')
       end
 
       # Add the hash to the file
-      files[hash['hash_type_john_name']] << ("%s\n" % hash['hash_hash'])
+      files[hash['hash_type_name']] << ("%s\n" % hash['hash'])
     end
 
     # Close our temporary john files so we can actually work on them
@@ -79,7 +79,7 @@ class SubmissionBatches < Breachdb
   # treating plaintext hashes special all over the place.
   def self.process_hashes_plaintext(hashes, results)
     hashes.each() do |hash|
-      hash = hash['hash_hash']
+      hash = hash['hash']
       if(results[hash].nil?)
         results[hash] = [hash]
       else
@@ -97,18 +97,27 @@ class SubmissionBatches < Breachdb
     # Hash the words in every known way
     debug("Hashing #{hashes.size()} submissions...")
     words.each() do |word|
+      # SHA-2 hashes
       submission_hashes[OpenPGP::Digest::SHA224.digest(word).unpack("H*").shift.downcase]   = word
       submission_hashes[OpenPGP::Digest::SHA256.digest(word).unpack("H*").shift.downcase]   = word
       submission_hashes[OpenPGP::Digest::SHA384.digest(word).unpack("H*").shift.downcase]   = word
       submission_hashes[OpenPGP::Digest::SHA512.digest(word).unpack("H*").shift.downcase]   = word
+
+      # Truncated MD5
       submission_hashes[OpenPGP::Digest::MD5.digest(word).unpack("H*").shift.downcase]      = word
       submission_hashes[OpenPGP::Digest::MD5.digest(word).unpack('H*').shift.downcase[0,8]] = word
+
+      # LinkedIn (sha1, where first 6 characters may be '0')
+      sha1 = OpenPGP::Digest::SHA1.digest(word).unpack('H*').shift.downcase
+      submission_hashes[sha1]     = word
+      l_sha1 = '000000' + sha1[6, sha1.length]
+      submission_hashes[l_sha1]   = word
     end
 
     # Now loop through the hashes and see if we have any
     debug("Looking up #{hashes.size} internal hashes")
     hashes.each() do |hash|
-      hash = hash['hash_hash']
+      hash = hash['hash']
       password = submission_hashes[hash]
       if(!password.nil?) then
         if(results[password]) then
@@ -129,10 +138,11 @@ class SubmissionBatches < Breachdb
 
     # If a list of hashes was submitted, prepare it for the query
     hash_list_sql = '1=1'
-    if(!hashes.nil?)
-      hashes = hashes.collect do |hash| "'#{hash}'" end
-      hash_list_sql = "`hash_id` IN (" + hashes.join(',') + ")"
-    end
+# TODO: Fix submitted hashes
+#    if(!hashes.nil?)
+#      hashes = hashes.collect do |hash| "'#{hash}'" end
+#      hash_list_sql = "`hash_cache_hash_id` IN (" + hashes.join(',') + ")"
+#    end
 
     # Create a file containing the plaintext passwords that we're testing
     debug("Creating temp file containing the plaintext submissions...")
@@ -147,26 +157,30 @@ class SubmissionBatches < Breachdb
 
     debug("Auto-cracking plaintext hashes (what a time saver!)")
     Hashes.each_chunk(500000, true, {
-      :columns => 'hash_hash',
+      :columns => { :name => 'hash_hash', :as => 'hash' },
       :where   => "`hash_hash_type_id` = -1 AND `hash_password_id`='0'",
     }) do |hashes|
+      puts("HI")
       process_hashes_plaintext(hashes, results)
       debug("[plaintext] Done the chunk of hashes! So far, we have #{results.keys.size} valid passwords representing #{results.values.flatten.size} hashes")
     end
 
     debug("Cracking passwords with john...")
-    Hashes.each_chunk(100000, true, {
-      :where => "`hash_type_difficulty` < 8 AND `hash_type_is_internal`='0' AND `hash_password_id`='0' AND #{hash_list_sql}",
-      :join => { :table => 'hash_type', :column1 => 'hash_hash_type_id', :column2 => 'hash_type_id' }
+    HashCache.each_chunk(100000, true, {
+      :columns => [
+        { :name => 'hash_cache_hash_hash',      :as => 'hash' },
+        { :name => 'hash_cache_hash_type_name', :as => 'hash_type_name'}
+      ] ,
+      :where => "`hash_cache_hash_type_difficulty` < 8 AND `hash_cache_hash_type_is_internal`='0' AND `hash_cache_password_id`='0' AND #{hash_list_sql}",
     }) do |hashes|
       process_hashes_john(words, hashes, results)
       debug("[john] Done the chunk of hashes! So far, we have #{results.keys.size} valid passwords representing #{results.values.flatten.size} hashes")
     end
 
     debug("Cracking hashes that john doesn't handle...")
-    Hashes.each_chunk(100000, true, {
-      :where => "`hash_type_difficulty` < 8 AND `hash_type_is_internal`='1' AND `hash_password_id`='0' AND #{hash_list_sql}",
-      :join => { :table => 'hash_type', :column1 => 'hash_hash_type_id', :column2 => 'hash_type_id' }
+    HashCache.each_chunk(100000, true, {
+      :columns => [ { :name => 'hash_cache_hash_hash', :as => 'hash' } ],
+      :where => "`hash_cache_hash_type_difficulty` < 8 AND `hash_cache_hash_type_is_internal`='1' AND `hash_cache_password_id`='0' AND #{hash_list_sql}",
     }) do |hashes|
       process_hashes_internal(words, hashes, results)
       debug("[internal] Done the chunk of hashes! So far, we have #{results.keys.size} valid passwords representing #{results.values.flatten.size} hashes")

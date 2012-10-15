@@ -8,7 +8,7 @@ require '/home/ron/auth.rb'
 
 class Db
   @@my = nil
-  CHUNK_SIZE = 100000
+  CHUNK_SIZE = 50000
   DEBUG = true
   DEBUG_QUERY = true
 
@@ -724,7 +724,7 @@ class Db
       end
 
       # Now grab the data in chunks and write it to the file
-      each_chunk(CHUNK_SIZE, true, query_params) do |chunk|
+      each_chunk(1000000, true, query_params) do |chunk|
         chunk.each do |line|
           out.write(line.values.join(',') + "\n")
         end

@@ -147,9 +147,11 @@ CREATE TABLE `hash_cache` (
   `hash_cache_hash_type_id` int(11) NOT NULL DEFAULT '0',
   `hash_cache_hash_type_name` varchar(64) NOT NULL DEFAULT '',
   `hash_cache_hash_count` int(11) NOT NULL DEFAULT '0',
+  `hash_cache_hash_type_difficulty` int(11) NOT NULL DEFAULT '0',
+  `hash_cache_hash_type_is_internal` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`hash_cache_id`),
   KEY `hash_cache_hash_hash` (`hash_cache_hash_hash`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -301,4 +303,4 @@ CREATE TABLE `submission_batch` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-10-15  0:19:06
+-- Dump completed on 2012-10-15 16:55:01
