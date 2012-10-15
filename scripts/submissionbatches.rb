@@ -47,8 +47,9 @@ class SubmissionBatches < Breachdb
     files.each do |hash_type, file|
       pid = fork()
       if(!pid) then
-        #exec("%s/john --pot=%s --wordlist=%s/submissions.tmp --format=%s --session=%s %s" % [JOHN_PATH, potfile, JOHN_PATH, hash_type, hash_type, file.path])
         exec("%s/john --pot=%s --wordlist=%s/submissions.tmp --format=%s --session=%s %s > /dev/null 2>&1" % [JOHN_PATH, potfile, JOHN_PATH, hash_type, hash_type, file.path])
+        # Uncomment this for noisy
+        #exec("%s/john --pot=%s --wordlist=%s/submissions.tmp --format=%s --session=%s %s" % [JOHN_PATH, potfile, JOHN_PATH, hash_type, hash_type, file.path])
         exit()
       end
     end
@@ -129,20 +130,8 @@ class SubmissionBatches < Breachdb
     end
   end
 
-  def self.process_hashes(submission, hashes, results)
+  def self.process_hashes(words, limit_hashes, results)
     debug("Collecting the list of submission words")
-    words = []
-    submission.each() do |s|
-      words << s['submission_password']
-    end
-
-    # If a list of hashes was submitted, prepare it for the query
-    hash_list_sql = '1=1'
-# TODO: Fix submitted hashes
-#    if(!hashes.nil?)
-#      hashes = hashes.collect do |hash| "'#{hash}'" end
-#      hash_list_sql = "`hash_cache_hash_id` IN (" + hashes.join(',') + ")"
-#    end
 
     # Create a file containing the plaintext passwords that we're testing
     debug("Creating temp file containing the plaintext submissions...")
@@ -150,19 +139,21 @@ class SubmissionBatches < Breachdb
     file.puts(words)
     file.close()
 
-    # Loop through chunks of john hashes
-    # IMPORTANT NOTE for future generations: you can't change the 'hash' table
-    # in this loop, or it'll screw up the chunking. If you're going to make
-    # changes, do it after! 
-
     debug("Auto-cracking plaintext hashes (what a time saver!)")
     Hashes.each_chunk(500000, true, {
       :columns => { :name => 'hash_hash', :as => 'hash' },
       :where   => "`hash_hash_type_id` = -1 AND `hash_password_id`='0'",
     }) do |hashes|
-      puts("HI")
       process_hashes_plaintext(hashes, results)
       debug("[plaintext] Done the chunk of hashes! So far, we have #{results.keys.size} valid passwords representing #{results.values.flatten.size} hashes")
+    end
+
+    # Either limit it to easier hashes, or to known hashes
+    if(limit_hashes.nil?) then
+      limit = "`hash_cache_hash_type_difficulty` < 8"
+    else
+      limit_hashes = limit_hashes.collect do |hash| "'#{Mysql::quote(hash)}'" end
+      limit = "`hash_cache_hash_hash` IN (" + limit_hashes.join(',') + ")"
     end
 
     debug("Cracking passwords with john...")
@@ -171,7 +162,7 @@ class SubmissionBatches < Breachdb
         { :name => 'hash_cache_hash_hash',      :as => 'hash' },
         { :name => 'hash_cache_hash_type_name', :as => 'hash_type_name'}
       ] ,
-      :where => "`hash_cache_hash_type_difficulty` < 8 AND `hash_cache_hash_type_is_internal`='0' AND `hash_cache_password_id`='0' AND #{hash_list_sql}",
+      :where => "#{limit} AND `hash_cache_hash_type_is_internal`='0' AND `hash_cache_password_id`='0'",
     }) do |hashes|
       process_hashes_john(words, hashes, results)
       debug("[john] Done the chunk of hashes! So far, we have #{results.keys.size} valid passwords representing #{results.values.flatten.size} hashes")
@@ -180,7 +171,7 @@ class SubmissionBatches < Breachdb
     debug("Cracking hashes that john doesn't handle...")
     HashCache.each_chunk(100000, true, {
       :columns => [ { :name => 'hash_cache_hash_hash', :as => 'hash' } ],
-      :where => "`hash_cache_hash_type_difficulty` < 8 AND `hash_cache_hash_type_is_internal`='1' AND `hash_cache_password_id`='0' AND #{hash_list_sql}",
+      :where => "#{limit} AND `hash_cache_hash_type_is_internal`='1' AND `hash_cache_password_id`='0'",
     }) do |hashes|
       process_hashes_internal(words, hashes, results)
       debug("[internal] Done the chunk of hashes! So far, we have #{results.keys.size} valid passwords representing #{results.values.flatten.size} hashes")
@@ -215,24 +206,34 @@ class SubmissionBatches < Breachdb
 
     # First, process the submissions that don't have associated hashes
     Submissions.each_chunk(CHUNK_SIZE, true, { :where => where + " AND `submission_hash`=''"}) do |submission|
-      process_hashes(submission, nil, results)
+      submissions = {}
+      submission.each() do |row|
+        submissions[row['submission_password']] = 1
+      end
+      process_hashes(submissions.keys, nil, results)
     end
 
     # Process submissions that have an associated hash
     Submissions.each_chunk(CHUNK_SIZE, true, { :where => where + " AND `submission_hash`!=''"}) do |submission|
       # Get a list of the submitted hashes
       known_hashes = []
+      submissions = {}
+
+      # Loop through the submissions and create a password -> hash table
       submission.each() do |row|
-        known_hashes << row['submission_hash']
+        hash = row['submission_hash']
+        password = row['submission_password']
+        if(submissions[password].nil?)
+          submissions[password] = [hash]
+        else
+          submissions[password] << hash
+        end
       end
 
-      # Convert the hashes to IDs (assuming they're in the database)
-      Hashes.get_ids('hash_hash', known_hashes, false).each_value do |hash_ids|
-        known_hashes = known_hashes + hash_ids
+      # Call process_hashes for each password
+      submissions.each_pair do |password, hashes|
+        process_hashes(password, hashes, results)
       end
-
-      # Now do the same thing as before, except limit ourselves to the known hashes
-      process_hashes(submission, known_hashes, results)
     end
 
     if(results.size > 0)

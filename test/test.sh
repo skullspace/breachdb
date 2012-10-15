@@ -20,11 +20,13 @@ echo -ne "14\n13\n\nJail Lords\n\n\n\n../test/jailords-md5.txt\n1\n0\n" | $CMD
 echo -ne "14\n63\n\nHell Rising\n\n\n\n../test/hellrising-sha256.txt\n1\n0\n" | $CMD
 echo -ne "14\n13\n\nOmploader\n\n\n\n../test/omploader-md5.txt\n1\n0\n" | $CMD
 echo -ne "14\n-1\n\nPlaintext test\n\n\n\n../test/unhashed-plaintext.txt\n1\n0\n" | $CMD
+echo -ne "14\n4\n\nGawker bcrypt\n\n\n\n../test/gawker-bcrypt.txt\n1\n0\n" | $CMD
 
 # Import the submissions
-echo -ne "11\n\n\ncracker 1\n\n\n../test/passwords-1.txt\n1\n0\n" | $CMD
-echo -ne "11\n\n\ncracker 2\n\n\n../test/passwords-2.txt\n2\n0\n" | $CMD
-echo -ne "11\n\n\ncracker 3\n\n\n../test/passwords-3.txt\n1\n0\n" | $CMD
+echo -ne "11\n\n\ncracker 1\n\n\n../test/passwords-1.txt\n0\n" | $CMD
+echo -ne "11\n\n\ncracker 2\n\n\n../test/passwords-2.txt\n0\n" | $CMD
+echo -ne "11\n\n\ncracker 3\n\n\n../test/passwords-3.txt\n0\n" | $CMD
+echo -ne "11\n\n\ncracker 4\n\n\n../test/passwords-4.txt\n0\n" | $CMD
 
 # Update the caches
 echo -ne "1\n0\n" | $CMD
